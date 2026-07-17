@@ -59,6 +59,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Pattern-first DSA app: flowcharts, verified creator videos, LeetCode auto-sync, streaks." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "google-site-verification", content: "eb9ueyBUus5uyc-e-FF0agHg8I17WUO8IvJykzRS7QM" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
