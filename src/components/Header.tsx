@@ -13,7 +13,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/5 bg-background/60 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-white/5 bg-background/95 shadow-[0_1px_0_0_oklch(1_0_0_/_0.03)]">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link to="/" className="group flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent text-primary-foreground font-bold shadow-lg shadow-primary/30">D</span>
