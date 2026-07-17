@@ -102,6 +102,56 @@ To sync:
 
 ---
 
+## Deploy with Docker
+
+After the project is connected to GitHub, you can deploy it as a self-contained Docker container on any VPS or container platform (Render, Railway, DigitalOcean, AWS, etc.).
+
+### Required environment variables
+
+The container needs the same public values that Lovable Cloud injects for the frontend build. Server-side code also reads the unprefixed versions.
+
+| Variable | Purpose |
+| --- | --- |
+| `VITE_SUPABASE_URL` | Backend URL (used in the client bundle and server) |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Public API key (used in the client bundle and server) |
+| `LOVABLE_API_KEY` | Server-side key for Lovable Cloud auth and connector services |
+
+Create a `.env` file next to `docker-compose.yml` (do **not** commit it) with:
+
+```env
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_project_key
+LOVABLE_API_KEY=your_lovable_api_key
+```
+
+### Build and run
+
+```bash
+# Build and run with Docker Compose
+docker compose up -d
+
+# Or build and run manually
+docker build \
+  --build-arg VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
+  --build-arg VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY \
+  -t dsa-mastery .
+
+docker run -p 3000:3000 \
+  -e VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
+  -e VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY \
+  -e LOVABLE_API_KEY=$LOVABLE_API_KEY \
+  dsa-mastery
+```
+
+The app will be available at `http://localhost:3000`.
+
+### Notes
+
+- The default Lovable publish path uses a Cloudflare Workers preset. Docker uses the `node-server` preset so the app runs as a standalone Node.js process.
+- The Lovable "Edit with Lovable" badge has been hidden from the public site.
+
+---
+
 ## Resources & attribution
 
 All video links are curated, verified creator playlists or individual videos. Links point directly to the creator's own YouTube content and stay on that creator's series where possible. External resources (GeeksforGeeks, CP-Algorithms, USACO Guide, VisuAlgo, etc.) are credited to their original authors.
