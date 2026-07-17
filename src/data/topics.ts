@@ -638,6 +638,7 @@ export const CHANNEL_LABELS: Record<Channel, string> = {
   AbdulBari: "Abdul Bari",
   Kunal: "Kunal Kushwaha",
   ApnaCollege: "Apna College",
+  CodeHelp: "CodeHelp — Love Babbar",
   NeetCode: "NeetCode",
   TusharRoy: "Tushar Roy",
   WilliamFiset: "WilliamFiset",
