@@ -1,29 +1,31 @@
-Add production-ready Docker files so the app can be deployed from the GitHub repo after the user has connected it. The backend (Lovable Cloud auth + database) remains unchanged; Docker will only host the frontend/SSR server.
+## Goal
+Connect Google Search Console (GSC) so `https://pattern-quest-guide.lovable.app` can be verified, submitted, and monitored for SEO.
 
-1. Switch the Nitro build preset for Docker
-   - Update `vite.config.ts` to read `process.env.NITRO_PRESET` and set Nitro's preset to `node-server` when that variable is set, otherwise keep the default Lovable/Cloudflare target.
-   - This keeps `bun run build` working for Lovable publish while `NITRO_PRESET=node-server bun run build` produces a Docker-runnable Node server.
+## Steps
 
-2. Add a `Dockerfile`
-   - Multi-stage build using `oven/bun:1` for dependency install and build.
-   - Build with `NITRO_PRESET=node-server` so Nitro outputs a Node server.
-   - Production stage based on `node:20-alpine` (or `oven/bun:1-slim`), copies the `.output` folder and `package.json`, sets `NODE_ENV=production`, exposes `3000`, and runs `node .output/server/index.mjs`.
+1. **Link the Google Search Console connector**
+   - Use the standard connector flow to authorize your Google account. This grants the app read access to your GSC properties and the ability to add/verify new sites.
 
-3. Add `docker-compose.yml`
-   - Define an `app` service that builds from the Dockerfile, maps port `3000:3000`, and reads environment variables for the Lovable Cloud backend (`VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID`, `LOVABLE_API_KEY`).
+2. **Verify the site with Google (META tag method)**
+   - Request a `META` verification token from Google for `https://pattern-quest-guide.lovable.app/`.
+   - Add the `<meta name="google-site-verification" content="..." />` tag to the root route head in `src/routes/__root.tsx` so it renders on every page.
+   - After you publish the update, call Google's verify endpoint to confirm ownership.
 
-4. Add `.dockerignore`
-   - Ignore `node_modules`, `.output`, `dist`, `.env`, `.git`, `.vscode`, `.idea`, `*.log`, and OS files to keep the build context small and avoid leaking secrets.
+3. **Register the site as a Search Console property**
+   - Once verified, add `https://pattern-quest-guide.lovable.app/` to your Search Console properties via the API so it appears in your GSC dashboard.
 
-5. Update `README.md`
-   - Add a "Deploy with Docker" section with the exact commands: build the image, run the container, and run with `docker compose up`.
-   - List the required environment variables and note that the Lovable badge has already been hidden from the public site.
+4. **Submit the sitemap**
+   - Submit `https://pattern-quest-guide.lovable.app/sitemap.xml` (already generated) to GSC so Google starts crawling all topic and pattern pages.
 
-6. Verify the setup
-   - Build the Docker image locally and confirm the container starts and responds on `http://localhost:3000`.
-   - Run a full project build to ensure the Lovable Cloud deployment path still works.
+5. **Confirm and mark the SEO finding fixed**
+   - After verification succeeds, mark the outstanding "Google Search Console" SEO finding as fixed.
 
-## Technical details
-- TanStack Start uses Nitro as the production server adapter. The default Lovable config targets Cloudflare Workers; the `node-server` preset produces a standalone Node.js server in `.output/server/index.mjs`.
-- The Node server listens on the `PORT` environment variable, so the Dockerfile will set `PORT=3000`.
-- Vite inlines `VITE_*` variables at build time, so the Supabase public values must be available during `docker build` or passed as build args; server-side variables are read at runtime.
+## What you'll need to do
+- Approve this plan.
+- When prompted, sign in with the Google account you want tied to Search Console.
+- After I add the verification meta tag, click **Publish → Update** so the new tag goes live before I run the verify step (Google fetches the live URL).
+
+## Technical notes
+- Verification tag lives in `src/routes/__root.tsx` `head()` — persists across all routes.
+- API calls go through the Lovable connector gateway (`/google_search_console/...`); no keys stored in code.
+- Only the META method is supported here (DNS/file upload aren't options for a Lovable-hosted app).
