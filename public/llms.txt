@@ -4,20 +4,21 @@
 
 ## Pages
 
-- [Home](/): Browse all 11 DSA topics and their pattern cards.
+- [Home](/): Browse all DSA topics and their pattern cards.
 - [Tracker](/tracker): Daily streaks, GitHub-style heatmap and solved history.
 - [Sign in](/auth): Sign in with Google or email to sync LeetCode solves.
 
 ## Topics
 
 - [Arrays](/topics/arrays): Sliding window, two pointers, Kadane's and prefix sums.
+- [Strings](/topics/strings): String manipulation, palindromes, pattern matching.
 - [HashMap](/topics/hashmap): Frequency counts, complements and group-by patterns.
-- [Linked List](/topics/linkedlist): Fast/slow pointers, reversal, cycle detection.
-- [Stack & Queue](/topics/stack): Monotonic stacks, next greater element, LRU.
+- [Stack & Queue](/topics/stack-queue): Monotonic stacks, next greater element, LRU.
+- [Linked List](/topics/linked-list): Fast/slow pointers, reversal, cycle detection.
 - [Trees](/topics/trees): Traversals, BST properties, LCA, tree DP.
 - [Graphs](/topics/graphs): BFS/DFS, shortest paths, MST, topological sort.
 - [Dynamic Programming](/topics/dp): 1-D, 2-D, knapsack, LIS/LCS, DP on trees.
-- [Recursion & Backtracking](/topics/recursion): Subsets, permutations, N-Queens.
-- [Greedy](/topics/greedy): Interval scheduling, Huffman, activity selection.
+- [Greedy & Backtracking](/topics/greedy-backtracking): Interval scheduling, N-Queens, subsets.
 - [Binary Search](/topics/binary-search): Sorted arrays, answer-space search.
-- [Service Placements](/topics/service-placements): TCS NQT / Infosys / EPAM / Accenture / Deloitte patterns.
+- [Bit Manipulation](/topics/bits): XOR tricks, bitmasks, power-of-two checks.
+- [Service Placements](/topics/placements): TCS NQT / Infosys / EPAM / Accenture / Deloitte patterns.
