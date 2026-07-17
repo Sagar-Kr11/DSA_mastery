@@ -498,6 +498,121 @@ export const PATTERNS: Pattern[] = [
       { slug: "sum-of-two-integers", title: "Sum of Two Integers", difficulty: "Medium" },
     ],
   },
+
+  // ==================== SERVICE-COMPANY PLACEMENTS (TCS NQT / HackwithInfy / EPAM / Accenture / Deloitte) ====================
+  {
+    id: "number-theory-basics",
+    topicId: "placements",
+    name: "Number Theory & Math",
+    logicType: "GCD/LCM, prime checks (√n, Sieve of Eratosthenes), factorials, Armstrong / palindrome numbers — bread-and-butter of every Indian OA.",
+    companies: ["TCS NQT", "Infosys HackwithInfy", "Accenture", "Wipro", "Cognizant"],
+    youtube: { kind: "playlist", id: "PLfqMhTWNBTe3LtFWcvwpqTkUSlB32kJop", channel: "ApnaCollege", title: "Apna College — Complete Java+DSA (Numbers & Math)" },
+    flow: [
+      { id: "n1", label: "Read number n", next: ["n2"] },
+      { id: "n2", label: "GCD → while(b) {a,b = b, a%b}", next: ["n3"] },
+      { id: "n3", label: "Prime → loop i=2..√n, check n%i", next: ["n4"] },
+      { id: "n4", label: "Sieve → mark multiples of every prime false", next: ["n5"] },
+      { id: "n5", label: "Return result / list" },
+    ],
+    problems: [
+      { slug: "count-primes", title: "Count Primes", difficulty: "Medium" },
+      { slug: "happy-number", title: "Happy Number", difficulty: "Easy" },
+      { slug: "palindrome-number", title: "Palindrome Number", difficulty: "Easy" },
+      { slug: "power-of-two", title: "Power of Two", difficulty: "Easy" },
+      { slug: "factorial-trailing-zeroes", title: "Factorial Trailing Zeroes", difficulty: "Medium" },
+      { slug: "greatest-common-divisor-of-strings", title: "Greatest Common Divisor of Strings", difficulty: "Easy" },
+    ],
+  },
+  {
+    id: "pattern-printing",
+    topicId: "placements",
+    name: "Pattern Printing (Stars / Pyramids)",
+    logicType: "Nested for-loops driven by row index — the #1 warm-up in TCS NQT and Wipro Elite coding rounds.",
+    companies: ["TCS NQT", "Wipro NLTH", "Cognizant GenC", "Capgemini", "Infosys"],
+    youtube: { kind: "playlist", id: "PLfqMhTWNBTe0b2nM6JHVCLbpX_R2qL1UW", channel: "ApnaCollege", title: "Apna College — Placement Pattern Printing" },
+    flow: [
+      { id: "pp1", label: "for i = 1..n (rows)", next: ["pp2"] },
+      { id: "pp2", label: "for j = 1..spaces → print ' '", next: ["pp3"] },
+      { id: "pp3", label: "for k = 1..stars(i) → print '*'", next: ["pp4"] },
+      { id: "pp4", label: "println() and continue", next: ["pp5"] },
+      { id: "pp5", label: "Mirror for inverted / diamond variants" },
+    ],
+    problems: [
+      { slug: "pascals-triangle", title: "Pascal's Triangle", difficulty: "Easy" },
+      { slug: "pascals-triangle-ii", title: "Pascal's Triangle II", difficulty: "Easy" },
+      { slug: "spiral-matrix", title: "Spiral Matrix (traversal pattern)", difficulty: "Medium" },
+      { slug: "print-in-order", title: "Print in Order", difficulty: "Easy" },
+    ],
+  },
+  {
+    id: "string-basics",
+    topicId: "placements",
+    name: "String Manipulation Basics",
+    logicType: "Reverse, palindrome check, anagram check, vowel/consonant counts, substring searches — Infosys HackwithInfy & Deloitte favourites.",
+    companies: ["Infosys HackwithInfy", "TCS Digital", "Deloitte", "EPAM", "Accenture"],
+    youtube: { kind: "playlist", id: "PLgUwDviBIf0ovIT8CcCi7-tprT2xdgpZo", channel: "Striver", title: "Striver — Strings series" },
+    flow: [
+      { id: "st1", label: "Normalize (lowercase, trim)", next: ["st2"] },
+      { id: "st2", label: "Two pointers l=0, r=n-1 for palindrome", next: ["st3"] },
+      { id: "st3", label: "Freq array [26] for anagram / duplicate char", next: ["st4"] },
+      { id: "st4", label: "Sliding window for longest-unique / substring", next: ["st5"] },
+      { id: "st5", label: "Return count / boolean / substring" },
+    ],
+    problems: [
+      { slug: "valid-palindrome", title: "Valid Palindrome", difficulty: "Easy" },
+      { slug: "reverse-string", title: "Reverse String", difficulty: "Easy" },
+      { slug: "reverse-words-in-a-string", title: "Reverse Words in a String", difficulty: "Medium" },
+      { slug: "first-unique-character-in-a-string", title: "First Unique Character in a String", difficulty: "Easy" },
+      { slug: "string-compression", title: "String Compression", difficulty: "Medium" },
+      { slug: "roman-to-integer", title: "Roman to Integer", difficulty: "Easy" },
+    ],
+  },
+  {
+    id: "matrix-basics",
+    topicId: "placements",
+    name: "Matrix / 2-D Array Problems",
+    logicType: "Rotate, transpose, spiral, search in sorted matrix — asked heavily in EPAM, Accenture, and Deloitte online rounds.",
+    companies: ["EPAM", "Accenture", "Deloitte", "TCS Digital", "Infosys"],
+    youtube: { kind: "playlist", id: "PLgUwDviBIf0rENwdL0nEH0uGom9no0nyB", channel: "Striver", title: "Striver — Arrays (2-D Matrix problems)" },
+    flow: [
+      { id: "mt1", label: "Check bounds n × m", next: ["mt2"] },
+      { id: "mt2", label: "Transpose: swap a[i][j] ↔ a[j][i]", next: ["mt3"] },
+      { id: "mt3", label: "Reverse each row → 90° rotation", next: ["mt4"] },
+      { id: "mt4", label: "Spiral → 4 pointers (top, bottom, left, right)", next: ["mt5"] },
+      { id: "mt5", label: "Search sorted matrix → start top-right, move ←/↓" },
+    ],
+    problems: [
+      { slug: "rotate-image", title: "Rotate Image (90°)", difficulty: "Medium" },
+      { slug: "spiral-matrix", title: "Spiral Matrix", difficulty: "Medium" },
+      { slug: "set-matrix-zeroes", title: "Set Matrix Zeroes", difficulty: "Medium" },
+      { slug: "search-a-2d-matrix", title: "Search a 2D Matrix", difficulty: "Medium" },
+      { slug: "search-a-2d-matrix-ii", title: "Search a 2D Matrix II", difficulty: "Medium" },
+      { slug: "transpose-matrix", title: "Transpose Matrix", difficulty: "Easy" },
+    ],
+  },
+  {
+    id: "recursion-basics",
+    topicId: "placements",
+    name: "Recursion Fundamentals",
+    logicType: "Factorial, Fibonacci, power(x,n), sum of digits, printing subsequences — HackwithInfy R1 staples & EPAM technical MCQs.",
+    companies: ["Infosys HackwithInfy", "EPAM", "TCS CodeVita", "Accenture", "Deloitte"],
+    youtube: { kind: "playlist", id: "PLgUwDviBIf0rGEWe64KWas0Nryn7SCRWw", channel: "Striver", title: "Striver — Recursion & Backtracking" },
+    flow: [
+      { id: "rc1", label: "Define base case (n==0 / n==1)", next: ["rc2"] },
+      { id: "rc2", label: "Trust the recursion for (n-1)", next: ["rc3"] },
+      { id: "rc3", label: "Combine result with current n", next: ["rc4"] },
+      { id: "rc4", label: "Handle even/odd split for fast power O(log n)", next: ["rc5"] },
+      { id: "rc5", label: "Return accumulated answer" },
+    ],
+    problems: [
+      { slug: "fibonacci-number", title: "Fibonacci Number", difficulty: "Easy" },
+      { slug: "climbing-stairs", title: "Climbing Stairs", difficulty: "Easy" },
+      { slug: "powx-n", title: "Pow(x, n)", difficulty: "Medium" },
+      { slug: "sum-of-digits-of-string-after-convert", title: "Sum of Digits of String After Convert", difficulty: "Easy" },
+      { slug: "subsets", title: "Subsets (print all subsequences)", difficulty: "Medium" },
+      { slug: "letter-combinations-of-a-phone-number", title: "Letter Combinations of a Phone Number", difficulty: "Medium" },
+    ],
+  },
 ];
 
 export const TOPICS: Topic[] = [
@@ -512,6 +627,7 @@ export const TOPICS: Topic[] = [
   { id: "greedy-backtracking", name: "Greedy / Backtracking", emoji: "⟳", blurb: "Choose-recurse-undo when brute force is only slightly too slow.", patternIds: ["backtracking"] },
   { id: "binary-search", name: "Binary Search", emoji: "⌕", blurb: "Halve the search space — over indices or over the answer itself.", patternIds: ["binary-search", "bs-on-answer"] },
   { id: "bits", name: "Bit Manipulation", emoji: "⚡", blurb: "XOR magic, popcount, masks — one-liners in interviews.", patternIds: ["bit-tricks"] },
+  { id: "placements", name: "Service-Company Placements", emoji: "🇮🇳", blurb: "TCS NQT · HackwithInfy · EPAM · Accenture · Deloitte — the patterns that actually appear on Indian OAs.", patternIds: ["number-theory-basics", "pattern-printing", "string-basics", "matrix-basics", "recursion-basics"] },
 ];
 
 
@@ -724,6 +840,60 @@ const EXTRAS: Record<string, { extraVideos?: YouTubeRef[]; resources?: Resource[
     resources: [
       { label: "Bit Manipulation", url: "https://cp-algorithms.com/algebra/bit-manipulation.html", kind: "article", source: "CP-Algorithms" },
       { label: "Bit tricks for competitive programming", url: "https://www.geeksforgeeks.org/bits-manipulation-important-tactics/", kind: "article", source: "GeeksforGeeks" },
+    ],
+  },
+  "number-theory-basics": {
+    extraVideos: [
+      { kind: "playlist", id: "PLu0W_9lII9agICnT8t4iYVSZ3eykIAOME", channel: "Kunal", title: "Kunal Kushwaha — DSA Bootcamp (Maths & Number Theory)" },
+      { kind: "video", id: "5LMkddl2NCk", channel: "AbdulBari", title: "Abdul Bari — Euclid's GCD Algorithm" },
+    ],
+    resources: [
+      { label: "TCS NQT Coding Questions", url: "https://www.geeksforgeeks.org/tcs-nqt-coding-sheet/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "Sieve of Eratosthenes", url: "https://cp-algorithms.com/algebra/sieve-of-eratosthenes.html", kind: "article", source: "CP-Algorithms" },
+      { label: "Number Theory for OA", url: "https://www.geeksforgeeks.org/number-theory-competitive-programming/", kind: "article", source: "GeeksforGeeks" },
+    ],
+  },
+  "pattern-printing": {
+    extraVideos: [
+      { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "ApnaCollege", title: "Apna College — Star Pattern Programs (Java)" },
+    ],
+    resources: [
+      { label: "Programs for printing pyramid patterns", url: "https://www.geeksforgeeks.org/programs-printing-pyramid-patterns-python/", kind: "article", source: "GeeksforGeeks" },
+      { label: "TCS NQT Pattern Questions", url: "https://www.geeksforgeeks.org/tcs-coding-questions-nqt/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "Wipro NLTH previous questions", url: "https://www.geeksforgeeks.org/wipro-nlth-previous-year-coding-questions/", kind: "cheatsheet", source: "GeeksforGeeks" },
+    ],
+  },
+  "string-basics": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53lfxD6l5pAGvCD4nPvWKU8Qo", channel: "NeetCode", title: "NeetCode — Arrays & Hashing (string subset)" },
+      { kind: "playlist", id: "PLu0W_9lII9agsLYolh1Jjmrl5RhBz1yTa", channel: "Kunal", title: "Kunal Kushwaha — Strings deep-dive" },
+    ],
+    resources: [
+      { label: "HackwithInfy previous questions", url: "https://www.geeksforgeeks.org/infosys-hackwithinfy-coding-questions/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "Deloitte interview experience", url: "https://www.geeksforgeeks.org/deloitte-interview-experience/", kind: "article", source: "GeeksforGeeks" },
+      { label: "String algorithms reference", url: "https://cp-algorithms.com/string/basic_string_processing.html", kind: "article", source: "CP-Algorithms" },
+    ],
+  },
+  "matrix-basics": {
+    extraVideos: [
+      { kind: "video", id: "SA867FvqHrM", channel: "NeetCode", title: "NeetCode — Rotate Image" },
+      { kind: "video", id: "BJnMZNwUk1M", channel: "NeetCode", title: "NeetCode — Spiral Matrix" },
+    ],
+    resources: [
+      { label: "EPAM interview questions", url: "https://www.geeksforgeeks.org/epam-systems-interview-experience/", kind: "article", source: "GeeksforGeeks" },
+      { label: "Accenture coding questions", url: "https://www.geeksforgeeks.org/accenture-coding-questions/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "Matrix problems (top 20)", url: "https://www.geeksforgeeks.org/top-20-interview-questions-on-matrix/", kind: "cheatsheet", source: "GeeksforGeeks" },
+    ],
+  },
+  "recursion-basics": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53lf5C3HSjCnyFghlW0G1HHXo", channel: "NeetCode", title: "NeetCode — Backtracking (recursion foundation)" },
+      { kind: "playlist", id: "PLu0W_9lII9ahIappRPN0MCAgtOu3lQjQi", channel: "Kunal", title: "Kunal Kushwaha — Recursion series" },
+    ],
+    resources: [
+      { label: "HackwithInfy sample problems", url: "https://www.geeksforgeeks.org/infosys-hackwithinfy-coding-questions/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "TCS CodeVita question bank", url: "https://www.geeksforgeeks.org/tcs-codevita-questions/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "Recursion — a way of thinking", url: "https://leetcode.com/discuss/study-guide/1733447/Become-Master-In-Recursion", kind: "cheatsheet", source: "LeetCode discuss" },
     ],
   },
 };
