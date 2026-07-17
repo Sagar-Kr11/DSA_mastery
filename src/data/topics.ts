@@ -647,6 +647,33 @@ export const CHANNEL_LABELS: Record<Channel, string> = {
   MIT: "MIT OpenCourseWare",
 };
 
+export type Language = "C++" | "Java" | "Python";
+export const LANGUAGES: Language[] = ["C++", "Java", "Python"];
+
+/**
+ * Default primary languages used by each creator in their pattern videos.
+ * Most Indian-placement creators code in C++; NeetCode/MIT lean Python;
+ * WilliamFiset/Tushar Roy/Kunal lean Java. freeCodeCamp is mixed.
+ */
+export const CHANNEL_LANGUAGES: Record<Channel, Language[]> = {
+  Striver: ["C++", "Java"],
+  AdityaVerma: ["C++"],
+  AbdulBari: ["C++"],
+  Kunal: ["Java"],
+  ApnaCollege: ["C++", "Java"],
+  CodeHelp: ["C++"],
+  NeetCode: ["Python", "Java"],
+  TusharRoy: ["Java"],
+  WilliamFiset: ["Java"],
+  Errichto: ["C++"],
+  freeCodeCamp: ["Python", "Java", "C++"],
+  MIT: ["Python"],
+};
+
+export function videoLanguages(v: YouTubeRef): Language[] {
+  return CHANNEL_LANGUAGES[v.channel] ?? [];
+}
+
 /**
  * Additional creator walkthroughs and credible external resources per pattern.
  * Verified against each creator's own channel — links stay inside the app via

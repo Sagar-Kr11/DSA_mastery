@@ -1,8 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { PATTERNS_BY_ID, TOPICS_BY_ID, CHANNEL_LABELS } from "@/data/topics";
-import type { YouTubeRef, Resource } from "@/data/topics";
+import { PATTERNS_BY_ID, TOPICS_BY_ID, CHANNEL_LABELS, LANGUAGES, videoLanguages } from "@/data/topics";
+import type { YouTubeRef, Resource, Language } from "@/data/topics";
 import { GlassCard } from "@/components/GlassCard";
 import { PatternFlow } from "@/components/PatternFlow";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
@@ -179,12 +179,21 @@ function DifficultyPill({ d }: { d: "Easy" | "Medium" | "Hard" }) {
 }
 
 function VideoPicker({ pattern }: { pattern: { youtube: YouTubeRef; extraVideos?: YouTubeRef[]; name: string } }) {
-  const videos = useMemo<YouTubeRef[]>(
+  const allVideos = useMemo<YouTubeRef[]>(
     () => [pattern.youtube, ...(pattern.extraVideos ?? [])],
     [pattern],
   );
+  const [lang, setLang] = useState<Language | "All">("All");
+  const videos = useMemo<YouTubeRef[]>(() => {
+    if (lang === "All") return allVideos;
+    const filtered = allVideos.filter((v) => videoLanguages(v).includes(lang));
+    return filtered.length > 0 ? filtered : allVideos;
+  }, [allVideos, lang]);
   const [idx, setIdx] = useState(0);
-  const active = videos[idx];
+  const safeIdx = Math.min(idx, videos.length - 1);
+  const active = videos[safeIdx];
+
+  const langOptions: Array<Language | "All"> = ["All", ...LANGUAGES];
 
   return (
     <>
@@ -192,22 +201,58 @@ function VideoPicker({ pattern }: { pattern: { youtube: YouTubeRef; extraVideos?
         <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Video walkthroughs</h2>
         <span className="text-[11px] text-muted-foreground">{videos.length} creators</span>
       </div>
+
+      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+        <span className="mr-1 text-[10px] uppercase tracking-wider text-muted-foreground">Language</span>
+        {langOptions.map((l) => {
+          const count = l === "All"
+            ? allVideos.length
+            : allVideos.filter((v) => videoLanguages(v).includes(l)).length;
+          const isActive = lang === l;
+          const disabled = l !== "All" && count === 0;
+          return (
+            <button
+              key={l}
+              disabled={disabled}
+              onClick={() => { setLang(l); setIdx(0); }}
+              className={`rounded-md border px-2 py-0.5 text-[11px] transition ${
+                isActive
+                  ? "border-primary/60 bg-primary/15 text-foreground"
+                  : disabled
+                    ? "border-white/5 bg-white/[0.02] text-muted-foreground/40 cursor-not-allowed"
+                    : "border-white/10 bg-white/5 text-muted-foreground hover:text-foreground hover:border-white/20"
+              }`}
+            >
+              {l}
+              <span className="ml-1 opacity-60">{count}</span>
+            </button>
+          );
+        })}
+      </div>
+
       {videos.length > 1 && (
         <div className="mb-3 flex flex-wrap gap-1.5">
           {videos.map((v, i) => {
-            const activeStyle = i === idx
+            const activeStyle = i === safeIdx
               ? "border-primary/60 bg-primary/15 text-foreground shadow-[0_0_18px_-6px_oklch(0.78_0.16_200/0.6)]"
               : "border-white/10 bg-white/5 text-muted-foreground hover:text-foreground hover:border-white/20";
+            const langs = videoLanguages(v).join(" · ");
             return (
               <button
-                key={`${v.kind}-${v.id}`}
+                key={`${v.kind}-${v.id}-${i}`}
                 onClick={() => setIdx(i)}
                 className={`rounded-md border px-2.5 py-1 text-xs transition ${activeStyle}`}
+                title={langs}
               >
                 {CHANNEL_LABELS[v.channel]}
                 <span className="ml-1.5 text-[9px] uppercase tracking-wider opacity-60">
                   {v.kind === "playlist" ? "playlist" : "video"}
                 </span>
+                {langs && (
+                  <span className="ml-1.5 text-[9px] uppercase tracking-wider text-primary/70">
+                    {langs}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -216,7 +261,7 @@ function VideoPicker({ pattern }: { pattern: { youtube: YouTubeRef; extraVideos?
       {/* remount on selection change so the iframe reloads to the picked video */}
       <YouTubeEmbed key={`${active.kind}-${active.id}`} yt={active} />
       <p className="mt-3 text-xs text-muted-foreground">
-        Pick the creator whose explanation clicks best for you. Plays inline — no redirect.
+        Filter by your preferred language, then pick the creator whose explanation clicks best. Plays inline — no redirect.
       </p>
     </>
   );
