@@ -514,8 +514,6 @@ export const TOPICS: Topic[] = [
   { id: "bits", name: "Bit Manipulation", emoji: "⚡", blurb: "XOR magic, popcount, masks — one-liners in interviews.", patternIds: ["bit-tricks"] },
 ];
 
-export const PATTERNS_BY_ID: Record<string, Pattern> = Object.fromEntries(PATTERNS.map((p) => [p.id, p]));
-export const TOPICS_BY_ID: Record<string, Topic> = Object.fromEntries(TOPICS.map((t) => [t.id, t]));
 
 export const CHANNEL_LABELS: Record<Channel, string> = {
   Striver: "Striver (takeUforward)",
