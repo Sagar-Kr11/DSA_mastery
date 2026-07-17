@@ -114,6 +114,7 @@ The container needs the same public values that Lovable Cloud injects for the fr
 | --- | --- |
 | `VITE_SUPABASE_URL` | Backend URL (used in the client bundle and server) |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | Public API key (used in the client bundle and server) |
+| `VITE_SUPABASE_PROJECT_ID` | Project identifier (used by the client bundle) |
 | `LOVABLE_API_KEY` | Server-side key for Lovable Cloud auth and connector services |
 
 Create a `.env` file next to `docker-compose.yml` (do **not** commit it) with:
@@ -121,24 +122,28 @@ Create a `.env` file next to `docker-compose.yml` (do **not** commit it) with:
 ```env
 VITE_SUPABASE_URL=your_project_url
 VITE_SUPABASE_PUBLISHABLE_KEY=your_project_key
+VITE_SUPABASE_PROJECT_ID=your_project_id
 LOVABLE_API_KEY=your_lovable_api_key
 ```
 
 ### Build and run
 
 ```bash
-# Build and run with Docker Compose
-docker compose up -d
+# Build and run with Docker Compose (loads variables from .env automatically)
+docker compose up -d --build
 
 # Or build and run manually
 docker build \
   --build-arg VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
   --build-arg VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY \
+  --build-arg VITE_SUPABASE_PROJECT_ID=$VITE_SUPABASE_PROJECT_ID \
+  --build-arg LOVABLE_API_KEY=$LOVABLE_API_KEY \
   -t dsa-mastery .
 
 docker run -p 3000:3000 \
   -e VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
   -e VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY \
+  -e VITE_SUPABASE_PROJECT_ID=$VITE_SUPABASE_PROJECT_ID \
   -e LOVABLE_API_KEY=$LOVABLE_API_KEY \
   dsa-mastery
 ```
