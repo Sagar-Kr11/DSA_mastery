@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TopicsTopicIdRouteImport } from './routes/topics.$topicId'
 import { Route as PatternsPatternIdRouteImport } from './routes/patterns.$patternId'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedSeoRouteImport } from './routes/_authenticated/seo'
 
 const TrackerRoute = TrackerRouteImport.update({
   id: '/tracker',
@@ -57,12 +58,18 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSeoRoute = AuthenticatedSeoRouteImport.update({
+  id: '/seo',
+  path: '/seo',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tracker': typeof TrackerRoute
+  '/seo': typeof AuthenticatedSeoRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/patterns/$patternId': typeof PatternsPatternIdRoute
   '/topics/$topicId': typeof TopicsTopicIdRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tracker': typeof TrackerRoute
+  '/seo': typeof AuthenticatedSeoRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/patterns/$patternId': typeof PatternsPatternIdRoute
   '/topics/$topicId': typeof TopicsTopicIdRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tracker': typeof TrackerRoute
+  '/_authenticated/seo': typeof AuthenticatedSeoRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/patterns/$patternId': typeof PatternsPatternIdRoute
   '/topics/$topicId': typeof TopicsTopicIdRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/tracker'
+    | '/seo'
     | '/settings'
     | '/patterns/$patternId'
     | '/topics/$topicId'
@@ -103,6 +113,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/tracker'
+    | '/seo'
     | '/settings'
     | '/patterns/$patternId'
     | '/topics/$topicId'
@@ -113,6 +124,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/tracker'
+    | '/_authenticated/seo'
     | '/_authenticated/settings'
     | '/patterns/$patternId'
     | '/topics/$topicId'
@@ -186,14 +198,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/seo': {
+      id: '/_authenticated/seo'
+      path: '/seo'
+      fullPath: '/seo'
+      preLoaderRoute: typeof AuthenticatedSeoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedSeoRoute: typeof AuthenticatedSeoRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedSeoRoute: AuthenticatedSeoRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
 }
 
