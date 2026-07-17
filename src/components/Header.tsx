@@ -25,7 +25,10 @@ export function Header() {
           <NavLink to="/">Topics</NavLink>
           <NavLink to="/tracker">Tracker</NavLink>
           {session ? (
-            <NavLink to="/settings">Settings</NavLink>
+            <>
+              <NavLink to="/seo">SEO</NavLink>
+              <NavLink to="/settings">Settings</NavLink>
+            </>
           ) : (
             <Link
               to="/auth"
