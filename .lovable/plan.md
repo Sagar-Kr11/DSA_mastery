@@ -1,31 +1,25 @@
-## Goal
-Connect Google Search Console (GSC) so `https://pattern-quest-guide.lovable.app` can be verified, submitted, and monitored for SEO.
+## 1. Fix scroll lag
 
-## Steps
+Two known perf offenders in the current styles:
 
-1. **Link the Google Search Console connector**
-   - Use the standard connector flow to authorize your Google account. This grants the app read access to your GSC properties and the ability to add/verify new sites.
+- **`backdrop-blur-xl` on the sticky `Header`** (`src/components/Header.tsx`). Backdrop-blur re-samples and blurs every pixel behind it on every frame — expensive on a sticky bar that sits over scrolling content, especially with the animated radial gradients in the background.
+- **`background-attachment: fixed`** on `body` in `src/styles.css` combined with three large radial gradients. `background-attachment: fixed` forces the browser to repaint the gradient layer on every scroll frame, which compounds with the header blur.
 
-2. **Verify the site with Google (META tag method)**
-   - Request a `META` verification token from Google for `https://pattern-quest-guide.lovable.app/`.
-   - Add the `<meta name="google-site-verification" content="..." />` tag to the root route head in `src/routes/__root.tsx` so it renders on every page.
-   - After you publish the update, call Google's verify endpoint to confirm ownership.
+Changes:
 
-3. **Register the site as a Search Console property**
-   - Once verified, add `https://pattern-quest-guide.lovable.app/` to your Search Console properties via the API so it appears in your GSC dashboard.
+- `src/components/Header.tsx`: replace `bg-background/60 backdrop-blur-xl` with a solid-ish `bg-background/95` (or a subtle top-border + shadow). Keeps the glassy look without the per-frame blur cost.
+- `src/styles.css`: drop `background-attachment: fixed` on `body` so the radial gradients scroll with the page (or move them to a `::before` layer with `position: fixed; z-index: -1; will-change: transform;` — cheaper than fixed-attachment).
+- Leave the `glass` utility (`backdrop-filter: blur(14px)`) alone — it's used on small cards, not on a scroll-overlapping full-width bar, so it's not the bottleneck.
 
-4. **Submit the sitemap**
-   - Submit `https://pattern-quest-guide.lovable.app/sitemap.xml` (already generated) to GSC so Google starts crawling all topic and pattern pages.
+No functional/business changes; purely CSS-level.
 
-5. **Confirm and mark the SEO finding fixed**
-   - After verification succeeds, mark the outstanding "Google Search Console" SEO finding as fixed.
+## 2. Why the "Edit with Lovable" badge still shows
 
-## What you'll need to do
-- Approve this plan.
-- When prompted, sign in with the Google account you want tied to Search Console.
-- After I add the verification meta tag, click **Publish → Update** so the new tag goes live before I run the verify step (Google fetches the live URL).
+The badge is hidden on **published** deployments only. You're currently viewing the **preview** URL (`id-preview--…lovable.app`) — the badge always renders there so you can jump back into the editor. On your live share link (`https://pattern-quest-guide.lovable.app`) the badge is already hidden (I set `hide_badge: true` before publishing).
 
-## Technical notes
-- Verification tag lives in `src/routes/__root.tsx` `head()` — persists across all routes.
-- API calls go through the Lovable connector gateway (`/google_search_console/...`); no keys stored in code.
-- Only the META method is supported here (DNS/file upload aren't options for a Lovable-hosted app).
+No code change needed for this — I'll just confirm the setting is still on and explain in the reply. If you open the published URL in a new tab, the badge will not be there.
+
+## Verification
+
+- Reload the preview after the CSS changes and scroll the home + a pattern page; scrolling should feel smooth.
+- Open `https://pattern-quest-guide.lovable.app` to confirm the badge is absent on the live site.
