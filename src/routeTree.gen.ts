@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TopicsTopicIdRouteImport } from './routes/topics.$topicId'
+import { Route as RoadmapLeetcodePatternsRouteImport } from './routes/roadmap.leetcode-patterns'
 import { Route as PatternsPatternIdRouteImport } from './routes/patterns.$patternId'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedSeoRouteImport } from './routes/_authenticated/seo'
@@ -48,6 +49,11 @@ const TopicsTopicIdRoute = TopicsTopicIdRouteImport.update({
   path: '/topics/$topicId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoadmapLeetcodePatternsRoute = RoadmapLeetcodePatternsRouteImport.update({
+  id: '/roadmap/leetcode-patterns',
+  path: '/roadmap/leetcode-patterns',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PatternsPatternIdRoute = PatternsPatternIdRouteImport.update({
   id: '/patterns/$patternId',
   path: '/patterns/$patternId',
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/seo': typeof AuthenticatedSeoRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/patterns/$patternId': typeof PatternsPatternIdRoute
+  '/roadmap/leetcode-patterns': typeof RoadmapLeetcodePatternsRoute
   '/topics/$topicId': typeof TopicsTopicIdRoute
 }
 export interface FileRoutesByTo {
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/seo': typeof AuthenticatedSeoRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/patterns/$patternId': typeof PatternsPatternIdRoute
+  '/roadmap/leetcode-patterns': typeof RoadmapLeetcodePatternsRoute
   '/topics/$topicId': typeof TopicsTopicIdRoute
 }
 export interface FileRoutesById {
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/_authenticated/seo': typeof AuthenticatedSeoRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/patterns/$patternId': typeof PatternsPatternIdRoute
+  '/roadmap/leetcode-patterns': typeof RoadmapLeetcodePatternsRoute
   '/topics/$topicId': typeof TopicsTopicIdRoute
 }
 export interface FileRouteTypes {
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/seo'
     | '/settings'
     | '/patterns/$patternId'
+    | '/roadmap/leetcode-patterns'
     | '/topics/$topicId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/seo'
     | '/settings'
     | '/patterns/$patternId'
+    | '/roadmap/leetcode-patterns'
     | '/topics/$topicId'
   id:
     | '__root__'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/_authenticated/seo'
     | '/_authenticated/settings'
     | '/patterns/$patternId'
+    | '/roadmap/leetcode-patterns'
     | '/topics/$topicId'
   fileRoutesById: FileRoutesById
 }
@@ -137,6 +149,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TrackerRoute: typeof TrackerRoute
   PatternsPatternIdRoute: typeof PatternsPatternIdRoute
+  RoadmapLeetcodePatternsRoute: typeof RoadmapLeetcodePatternsRoute
   TopicsTopicIdRoute: typeof TopicsTopicIdRoute
 }
 
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsTopicIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/roadmap/leetcode-patterns': {
+      id: '/roadmap/leetcode-patterns'
+      path: '/roadmap/leetcode-patterns'
+      fullPath: '/roadmap/leetcode-patterns'
+      preLoaderRoute: typeof RoadmapLeetcodePatternsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/patterns/$patternId': {
       id: '/patterns/$patternId'
       path: '/patterns/$patternId'
@@ -228,6 +248,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TrackerRoute: TrackerRoute,
   PatternsPatternIdRoute: PatternsPatternIdRoute,
+  RoadmapLeetcodePatternsRoute: RoadmapLeetcodePatternsRoute,
   TopicsTopicIdRoute: TopicsTopicIdRoute,
 }
 export const routeTree = rootRouteImport
