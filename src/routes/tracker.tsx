@@ -10,7 +10,18 @@ import { Flame, Trophy, CheckCircle2 } from "lucide-react";
 import { PATTERNS } from "@/data/topics";
 
 export const Route = createFileRoute("/tracker")({
-  head: () => ({ meta: [{ title: "Tracker — DSA Mastery" }, { name: "description", content: "Streaks, heatmap and solved history." }] }),
+  head: () => {
+    const title = "Tracker — Streaks, heatmap & solved history | DSA Mastery";
+    const description = "Track your DSA journey with daily streaks, a GitHub-style year heatmap, and a full history of solved LeetCode patterns and problems.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: TrackerPage,
 });
 
