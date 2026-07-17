@@ -12,4 +12,7 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Allow self-hosted Docker builds to use the Nitro node-server preset
+  // while keeping the default Lovable Cloud / Cloudflare preset otherwise.
+  ...(process.env.NITRO_PRESET ? { nitro: { preset: process.env.NITRO_PRESET } } : {}),
 });
