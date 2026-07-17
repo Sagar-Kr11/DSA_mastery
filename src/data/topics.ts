@@ -627,6 +627,7 @@ export const TOPICS: Topic[] = [
   { id: "greedy-backtracking", name: "Greedy / Backtracking", emoji: "⟳", blurb: "Choose-recurse-undo when brute force is only slightly too slow.", patternIds: ["backtracking"] },
   { id: "binary-search", name: "Binary Search", emoji: "⌕", blurb: "Halve the search space — over indices or over the answer itself.", patternIds: ["binary-search", "bs-on-answer"] },
   { id: "bits", name: "Bit Manipulation", emoji: "⚡", blurb: "XOR magic, popcount, masks — one-liners in interviews.", patternIds: ["bit-tricks"] },
+  { id: "placements", name: "Service-Company Placements", emoji: "🇮🇳", blurb: "TCS NQT · HackwithInfy · EPAM · Accenture · Deloitte — the patterns that actually appear on Indian OAs.", patternIds: ["number-theory-basics", "pattern-printing", "string-basics", "matrix-basics", "recursion-basics"] },
 ];
 
 
