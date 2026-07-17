@@ -1,0 +1,23 @@
+# DSA Mastery
+
+> Pattern-first Data Structures & Algorithms learning app with animated flowcharts, verified creator videos (Striver, NeetCode, Aditya Verma, CodeHelp, Apna College), LeetCode auto-sync, streaks, and a curated roadmap for Indian placement exams (TCS NQT, HackwithInfy, EPAM, Accenture, Deloitte).
+
+## Pages
+
+- [Home](/): Browse all 11 DSA topics and their pattern cards.
+- [Tracker](/tracker): Daily streaks, GitHub-style heatmap and solved history.
+- [Sign in](/auth): Sign in with Google or email to sync LeetCode solves.
+
+## Topics
+
+- [Arrays](/topics/arrays): Sliding window, two pointers, Kadane's and prefix sums.
+- [HashMap](/topics/hashmap): Frequency counts, complements and group-by patterns.
+- [Linked List](/topics/linkedlist): Fast/slow pointers, reversal, cycle detection.
+- [Stack & Queue](/topics/stack): Monotonic stacks, next greater element, LRU.
+- [Trees](/topics/trees): Traversals, BST properties, LCA, tree DP.
+- [Graphs](/topics/graphs): BFS/DFS, shortest paths, MST, topological sort.
+- [Dynamic Programming](/topics/dp): 1-D, 2-D, knapsack, LIS/LCS, DP on trees.
+- [Recursion & Backtracking](/topics/recursion): Subsets, permutations, N-Queens.
+- [Greedy](/topics/greedy): Interval scheduling, Huffman, activity selection.
+- [Binary Search](/topics/binary-search): Sorted arrays, answer-space search.
+- [Service Placements](/topics/service-placements): TCS NQT / Infosys / EPAM / Accenture / Deloitte patterns.
