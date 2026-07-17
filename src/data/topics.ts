@@ -842,6 +842,60 @@ const EXTRAS: Record<string, { extraVideos?: YouTubeRef[]; resources?: Resource[
       { label: "Bit tricks for competitive programming", url: "https://www.geeksforgeeks.org/bits-manipulation-important-tactics/", kind: "article", source: "GeeksforGeeks" },
     ],
   },
+  "number-theory-basics": {
+    extraVideos: [
+      { kind: "playlist", id: "PLu0W_9lII9agICnT8t4iYVSZ3eykIAOME", channel: "Kunal", title: "Kunal Kushwaha — DSA Bootcamp (Maths & Number Theory)" },
+      { kind: "video", id: "5LMkddl2NCk", channel: "AbdulBari", title: "Abdul Bari — Euclid's GCD Algorithm" },
+    ],
+    resources: [
+      { label: "TCS NQT Coding Questions", url: "https://www.geeksforgeeks.org/tcs-nqt-coding-sheet/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "Sieve of Eratosthenes", url: "https://cp-algorithms.com/algebra/sieve-of-eratosthenes.html", kind: "article", source: "CP-Algorithms" },
+      { label: "Number Theory for OA", url: "https://www.geeksforgeeks.org/number-theory-competitive-programming/", kind: "article", source: "GeeksforGeeks" },
+    ],
+  },
+  "pattern-printing": {
+    extraVideos: [
+      { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "ApnaCollege", title: "Apna College — Star Pattern Programs (Java)" },
+    ],
+    resources: [
+      { label: "Programs for printing pyramid patterns", url: "https://www.geeksforgeeks.org/programs-printing-pyramid-patterns-python/", kind: "article", source: "GeeksforGeeks" },
+      { label: "TCS NQT Pattern Questions", url: "https://www.geeksforgeeks.org/tcs-coding-questions-nqt/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "Wipro NLTH previous questions", url: "https://www.geeksforgeeks.org/wipro-nlth-previous-year-coding-questions/", kind: "cheatsheet", source: "GeeksforGeeks" },
+    ],
+  },
+  "string-basics": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53lfxD6l5pAGvCD4nPvWKU8Qo", channel: "NeetCode", title: "NeetCode — Arrays & Hashing (string subset)" },
+      { kind: "playlist", id: "PLu0W_9lII9agsLYolh1Jjmrl5RhBz1yTa", channel: "Kunal", title: "Kunal Kushwaha — Strings deep-dive" },
+    ],
+    resources: [
+      { label: "HackwithInfy previous questions", url: "https://www.geeksforgeeks.org/infosys-hackwithinfy-coding-questions/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "Deloitte interview experience", url: "https://www.geeksforgeeks.org/deloitte-interview-experience/", kind: "article", source: "GeeksforGeeks" },
+      { label: "String algorithms reference", url: "https://cp-algorithms.com/string/basic_string_processing.html", kind: "article", source: "CP-Algorithms" },
+    ],
+  },
+  "matrix-basics": {
+    extraVideos: [
+      { kind: "video", id: "SA867FvqHrM", channel: "NeetCode", title: "NeetCode — Rotate Image" },
+      { kind: "video", id: "BJnMZNwUk1M", channel: "NeetCode", title: "NeetCode — Spiral Matrix" },
+    ],
+    resources: [
+      { label: "EPAM interview questions", url: "https://www.geeksforgeeks.org/epam-systems-interview-experience/", kind: "article", source: "GeeksforGeeks" },
+      { label: "Accenture coding questions", url: "https://www.geeksforgeeks.org/accenture-coding-questions/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "Matrix problems (top 20)", url: "https://www.geeksforgeeks.org/top-20-interview-questions-on-matrix/", kind: "cheatsheet", source: "GeeksforGeeks" },
+    ],
+  },
+  "recursion-basics": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53lf5C3HSjCnyFghlW0G1HHXo", channel: "NeetCode", title: "NeetCode — Backtracking (recursion foundation)" },
+      { kind: "playlist", id: "PLu0W_9lII9ahIappRPN0MCAgtOu3lQjQi", channel: "Kunal", title: "Kunal Kushwaha — Recursion series" },
+    ],
+    resources: [
+      { label: "HackwithInfy sample problems", url: "https://www.geeksforgeeks.org/infosys-hackwithinfy-coding-questions/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "TCS CodeVita question bank", url: "https://www.geeksforgeeks.org/tcs-codevita-questions/", kind: "cheatsheet", source: "GeeksforGeeks" },
+      { label: "Recursion — a way of thinking", url: "https://leetcode.com/discuss/study-guide/1733447/Become-Master-In-Recursion", kind: "cheatsheet", source: "LeetCode discuss" },
+    ],
+  },
 };
 
 // Merge extras onto every pattern (kept side-by-side so the base list above stays readable)
