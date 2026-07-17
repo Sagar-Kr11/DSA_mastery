@@ -103,16 +103,20 @@ function PatternPage() {
         </GlassCard>
 
         <GlassCard className="p-5">
-          <div className="mb-3 flex items-baseline justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Video walkthrough</h2>
-            <span className="text-[11px] text-muted-foreground">{CHANNEL_LABELS[pattern.youtube.channel]}</span>
-          </div>
-          <YouTubeEmbed yt={pattern.youtube} />
-          <p className="mt-3 text-xs text-muted-foreground">
-            Curated to the creator best known for this pattern. Plays inline — no redirect.
-          </p>
+          <VideoPicker pattern={pattern} />
         </GlassCard>
       </div>
+
+      {pattern.resources && pattern.resources.length > 0 && (
+        <section className="mt-8">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Extra resources</h2>
+          <GlassCard className="grid grid-cols-1 gap-2 p-4 sm:grid-cols-2">
+            {pattern.resources.map((r) => (
+              <ResourceRow key={r.url} r={r} />
+            ))}
+          </GlassCard>
+        </section>
+      )}
 
       <section className="mt-8">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Practice problems</h2>
