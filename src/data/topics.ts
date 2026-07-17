@@ -5,6 +5,7 @@ export type Channel =
   | "AbdulBari"
   | "Kunal"
   | "ApnaCollege"
+  | "CodeHelp"
   | "NeetCode"
   | "TusharRoy"
   | "WilliamFiset"
