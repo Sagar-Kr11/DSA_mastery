@@ -23,7 +23,9 @@ export function Header() {
         </Link>
         <nav className="flex items-center gap-1 text-sm">
           <NavLink to="/">Topics</NavLink>
+          <NavLink to="/roadmap/leetcode-patterns">Roadmap</NavLink>
           <NavLink to="/tracker">Tracker</NavLink>
+
           {session ? (
             <>
               <NavLink to="/seo">SEO</NavLink>
