@@ -2,12 +2,13 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { PATTERNS_BY_ID, TOPICS_BY_ID, CHANNEL_LABELS } from "@/data/topics";
+import type { YouTubeRef, Resource } from "@/data/topics";
 import { GlassCard } from "@/components/GlassCard";
 import { PatternFlow } from "@/components/PatternFlow";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getSolved, toggleSolved } from "@/lib/solved.functions";
-import { ArrowLeft, Check, ExternalLink } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowLeft, BookOpen, Check, ExternalLink, FileText, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
