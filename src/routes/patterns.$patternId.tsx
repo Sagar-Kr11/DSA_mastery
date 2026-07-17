@@ -2,12 +2,13 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { PATTERNS_BY_ID, TOPICS_BY_ID, CHANNEL_LABELS } from "@/data/topics";
+import type { YouTubeRef, Resource } from "@/data/topics";
 import { GlassCard } from "@/components/GlassCard";
 import { PatternFlow } from "@/components/PatternFlow";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getSolved, toggleSolved } from "@/lib/solved.functions";
-import { ArrowLeft, Check, ExternalLink } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowLeft, BookOpen, Check, ExternalLink, FileText, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -102,16 +103,20 @@ function PatternPage() {
         </GlassCard>
 
         <GlassCard className="p-5">
-          <div className="mb-3 flex items-baseline justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Video walkthrough</h2>
-            <span className="text-[11px] text-muted-foreground">{CHANNEL_LABELS[pattern.youtube.channel]}</span>
-          </div>
-          <YouTubeEmbed yt={pattern.youtube} />
-          <p className="mt-3 text-xs text-muted-foreground">
-            Curated to the creator best known for this pattern. Plays inline — no redirect.
-          </p>
+          <VideoPicker pattern={pattern} />
         </GlassCard>
       </div>
+
+      {pattern.resources && pattern.resources.length > 0 && (
+        <section className="mt-8">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Extra resources</h2>
+          <GlassCard className="grid grid-cols-1 gap-2 p-4 sm:grid-cols-2">
+            {pattern.resources.map((r) => (
+              <ResourceRow key={r.url} r={r} />
+            ))}
+          </GlassCard>
+        </section>
+      )}
 
       <section className="mt-8">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Practice problems</h2>
@@ -171,4 +176,71 @@ function DifficultyPill({ d }: { d: "Easy" | "Medium" | "Hard" }) {
     d === "Medium" ? "bg-amber-500/15 text-amber-300 border-amber-500/30" :
     "bg-rose-500/15 text-rose-300 border-rose-500/30";
   return <span className={`rounded-md border px-1.5 py-0.5 text-[10px] font-medium ${color}`}>{d}</span>;
+}
+
+function VideoPicker({ pattern }: { pattern: { youtube: YouTubeRef; extraVideos?: YouTubeRef[]; name: string } }) {
+  const videos = useMemo<YouTubeRef[]>(
+    () => [pattern.youtube, ...(pattern.extraVideos ?? [])],
+    [pattern],
+  );
+  const [idx, setIdx] = useState(0);
+  const active = videos[idx];
+
+  return (
+    <>
+      <div className="mb-3 flex items-baseline justify-between">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Video walkthroughs</h2>
+        <span className="text-[11px] text-muted-foreground">{videos.length} creators</span>
+      </div>
+      {videos.length > 1 && (
+        <div className="mb-3 flex flex-wrap gap-1.5">
+          {videos.map((v, i) => {
+            const activeStyle = i === idx
+              ? "border-primary/60 bg-primary/15 text-foreground shadow-[0_0_18px_-6px_oklch(0.78_0.16_200/0.6)]"
+              : "border-white/10 bg-white/5 text-muted-foreground hover:text-foreground hover:border-white/20";
+            return (
+              <button
+                key={`${v.kind}-${v.id}`}
+                onClick={() => setIdx(i)}
+                className={`rounded-md border px-2.5 py-1 text-xs transition ${activeStyle}`}
+              >
+                {CHANNEL_LABELS[v.channel]}
+                <span className="ml-1.5 text-[9px] uppercase tracking-wider opacity-60">
+                  {v.kind === "playlist" ? "playlist" : "video"}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+      {/* remount on selection change so the iframe reloads to the picked video */}
+      <YouTubeEmbed key={`${active.kind}-${active.id}`} yt={active} />
+      <p className="mt-3 text-xs text-muted-foreground">
+        Pick the creator whose explanation clicks best for you. Plays inline — no redirect.
+      </p>
+    </>
+  );
+}
+
+function ResourceRow({ r }: { r: Resource }) {
+  const Icon = r.kind === "visualizer" ? Sparkles : r.kind === "cheatsheet" ? FileText : BookOpen;
+  return (
+    <a
+      href={r.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex items-center gap-3 rounded-lg border border-white/5 bg-white/[0.03] px-3 py-2.5 transition hover:border-primary/40 hover:bg-white/[0.06]"
+    >
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">
+        <Icon className="h-4 w-4" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm text-foreground">{r.label}</div>
+        <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+          {r.source} · {r.kind}
+        </div>
+      </div>
+      <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition group-hover:text-foreground" />
+    </a>
+  );
 }

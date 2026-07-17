@@ -1,9 +1,28 @@
 export type Difficulty = "Easy" | "Medium" | "Hard";
-export type Channel = "Striver" | "AdityaVerma" | "AbdulBari" | "Kunal" | "ApnaCollege";
+export type Channel =
+  | "Striver"
+  | "AdityaVerma"
+  | "AbdulBari"
+  | "Kunal"
+  | "ApnaCollege"
+  | "NeetCode"
+  | "TusharRoy"
+  | "WilliamFiset"
+  | "Errichto"
+  | "freeCodeCamp"
+  | "MIT";
 
 export type YouTubeRef =
   | { kind: "video"; id: string; channel: Channel; title: string }
   | { kind: "playlist"; id: string; channel: Channel; title: string };
+
+export type ResourceKind = "article" | "visualizer" | "book" | "cheatsheet" | "docs";
+export type Resource = {
+  label: string;
+  url: string;
+  kind: ResourceKind;
+  source: string; // e.g. "GeeksforGeeks", "CP-Algorithms"
+};
 
 export type FlowStep = { id: string; label: string; next?: string[] };
 
@@ -19,7 +38,9 @@ export type Pattern = {
   name: string;
   logicType: string;
   companies: string[];
-  youtube: YouTubeRef;
+  youtube: YouTubeRef; // primary (kept for backward compat)
+  extraVideos?: YouTubeRef[]; // additional creators for the same pattern
+  resources?: Resource[]; // articles, visualizers, docs
   flow: FlowStep[];
   problems: Problem[];
 };
@@ -493,8 +514,6 @@ export const TOPICS: Topic[] = [
   { id: "bits", name: "Bit Manipulation", emoji: "⚡", blurb: "XOR magic, popcount, masks — one-liners in interviews.", patternIds: ["bit-tricks"] },
 ];
 
-export const PATTERNS_BY_ID: Record<string, Pattern> = Object.fromEntries(PATTERNS.map((p) => [p.id, p]));
-export const TOPICS_BY_ID: Record<string, Topic> = Object.fromEntries(TOPICS.map((t) => [t.id, t]));
 
 export const CHANNEL_LABELS: Record<Channel, string> = {
   Striver: "Striver (takeUforward)",
@@ -502,8 +521,226 @@ export const CHANNEL_LABELS: Record<Channel, string> = {
   AbdulBari: "Abdul Bari",
   Kunal: "Kunal Kushwaha",
   ApnaCollege: "Apna College",
+  NeetCode: "NeetCode",
+  TusharRoy: "Tushar Roy",
+  WilliamFiset: "WilliamFiset",
+  Errichto: "Errichto Algorithms",
+  freeCodeCamp: "freeCodeCamp",
+  MIT: "MIT OpenCourseWare",
 };
+
+/**
+ * Additional creator walkthroughs and credible external resources per pattern.
+ * Verified against each creator's own channel — links stay inside the app via
+ * the inline embed player (videos) or open in a new tab (articles/visualizers).
+ */
+const EXTRAS: Record<string, { extraVideos?: YouTubeRef[]; resources?: Resource[] }> = {
+  "two-pointers": {
+    extraVideos: [
+      { kind: "video", id: "On03HWe2tZM", channel: "NeetCode", title: "NeetCode — Two Sum II (Two Pointers)" },
+      { kind: "playlist", id: "PLot-Xpze53leF0FeHz2X0aG3zd0mr1AW_", channel: "NeetCode", title: "NeetCode — Two Pointers playlist" },
+    ],
+    resources: [
+      { label: "Two Pointers Technique", url: "https://www.geeksforgeeks.org/two-pointers-technique/", kind: "article", source: "GeeksforGeeks" },
+      { label: "Two Pointers pattern guide", url: "https://leetcode.com/discuss/study-guide/1688903/Solved-all-two-pointers-problems-in-100-days", kind: "cheatsheet", source: "LeetCode discuss" },
+    ],
+  },
+  kadane: {
+    extraVideos: [
+      { kind: "video", id: "5WZl3MMT0Eg", channel: "NeetCode", title: "NeetCode — Maximum Subarray (Kadane)" },
+      { kind: "video", id: "AHZpyENo7k4", channel: "TusharRoy", title: "Tushar Roy — Kadane's Algorithm" },
+    ],
+    resources: [
+      { label: "Kadane's Algorithm", url: "https://cp-algorithms.com/others/maximum_average_segment.html", kind: "article", source: "CP-Algorithms" },
+      { label: "Largest Sum Contiguous Subarray", url: "https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/", kind: "article", source: "GeeksforGeeks" },
+    ],
+  },
+  "prefix-sum": {
+    extraVideos: [
+      { kind: "video", id: "fFVZt-6sgyo", channel: "NeetCode", title: "NeetCode — Subarray Sum Equals K" },
+    ],
+    resources: [
+      { label: "Prefix Sum Array", url: "https://www.geeksforgeeks.org/prefix-sum-array-implementation-applications-competitive-programming/", kind: "article", source: "GeeksforGeeks" },
+      { label: "USACO Guide — Prefix Sums", url: "https://usaco.guide/silver/prefix-sums", kind: "article", source: "USACO Guide" },
+    ],
+  },
+  "sliding-window": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53ldVwtstag2TL4HQhAnC8ATf", channel: "NeetCode", title: "NeetCode — Sliding Window playlist" },
+      { kind: "video", id: "MK-NZ4hN7rs", channel: "Striver", title: "Striver — Sliding Window & Two Pointer Concept" },
+    ],
+    resources: [
+      { label: "Sliding Window Technique", url: "https://www.geeksforgeeks.org/window-sliding-technique/", kind: "article", source: "GeeksforGeeks" },
+      { label: "Sliding Window master template", url: "https://leetcode.com/discuss/study-guide/657507/Sliding-Window-for-Beginners-Problems-or-Template-or-Sample-Solutions", kind: "cheatsheet", source: "LeetCode discuss" },
+    ],
+  },
+  "hashmap-frequency": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53lfxD6l5pAGvCD4nPvWKU8Qo", channel: "NeetCode", title: "NeetCode — Arrays & Hashing playlist" },
+    ],
+    resources: [
+      { label: "Hashing Data Structure", url: "https://www.geeksforgeeks.org/hashing-data-structure/", kind: "article", source: "GeeksforGeeks" },
+      { label: "CP-Algorithms — Hashing", url: "https://cp-algorithms.com/string/string-hashing.html", kind: "article", source: "CP-Algorithms" },
+    ],
+  },
+  "monotonic-stack": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53leOBgcVsJBEGrHPd_7x_koV", channel: "NeetCode", title: "NeetCode — Stack playlist" },
+      { kind: "video", id: "68a1Dc_qVq4", channel: "NeetCode", title: "NeetCode — Daily Temperatures (Monotonic Stack)" },
+    ],
+    resources: [
+      { label: "Monotonic Stack template & problems", url: "https://leetcode.com/discuss/study-guide/2347639/A-comprehensive-guide-and-template-for-monotonic-stack-based-problems", kind: "cheatsheet", source: "LeetCode discuss" },
+      { label: "Next Greater Element", url: "https://www.geeksforgeeks.org/next-greater-element/", kind: "article", source: "GeeksforGeeks" },
+    ],
+  },
+  "fast-slow": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53ldBT_7QA8NVot7wjsuAHGq3", channel: "NeetCode", title: "NeetCode — Linked List playlist" },
+      { kind: "video", id: "gBTe7lFR3vc", channel: "NeetCode", title: "NeetCode — Linked List Cycle (Floyd's)" },
+    ],
+    resources: [
+      { label: "Floyd's Cycle Detection", url: "https://www.geeksforgeeks.org/detect-loop-in-a-linked-list/", kind: "article", source: "GeeksforGeeks" },
+      { label: "Cycle detection visualizer", url: "https://visualgo.net/en/list", kind: "visualizer", source: "VisuAlgo" },
+    ],
+  },
+  "reverse-list": {
+    extraVideos: [
+      { kind: "video", id: "G0_I-ZF0S38", channel: "NeetCode", title: "NeetCode — Reverse Linked List" },
+    ],
+    resources: [
+      { label: "Reverse a Linked List", url: "https://www.geeksforgeeks.org/reverse-a-linked-list/", kind: "article", source: "GeeksforGeeks" },
+      { label: "Linked List visualizer", url: "https://visualgo.net/en/list", kind: "visualizer", source: "VisuAlgo" },
+    ],
+  },
+  "tree-dfs": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53leF-vjHe5DFvbmBj0rvXjXk", channel: "NeetCode", title: "NeetCode — Trees playlist" },
+      { kind: "video", id: "hTM3phVI6YQ", channel: "NeetCode", title: "NeetCode — Maximum Depth of Binary Tree (DFS)" },
+    ],
+    resources: [
+      { label: "Tree Traversals", url: "https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/", kind: "article", source: "GeeksforGeeks" },
+      { label: "Binary Tree visualizer", url: "https://visualgo.net/en/bst", kind: "visualizer", source: "VisuAlgo" },
+    ],
+  },
+  "tree-bfs": {
+    extraVideos: [
+      { kind: "video", id: "6ZnyEApgFYg", channel: "NeetCode", title: "NeetCode — Binary Tree Level Order Traversal" },
+    ],
+    resources: [
+      { label: "Level Order Traversal", url: "https://www.geeksforgeeks.org/level-order-tree-traversal/", kind: "article", source: "GeeksforGeeks" },
+    ],
+  },
+  "graph-bfs-dfs": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53leAtnwDp2K7SykFYWfaOZ_r", channel: "NeetCode", title: "NeetCode — Graphs playlist" },
+      { kind: "playlist", id: "PLDV1Zeh2NRsDGO4--qE8yH72HFL1Km93P", channel: "WilliamFiset", title: "WilliamFiset — Graph Theory" },
+    ],
+    resources: [
+      { label: "Graph Data Structure", url: "https://www.geeksforgeeks.org/graph-data-structure-and-algorithms/", kind: "article", source: "GeeksforGeeks" },
+      { label: "CP-Algorithms — Graph traversal", url: "https://cp-algorithms.com/graph/breadth-first-search.html", kind: "article", source: "CP-Algorithms" },
+      { label: "Graph visualizer", url: "https://visualgo.net/en/dfsbfs", kind: "visualizer", source: "VisuAlgo" },
+    ],
+  },
+  "topo-sort": {
+    extraVideos: [
+      { kind: "video", id: "cIBFEhD77b4", channel: "WilliamFiset", title: "WilliamFiset — Topological Sort" },
+      { kind: "video", id: "EgI5nU9etnU", channel: "NeetCode", title: "NeetCode — Course Schedule (Topo Sort)" },
+    ],
+    resources: [
+      { label: "Topological Sorting", url: "https://www.geeksforgeeks.org/topological-sorting/", kind: "article", source: "GeeksforGeeks" },
+      { label: "CP-Algorithms — Topological Sort", url: "https://cp-algorithms.com/graph/topological-sort.html", kind: "article", source: "CP-Algorithms" },
+    ],
+  },
+  dijkstra: {
+    extraVideos: [
+      { kind: "video", id: "pSqmAO-m7Lk", channel: "WilliamFiset", title: "WilliamFiset — Dijkstra's Shortest Path" },
+      { kind: "video", id: "EFg3u_E6eHU", channel: "NeetCode", title: "NeetCode — Network Delay Time (Dijkstra)" },
+    ],
+    resources: [
+      { label: "Dijkstra's Algorithm", url: "https://cp-algorithms.com/graph/dijkstra.html", kind: "article", source: "CP-Algorithms" },
+      { label: "Dijkstra visualizer", url: "https://visualgo.net/en/sssp", kind: "visualizer", source: "VisuAlgo" },
+    ],
+  },
+  knapsack: {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53ldBT_7QA8NVot7wjsuAHGq3", channel: "NeetCode", title: "NeetCode — DP playlist" },
+      { kind: "video", id: "8LusJS5-AGo", channel: "TusharRoy", title: "Tushar Roy — 0/1 Knapsack" },
+    ],
+    resources: [
+      { label: "0/1 Knapsack Problem", url: "https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/", kind: "article", source: "GeeksforGeeks" },
+      { label: "CP-Algorithms — Knapsack", url: "https://cp-algorithms.com/dynamic_programming/knapsack.html", kind: "article", source: "CP-Algorithms" },
+    ],
+  },
+  lis: {
+    extraVideos: [
+      { kind: "video", id: "cjWnW0hdF1Y", channel: "NeetCode", title: "NeetCode — Longest Increasing Subsequence" },
+      { kind: "video", id: "S9oUiVYEq7E", channel: "TusharRoy", title: "Tushar Roy — Longest Increasing Subsequence O(n log n)" },
+    ],
+    resources: [
+      { label: "Longest Increasing Subsequence", url: "https://cp-algorithms.com/sequences/longest_increasing_subsequence.html", kind: "article", source: "CP-Algorithms" },
+      { label: "LIS with patience sorting", url: "https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/", kind: "article", source: "GeeksforGeeks" },
+    ],
+  },
+  mcm: {
+    extraVideos: [
+      { kind: "video", id: "prx1psByp7U", channel: "TusharRoy", title: "Tushar Roy — Matrix Chain Multiplication" },
+    ],
+    resources: [
+      { label: "Matrix Chain Multiplication", url: "https://www.geeksforgeeks.org/matrix-chain-multiplication-dp-8/", kind: "article", source: "GeeksforGeeks" },
+      { label: "Partition DP guide", url: "https://leetcode.com/discuss/study-guide/1490065/Interval-DP-Study-Guide", kind: "cheatsheet", source: "LeetCode discuss" },
+    ],
+  },
+  backtracking: {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53lf5C3HSjCnyFghlW0G1HHXo", channel: "NeetCode", title: "NeetCode — Backtracking playlist" },
+    ],
+    resources: [
+      { label: "Backtracking Algorithms", url: "https://www.geeksforgeeks.org/backtracking-algorithms/", kind: "article", source: "GeeksforGeeks" },
+      { label: "Backtracking master template", url: "https://leetcode.com/discuss/study-guide/1405817/Backtracking-algorithm-%2B-problems-to-practice", kind: "cheatsheet", source: "LeetCode discuss" },
+    ],
+  },
+  "binary-search": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53lcvx_tjrr_m2lgD2NsRHlNO", channel: "NeetCode", title: "NeetCode — Binary Search playlist" },
+    ],
+    resources: [
+      { label: "Binary Search", url: "https://cp-algorithms.com/num_methods/binary_search.html", kind: "article", source: "CP-Algorithms" },
+      { label: "Binary Search 101", url: "https://leetcode.com/discuss/study-guide/786126/Python-Powerful-Ultimate-Binary-Search-Template.-Solved-many-problems", kind: "cheatsheet", source: "LeetCode discuss" },
+    ],
+  },
+  "bs-on-answer": {
+    extraVideos: [
+      { kind: "video", id: "U-tKk6mFA1Y", channel: "NeetCode", title: "NeetCode — Koko Eating Bananas" },
+    ],
+    resources: [
+      { label: "Binary Search on Answer", url: "https://usaco.guide/silver/binary-search", kind: "article", source: "USACO Guide" },
+    ],
+  },
+  "bit-tricks": {
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53lfQmTEztbgdp8ALEoydvnRQ", channel: "NeetCode", title: "NeetCode — Bit Manipulation playlist" },
+      { kind: "video", id: "7jkIUgLC29I", channel: "Errichto", title: "Errichto — Bitwise operations (part 1)" },
+    ],
+    resources: [
+      { label: "Bit Manipulation", url: "https://cp-algorithms.com/algebra/bit-manipulation.html", kind: "article", source: "CP-Algorithms" },
+      { label: "Bit tricks for competitive programming", url: "https://www.geeksforgeeks.org/bits-manipulation-important-tactics/", kind: "article", source: "GeeksforGeeks" },
+    ],
+  },
+};
+
+// Merge extras onto every pattern (kept side-by-side so the base list above stays readable)
+for (const p of PATTERNS) {
+  const extra = EXTRAS[p.id];
+  if (extra) {
+    p.extraVideos = extra.extraVideos;
+    p.resources = extra.resources;
+  }
+}
+
+export const PATTERNS_BY_ID: Record<string, Pattern> = Object.fromEntries(PATTERNS.map((p) => [p.id, p]));
+export const TOPICS_BY_ID: Record<string, Topic> = Object.fromEntries(TOPICS.map((t) => [t.id, t]));
 
 export const ALL_PROBLEM_SLUGS: string[] = Array.from(
   new Set(PATTERNS.flatMap((p) => p.problems.map((q) => q.slug))),
 );
+
