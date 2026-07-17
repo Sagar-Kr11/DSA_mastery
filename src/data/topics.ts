@@ -900,13 +900,45 @@ const EXTRAS: Record<string, { extraVideos?: YouTubeRef[]; resources?: Resource[
   },
 };
 
+// CodeHelp (Love Babbar) — verified playlists from the CodeHelp YouTube channel.
+// Mapped to whichever playlist he treats as canonical for that pattern.
+const CODEHELP: Record<string, YouTubeRef> = {
+  "two-pointers":        { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Arrays)" },
+  kadane:                { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Arrays / Kadane)" },
+  "prefix-sum":          { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Prefix Sum)" },
+  "sliding-window":      { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Sliding Window)" },
+  "hashmap-frequency":   { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Hashing)" },
+  "monotonic-stack":     { kind: "playlist", id: "PLDzeHZWIZsTrhXYYtx4z8-u8zA-DzuVsj", channel: "CodeHelp", title: "CodeHelp — Stack & Queue by Love Babbar" },
+  "fast-slow":           { kind: "playlist", id: "PLDzeHZWIZsTr54_TH_NK4ibFojS4mmQA6", channel: "CodeHelp", title: "CodeHelp — Linked List by Love Babbar" },
+  "reverse-list":        { kind: "playlist", id: "PLDzeHZWIZsTr54_TH_NK4ibFojS4mmQA6", channel: "CodeHelp", title: "CodeHelp — Linked List by Love Babbar" },
+  "tree-dfs":            { kind: "playlist", id: "PLDzeHZWIZsTo87y1ytEAqp7wYlEP3nner", channel: "CodeHelp", title: "CodeHelp — Binary Trees by Love Babbar" },
+  "tree-bfs":            { kind: "playlist", id: "PLDzeHZWIZsTo87y1ytEAqp7wYlEP3nner", channel: "CodeHelp", title: "CodeHelp — Binary Trees by Love Babbar" },
+  "graph-bfs-dfs":       { kind: "playlist", id: "PLDzeHZWIZsTobi35C3I-tKB3tRDX6YxuA", channel: "CodeHelp", title: "CodeHelp — Graph Series by Love Babbar" },
+  "topo-sort":           { kind: "playlist", id: "PLDzeHZWIZsTobi35C3I-tKB3tRDX6YxuA", channel: "CodeHelp", title: "CodeHelp — Graph Series by Love Babbar" },
+  dijkstra:              { kind: "playlist", id: "PLDzeHZWIZsTobi35C3I-tKB3tRDX6YxuA", channel: "CodeHelp", title: "CodeHelp — Graph Series (Dijkstra)" },
+  knapsack:              { kind: "playlist", id: "PLDzeHZWIZsTomOPnCiU3J95WufjE36wsb", channel: "CodeHelp", title: "CodeHelp — DP Series by Babbar" },
+  lis:                   { kind: "playlist", id: "PLDzeHZWIZsTomOPnCiU3J95WufjE36wsb", channel: "CodeHelp", title: "CodeHelp — DP Series (LIS)" },
+  mcm:                   { kind: "playlist", id: "PLDzeHZWIZsTomOPnCiU3J95WufjE36wsb", channel: "CodeHelp", title: "CodeHelp — DP Series (MCM / Partition DP)" },
+  backtracking:          { kind: "playlist", id: "PLDzeHZWIZsTq8KwpV5ipe5-ncApOTEL9k", channel: "CodeHelp", title: "CodeHelp — Backtracking by Love Babbar" },
+  "binary-search":       { kind: "playlist", id: "PLDzeHZWIZsTp4pb_WBRahP1tnipLuX9qM", channel: "CodeHelp", title: "CodeHelp — Searching & Sorting by Love Babbar" },
+  "bs-on-answer":        { kind: "playlist", id: "PLDzeHZWIZsTp4pb_WBRahP1tnipLuX9qM", channel: "CodeHelp", title: "CodeHelp — Searching & Sorting (BS on Answer)" },
+  "bit-tricks":          { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Bit Manipulation)" },
+  "number-theory-basics":{ kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Maths)" },
+  "pattern-printing":    { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Patterns)" },
+  "string-basics":       { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Strings)" },
+  "matrix-basics":       { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (2-D Arrays)" },
+  "recursion-basics":    { kind: "playlist", id: "PLDzeHZWIZsTqBmRGnsCOGNDG5FY0G04Td", channel: "CodeHelp", title: "CodeHelp — Recursion Series by Love Babbar" },
+};
+
 // Merge extras onto every pattern (kept side-by-side so the base list above stays readable)
 for (const p of PATTERNS) {
   const extra = EXTRAS[p.id];
-  if (extra) {
-    p.extraVideos = extra.extraVideos;
-    p.resources = extra.resources;
-  }
+  const codehelp = CODEHELP[p.id];
+  const extraVideos: YouTubeRef[] = [];
+  if (extra?.extraVideos) extraVideos.push(...extra.extraVideos);
+  if (codehelp) extraVideos.push(codehelp);
+  if (extraVideos.length) p.extraVideos = extraVideos;
+  if (extra?.resources) p.resources = extra.resources;
 }
 
 export const PATTERNS_BY_ID: Record<string, Pattern> = Object.fromEntries(PATTERNS.map((p) => [p.id, p]));
