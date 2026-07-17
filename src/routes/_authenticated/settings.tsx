@@ -10,7 +10,18 @@ import { toast } from "sonner";
 import { RefreshCw, LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/settings")({
-  head: () => ({ meta: [{ title: "Settings — DSA Mastery" }, { name: "description", content: "LeetCode username, sync, sign out." }] }),
+  head: () => {
+    const title = "Settings — LeetCode sync & account | DSA Mastery";
+    const description = "Manage your DSA Mastery account: set your LeetCode username, trigger a fresh solved-problems sync, and sign out securely from any device.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: SettingsPage,
 });
 

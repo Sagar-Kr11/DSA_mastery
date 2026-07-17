@@ -47,7 +47,7 @@ function TopicPage() {
             <Link key={p.id} to="/patterns/$patternId" params={{ patternId: p.id }} className="group">
               <GlassCard className="h-full p-5 transition group-hover:glow-ring">
                 <div className="flex items-start justify-between">
-                  <h3 className="text-lg font-semibold">{p.name}</h3>
+                  <h2 className="text-lg font-semibold">{p.name}</h2>
                   <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground">{p.logicType}</p>

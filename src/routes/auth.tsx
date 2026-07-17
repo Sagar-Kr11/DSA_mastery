@@ -7,7 +7,18 @@ import { toast } from "sonner";
 import { Mail } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — DSA Mastery" }, { name: "description", content: "Sign in to save streaks and sync LeetCode." }] }),
+  head: () => {
+    const title = "Sign in — Save streaks & sync LeetCode | DSA Mastery";
+    const description = "Sign in to DSA Mastery with Google or email to sync your LeetCode solves, save daily streaks, and pick up your pattern practice across devices.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
   component: AuthPage,
 });
 
