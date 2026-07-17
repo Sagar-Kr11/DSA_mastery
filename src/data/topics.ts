@@ -1,9 +1,28 @@
 export type Difficulty = "Easy" | "Medium" | "Hard";
-export type Channel = "Striver" | "AdityaVerma" | "AbdulBari" | "Kunal" | "ApnaCollege";
+export type Channel =
+  | "Striver"
+  | "AdityaVerma"
+  | "AbdulBari"
+  | "Kunal"
+  | "ApnaCollege"
+  | "NeetCode"
+  | "TusharRoy"
+  | "WilliamFiset"
+  | "Errichto"
+  | "freeCodeCamp"
+  | "MIT";
 
 export type YouTubeRef =
   | { kind: "video"; id: string; channel: Channel; title: string }
   | { kind: "playlist"; id: string; channel: Channel; title: string };
+
+export type ResourceKind = "article" | "visualizer" | "book" | "cheatsheet" | "docs";
+export type Resource = {
+  label: string;
+  url: string;
+  kind: ResourceKind;
+  source: string; // e.g. "GeeksforGeeks", "CP-Algorithms"
+};
 
 export type FlowStep = { id: string; label: string; next?: string[] };
 
@@ -19,7 +38,9 @@ export type Pattern = {
   name: string;
   logicType: string;
   companies: string[];
-  youtube: YouTubeRef;
+  youtube: YouTubeRef; // primary (kept for backward compat)
+  extraVideos?: YouTubeRef[]; // additional creators for the same pattern
+  resources?: Resource[]; // articles, visualizers, docs
   flow: FlowStep[];
   problems: Problem[];
 };
