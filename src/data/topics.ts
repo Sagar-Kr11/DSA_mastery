@@ -671,6 +671,7 @@ export const CHANNEL_LANGUAGES: Record<Channel, Language[]> = {
 };
 
 export function videoLanguages(v: YouTubeRef): Language[] {
+  if (v.languages && v.languages.length) return v.languages;
   return CHANNEL_LANGUAGES[v.channel] ?? [];
 }
 
