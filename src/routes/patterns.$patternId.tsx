@@ -136,16 +136,11 @@ function PatternPage() {
           <section className="mt-8">
             <div className="mb-3 flex items-baseline justify-between">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Recall drill</h2>
-              <span className="text-[11px] text-muted-foreground">Type the missing tokens to burn them into memory.</span>
+              <span className="text-[11px] text-muted-foreground">Pick a problem, then type the missing tokens.</span>
             </div>
-            <div className="grid grid-cols-1 gap-4">
-              {drills.map((d) => (
-                <GlassCard key={d.id} className="p-5">
-                  <h3 className="mb-3 text-sm font-medium text-foreground">{d.title}</h3>
-                  <RecallDrill patternId={patternId} drill={d} signedIn={signedIn} />
-                </GlassCard>
-              ))}
-            </div>
+            <GlassCard className="p-5">
+              <RecallDrill patternId={patternId} drills={drills} signedIn={signedIn} />
+            </GlassCard>
             {!signedIn && (
               <p className="mt-2 text-xs text-muted-foreground">
                 <Link to="/auth" className="text-primary hover:underline">Sign in</Link> to save your drill scores to the tracker.
