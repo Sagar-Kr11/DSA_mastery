@@ -1,13 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { getSolved } from "@/lib/solved.functions";
 import { getDrillProgress } from "@/lib/drills.functions";
+import { syncLeetCode } from "@/lib/leetcode.functions";
 import { GlassCard } from "@/components/GlassCard";
 import { Heatmap, computeStreaks } from "@/components/Heatmap";
-import { Flame, Trophy, CheckCircle2, Brain } from "lucide-react";
+import { Flame, Trophy, CheckCircle2, Brain, Signal } from "lucide-react";
 import { PATTERNS } from "@/data/topics";
 
 export const Route = createFileRoute("/tracker")({
@@ -48,10 +49,26 @@ function TrackerPage() {
     enabled: !!signedIn,
   });
 
+  // Auto-sync LeetCode once per session so tracker stays fresh.
+  const qc = useQueryClient();
+  const sync = useServerFn(syncLeetCode);
+  const syncMut = useMutation({
+    mutationFn: () => sync(),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["solved"] }),
+  });
+  const autoRan = useRef(false);
+  useEffect(() => {
+    if (autoRan.current || !signedIn) return;
+    autoRan.current = true;
+    syncMut.mutate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signedIn]);
+
   const rows = solvedQ.data ?? [];
   const dates = rows.map((r) => r.solved_at);
   const streaks = computeStreaks(dates);
   const drillsMastered = (drillsQ.data ?? []).filter((r) => r.total > 0 && r.correct === r.total).length;
+  const lcTotal = syncMut.data && "totalSolved" in syncMut.data ? syncMut.data.totalSolved : null;
 
   // Build slug -> pattern lookup for display
   const slugToPatterns: Record<string, string[]> = {};
@@ -79,9 +96,25 @@ function TrackerPage() {
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard icon={<Flame className="h-4 w-4" />} label="Current streak" value={streaks.current} suffix="days" />
         <StatCard icon={<Trophy className="h-4 w-4" />} label="Longest streak" value={streaks.longest} suffix="days" />
-        <StatCard icon={<CheckCircle2 className="h-4 w-4" />} label="Total solved" value={rows.length} />
+        <StatCard icon={<CheckCircle2 className="h-4 w-4" />} label="Tracked solves" value={rows.length} />
         <StatCard icon={<Brain className="h-4 w-4" />} label="Drills mastered" value={drillsMastered} />
       </div>
+
+      {lcTotal != null && lcTotal > rows.length && (
+        <GlassCard className="mt-4 flex items-start gap-3 p-4">
+          <Signal className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+          <div className="text-sm">
+            <p>
+              LeetCode reports <b>{lcTotal}</b> lifetime accepted solves, but only <b>{rows.length}</b> are individually mapped here.
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              To map every solve to a pattern, turn on <b>"Show recent AC submissions"</b> in your{" "}
+              <a href="https://leetcode.com/profile/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">LeetCode profile settings</a>,
+              then re-sync from <Link to="/settings" className="text-primary hover:underline">Settings</Link>.
+            </p>
+          </div>
+        </GlassCard>
+      )}
 
       <GlassCard className="mt-6 p-5">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Activity — last 365 days</h2>
