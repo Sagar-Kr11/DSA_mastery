@@ -14,8 +14,8 @@ export type Channel =
   | "MIT";
 
 export type YouTubeRef =
-  | { kind: "video"; id: string; channel: Channel; title: string }
-  | { kind: "playlist"; id: string; channel: Channel; title: string };
+  | { kind: "video"; id: string; channel: Channel; title: string; languages?: ("C++" | "Java" | "Python")[] }
+  | { kind: "playlist"; id: string; channel: Channel; title: string; languages?: ("C++" | "Java" | "Python")[] };
 
 export type ResourceKind = "article" | "visualizer" | "book" | "cheatsheet" | "docs";
 export type Resource = {
@@ -671,6 +671,7 @@ export const CHANNEL_LANGUAGES: Record<Channel, Language[]> = {
 };
 
 export function videoLanguages(v: YouTubeRef): Language[] {
+  if (v.languages && v.languages.length) return v.languages;
   return CHANNEL_LANGUAGES[v.channel] ?? [];
 }
 
@@ -957,13 +958,37 @@ const CODEHELP: Record<string, YouTubeRef> = {
   "recursion-basics":    { kind: "playlist", id: "PLDzeHZWIZsTqBmRGnsCOGNDG5FY0G04Td", channel: "CodeHelp", title: "CodeHelp — Recursion Series by Love Babbar" },
 };
 
+// CodeHelp — Java DSA Series (Hindi). Hand-picked individual lectures whose
+// titles map to each pattern. The series is still in progress on the channel
+// (as of authoring: 72 lectures, up to backtracking intro), so patterns not
+// yet covered by a dedicated Java lecture stay with the C++ playlist above.
+// Verified against playlist PLDzeHZWIZsTqNW1gvXXAicBgku9uPZeOC on the
+// CodeHelp - by Babbar channel (UCldyi11QYNXYXiLjVbyw5dA).
+const CODEHELP_JAVA: Record<string, YouTubeRef> = {
+  "pattern-printing":     { kind: "video", id: "AWHn2IimUiY", channel: "CodeHelp", title: "CodeHelp Java — Solve any PATTERN Printing Problem (L11)", languages: ["Java"] },
+  "string-basics":        { kind: "video", id: "_hvBbiMRoo0", channel: "CodeHelp", title: "CodeHelp Java — Strings in Java (L14)", languages: ["Java"] },
+  "number-theory-basics": { kind: "video", id: "ktEyWsU7G94", channel: "CodeHelp", title: "CodeHelp Java — Basic Maths for DSA (L15)", languages: ["Java"] },
+  "bit-tricks":           { kind: "video", id: "MBv6HPXKUjU", channel: "CodeHelp", title: "CodeHelp Java — Bitwise Operators in Java (L26)", languages: ["Java"] },
+  "prefix-sum":           { kind: "video", id: "YOiBIsSkNLo", channel: "CodeHelp", title: "CodeHelp Java — Array Problem Solving Part-1 (L27)", languages: ["Java"] },
+  "two-pointers":         { kind: "video", id: "qB781Qqi4Cg", channel: "CodeHelp", title: "CodeHelp Java — Array Manipulation Problems (L28)", languages: ["Java"] },
+  "hashmap-frequency":    { kind: "video", id: "GS-7B21Ouh8", channel: "CodeHelp", title: "CodeHelp Java — Missing Elements from Array of Duplicates (L31)", languages: ["Java"] },
+  kadane:                 { kind: "video", id: "1EK1D1b9mB8", channel: "CodeHelp", title: "CodeHelp Java — Kadane's Algorithm (L32)", languages: ["Java"] },
+  "matrix-basics":        { kind: "video", id: "XE-f4jKCsak", channel: "CodeHelp", title: "CodeHelp Java — Solving 2D Array Problems (L33)", languages: ["Java"] },
+  "binary-search":        { kind: "video", id: "LfeH5aFeP7E", channel: "CodeHelp", title: "CodeHelp Java — Binary Search in 1 Video (L36)", languages: ["Java"] },
+  "bs-on-answer":         { kind: "video", id: "llTL_-2DEXI", channel: "CodeHelp", title: "CodeHelp Java — Binary Search on Answers Pattern (L40)", languages: ["Java"] },
+  "recursion-basics":     { kind: "video", id: "2kS5XRW6cpY", channel: "CodeHelp", title: "CodeHelp Java — Recursion Basics (L54)", languages: ["Java"] },
+  backtracking:           { kind: "video", id: "Xkxf5Hy10_8", channel: "CodeHelp", title: "CodeHelp Java — Intro to Backtracking (L71)", languages: ["Java"] },
+};
+
 // Merge extras onto every pattern (kept side-by-side so the base list above stays readable)
 for (const p of PATTERNS) {
   const extra = EXTRAS[p.id];
   const codehelp = CODEHELP[p.id];
+  const codehelpJava = CODEHELP_JAVA[p.id];
   const extraVideos: YouTubeRef[] = [];
   if (extra?.extraVideos) extraVideos.push(...extra.extraVideos);
   if (codehelp) extraVideos.push(codehelp);
+  if (codehelpJava) extraVideos.push(codehelpJava);
   if (extraVideos.length) p.extraVideos = extraVideos;
   if (extra?.resources) p.resources = extra.resources;
 }
