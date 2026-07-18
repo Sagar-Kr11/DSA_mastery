@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, RotateCcw, Eye } from "lucide-react";
+import { Check, RotateCcw, Eye, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import type { Drill, DrillLanguage, DrillSnippet } from "@/data/drills";
 import { saveDrillAttempt } from "@/lib/drills.functions";
