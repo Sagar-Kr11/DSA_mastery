@@ -1,60 +1,59 @@
-# Per-problem recall drills
+## Goal
 
-Turn the current one-drill-per-pattern into a tabbed set where each LeetCode problem listed under a pattern has its own drill in C++/Java/Python — built on the existing pattern skeleton with problem-specific blanks (condition, update, return).
+Replace the current "reused pattern skeleton" recall drills with a **unique fill-in-the-blank drill per practice problem**, in C++, Java, and Python — so each problem teaches its own key lines instead of showing the same template with a renamed title.
 
-## What changes for the user
+## Why the current version feels weak
 
-On every pattern page, the Recall Drill section shows:
-- A row of **problem tabs** (one per problem in `pattern.problems`) — e.g. for Sliding Window: `Max Sum Size K` · `Longest Substring w/o Repeat` · `Min Window Substring` …
-- Below tabs: the existing **language chips** (C++ / Java / Python).
-- Below that: the code template with blanks, unchanged UX (validate, reveal, reset, save score).
-- Progress saved per (pattern, problem, language) so switching tabs preserves state and the Tracker "Drills mastered" tile counts each problem as its own drill.
+`src/data/drills.ts` uses `cloneDrill(pattern, problem)` which reuses the pattern's template and just relabels the title. Every problem under a pattern shows identical code with the same blanks, so switching tabs teaches nothing new.
 
-## Data model
+## What changes
 
-`src/data/drills.ts`:
-- Keep `Drill` shape. Add a new export:
-  ```ts
-  export type PatternDrills = {
-    patternId: string;
-    drills: Drill[];   // one per problem; drill.id === problem.slug
-  };
-  export const DRILLS: Record<string, Drill[]>  // patternId → array of drills
-  ```
-- Replace current `DRILLS: Record<string, Drill>` (single) with `Record<string, Drill[]>` (array). First drill in each array is the existing pattern-skeleton drill (kept, retitled to the canonical problem, e.g. Sliding Window's stays under `maximum-subarray-of-size-k` if applicable, otherwise under the first `problems[]` slug).
-- For each remaining problem in every pattern's `problems[]`, author a `Drill` with three snippets (C++/Java/Python). Skeleton is copied from the pattern's canonical drill; only the parts that change per problem are re-blanked (comparison operator, window-shrink condition, aggregation, return value).
+### 1. Data model: one authored drill per problem
 
-Coverage target: every problem in `pattern.problems` across all 25 patterns. Approximate volume: ~100 problems × 3 languages ≈ 300 snippets. Authored in one pass in `drills.ts`; no schema change.
+Rewrite `src/data/drills.ts` so `DRILLS[patternId]` is an array where **each entry is hand-authored for a specific problem**, not cloned:
 
-## UI
+```ts
+type Drill = {
+  id: string;              // problem slug, e.g. "two-sum"
+  patternId: string;
+  problemTitle: string;
+  problemUrl: string;      // LeetCode / GFG link
+  snippets: { language: 'cpp'|'java'|'python'; code: string; blanks: Blank[] }[];
+};
+```
 
-`src/components/RecallDrill.tsx`:
-- Accept `drills: Drill[]` instead of `drill: Drill`.
-- Add a horizontal, scrollable **problem tab bar** above the existing language chips. Tab label = problem title (from `pattern.problems`, matched by `drill.id === problem.slug`); falls back to `drill.title`.
-- Active tab state lives in the component; switching tabs remounts `SnippetRunner` via `key={drillId + lang}` so per-problem inputs reset cleanly.
-- Preserve current language-chip + validate + reveal + reset + save behavior unchanged.
-- Small "n / total mastered" pill next to tab bar showing how many problems in this pattern the signed-in user has scored ≥80% on (reads existing `pattern_drill_attempts`).
+Each snippet is the actual solution outline for that problem with 4–7 blanks on the meaningful tokens (the condition, the update, the return value) — not generic `i++` scaffolding.
 
-`src/routes/patterns.$patternId.tsx`:
-- Change `DRILLS[patternId]` lookup to expect an array; pass `drills` to `RecallDrill`. "Coming soon" placeholder only shows if the array is empty (won't happen after authoring).
+### 2. Coverage
 
-## Progress + Tracker
+Author drills for **every problem currently listed in `src/data/topics.ts`** across all 25 patterns (~100 problems × 3 languages ≈ 300 snippets). Each snippet:
 
-No DB migration. `pattern_drill_attempts` already keys on `(user_id, pattern_id, drill_id, language)`, so per-problem attempts slot in naturally.
+- Compiles mentally as a real solution to that specific problem
+- Highlights the 4–7 tokens most worth memorizing for interviews
+- Uses `{{blankId}}` placeholders with an `answers` map (accepts obvious synonyms, e.g. `len` / `size`)
 
-`src/routes/tracker.tsx`:
-- "Drills mastered" tile: existing query already counts distinct `(pattern_id, drill_id)` at ≥80%; it will automatically scale up as users complete per-problem drills. Update the tile's denominator to total drill count across all patterns (sum of `DRILLS[p].length`).
+### 3. UI (no visual redesign)
 
-## Rollout
+`src/components/RecallDrill.tsx` already has the tab bar, language switch, and validator. Only tweaks:
 
-Single change set:
-1. Rewrite `src/data/drills.ts` — new `Drill[]` map, author per-problem drills for all 25 patterns.
-2. Update `RecallDrill.tsx` for problem tabs.
-3. Update `patterns.$patternId.tsx` and `tracker.tsx` for the new shape.
-4. Typecheck; verify a couple of pattern pages in the preview.
+- Show the problem's LeetCode/GFG link next to the tab title
+- Keep the `key={drill.id}-${lang}` reset behavior
+- No layout changes
+
+### 4. Tracker
+
+`pattern_drill_attempts` already keys on `(pattern_id, drill_id)`. No schema change; the new per-problem `drill.id` values slot in directly.
 
 ## Technical notes
 
-- Blanks stay client-validated with `accepts` aliases — problem-specific answers (e.g. `s.count == k` vs `s.count <= 1`) get their own alias lists.
-- Tab bar uses `overflow-x-auto` with the existing chip styling for consistency; no new deps.
-- Because `drill.id` is the LeetCode slug, it doubles as a stable analytics key and matches the "Problems" list on the same page — clicking a problem could later scroll to its drill tab (out of scope for this pass).
+- File touched most heavily: `src/data/drills.ts` (full rewrite, large file — will be split into `src/data/drills/<patternId>.ts` and re-exported from an index to stay maintainable).
+- `RecallDrill.tsx`: ~10-line change to render the problem link.
+- `patterns.$patternId.tsx`: already passes the drill array, no change.
+- No DB migration, no new dependencies.
+
+## Scope check before I start
+
+Authoring ~100 problem-specific drills × 3 languages is a large content pass. Two questions so I build the right thing:
+
+1. **Blanks per snippet** — target **5 blanks** (tight, interview-recall focused) or **8–10 blanks** (more thorough, closer to writing the solution)?
+2. **Rollout** — do all 25 patterns in one pass, or start with the 6 most-visited patterns (Sliding Window, Two Pointers, Binary Search, BFS, DFS, DP-1D) and expand next turn?
