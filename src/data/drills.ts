@@ -1093,39 +1093,55 @@ const recursionBasicsDrill: Drill = {
   ],
 };
 
+import { PATTERNS_BY_ID } from "@/data/topics";
+
+// Reuse the pattern's canonical skeleton for every problem in the pattern,
+// giving each problem its own drill id (= problem slug) and title so the tab
+// bar can list them and the tracker stores per-problem attempts.
+function cloneDrill(base: Drill, id: string, title: string): Drill {
+  return { id, title, snippets: base.snippets };
+}
+
+function drillsForPattern(patternId: string, base: Drill, extras: Drill[] = []): Drill[] {
+  const pattern = PATTERNS_BY_ID[patternId];
+  if (!pattern) return [base, ...extras];
+  const cloned = pattern.problems.map((p) => cloneDrill(base, p.slug, p.title));
+  return [...cloned, ...extras];
+}
+
 export const DRILLS: Record<string, Drill[]> = {
   // Arrays
-  "two-pointers": [twoPointersDrill],
-  kadane: [kadaneDrill],
-  "prefix-sum": [prefixSumDrill],
-  "sliding-window": [slidingWindowDrill],
-  "hashmap-frequency": [hashmapFreqDrill],
-  "monotonic-stack": [monotonicStackDrill],
+  "two-pointers": drillsForPattern("two-pointers", twoPointersDrill),
+  kadane: drillsForPattern("kadane", kadaneDrill),
+  "prefix-sum": drillsForPattern("prefix-sum", prefixSumDrill),
+  "sliding-window": drillsForPattern("sliding-window", slidingWindowDrill),
+  "hashmap-frequency": drillsForPattern("hashmap-frequency", hashmapFreqDrill),
+  "monotonic-stack": drillsForPattern("monotonic-stack", monotonicStackDrill),
   // Linked list
-  "fast-slow": [fastSlowDrill],
-  "reverse-list": [reverseListDrill],
+  "fast-slow": drillsForPattern("fast-slow", fastSlowDrill),
+  "reverse-list": drillsForPattern("reverse-list", reverseListDrill),
   // Trees
-  "tree-dfs": [treeDfsDrill],
-  "tree-bfs": [treeBfsDrill],
-  // Graphs
-  "graph-bfs-dfs": [bfsDrill, dfsDrill],
-  "topo-sort": [topoSortDrill],
-  dijkstra: [dijkstraDrill],
+  "tree-dfs": drillsForPattern("tree-dfs", treeDfsDrill),
+  "tree-bfs": drillsForPattern("tree-bfs", treeBfsDrill),
+  // Graphs — BFS skeleton per problem, plus a dedicated DFS reference drill.
+  "graph-bfs-dfs": [...drillsForPattern("graph-bfs-dfs", bfsDrill), dfsDrill],
+  "topo-sort": drillsForPattern("topo-sort", topoSortDrill),
+  dijkstra: drillsForPattern("dijkstra", dijkstraDrill),
   // DP
-  knapsack: [dp1dDrill],
-  lis: [lisDrill],
-  mcm: [mcmDrill],
+  knapsack: drillsForPattern("knapsack", dp1dDrill),
+  lis: drillsForPattern("lis", lisDrill),
+  mcm: drillsForPattern("mcm", mcmDrill),
   // Backtracking
-  backtracking: [backtrackingDrill],
+  backtracking: drillsForPattern("backtracking", backtrackingDrill),
   // Search
-  "binary-search": [binarySearchDrill],
-  "bs-on-answer": [bsAnswerDrill],
+  "binary-search": drillsForPattern("binary-search", binarySearchDrill),
+  "bs-on-answer": drillsForPattern("bs-on-answer", bsAnswerDrill),
   // Bit / Math
-  "bit-tricks": [bitTricksDrill],
-  "number-theory-basics": [numberTheoryDrill],
+  "bit-tricks": drillsForPattern("bit-tricks", bitTricksDrill),
+  "number-theory-basics": drillsForPattern("number-theory-basics", numberTheoryDrill),
   // Service-company placements
-  "pattern-printing": [patternPrintingDrill],
-  "string-basics": [stringBasicsDrill],
-  "matrix-basics": [matrixBasicsDrill],
-  "recursion-basics": [recursionBasicsDrill],
+  "pattern-printing": drillsForPattern("pattern-printing", patternPrintingDrill),
+  "string-basics": drillsForPattern("string-basics", stringBasicsDrill),
+  "matrix-basics": drillsForPattern("matrix-basics", matrixBasicsDrill),
+  "recursion-basics": drillsForPattern("recursion-basics", recursionBasicsDrill),
 };
