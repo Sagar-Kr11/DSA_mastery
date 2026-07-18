@@ -51,25 +51,35 @@ export function Heatmap({ solvedDates }: { solvedDates: string[] }) {
     return "bg-[oklch(0.8_0.19_200)] shadow-[0_0_12px_-2px_oklch(0.78_0.16_200/0.6)]";
   };
 
+  const COL = 15; // 12px cell + 3px gap
+  const ROW = 15;
+
   return (
     <div className="w-full overflow-x-auto">
       <div className="inline-flex flex-col gap-1">
-        <div className="flex gap-1 pl-6 text-[10px] text-muted-foreground">
-          {months.map((m, i) => {
-            const prev = months[i - 1]?.weekIndex ?? 0;
-            const gap = i === 0 ? m.weekIndex : m.weekIndex - prev;
-            return (
-              <span key={`${m.label}-${i}`} style={{ marginLeft: `${gap * 14}px` }} className="w-8">
+        <div className="flex gap-1">
+          <div className="w-6" />
+          <div className="relative h-4" style={{ width: `${weeks.length * COL}px` }}>
+            {months.map((m, i) => (
+              <span
+                key={`${m.label}-${i}`}
+                className="absolute top-0 text-[10px] text-muted-foreground"
+                style={{ left: `${m.weekIndex * COL}px` }}
+              >
                 {m.label}
               </span>
-            );
-          })}
+            ))}
+          </div>
         </div>
         <div className="flex gap-1">
-          <div className="flex flex-col justify-around text-[10px] text-muted-foreground pr-1">
-            <span>Mon</span>
-            <span>Wed</span>
-            <span>Fri</span>
+          <div className="flex flex-col gap-[3px] pr-1 text-[10px] leading-3 text-muted-foreground" style={{ height: `${7 * ROW - 3}px` }}>
+            <span className="h-3" />
+            <span className="h-3">Mon</span>
+            <span className="h-3" />
+            <span className="h-3">Wed</span>
+            <span className="h-3" />
+            <span className="h-3">Fri</span>
+            <span className="h-3" />
           </div>
           <div className="flex gap-[3px]">
             {weeks.map((week, wi) => (
