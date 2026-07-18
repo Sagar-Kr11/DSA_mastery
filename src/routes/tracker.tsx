@@ -76,10 +76,11 @@ function TrackerPage() {
       <h1 className="text-2xl font-bold tracking-tight">Your tracker</h1>
       <p className="mt-1 text-sm text-muted-foreground">Every solved problem — from LeetCode sync or manual checks.</p>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard icon={<Flame className="h-4 w-4" />} label="Current streak" value={streaks.current} suffix="days" />
         <StatCard icon={<Trophy className="h-4 w-4" />} label="Longest streak" value={streaks.longest} suffix="days" />
         <StatCard icon={<CheckCircle2 className="h-4 w-4" />} label="Total solved" value={rows.length} />
+        <StatCard icon={<Brain className="h-4 w-4" />} label="Drills mastered" value={drillsMastered} />
       </div>
 
       <GlassCard className="mt-6 p-5">
