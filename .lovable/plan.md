@@ -1,48 +1,36 @@
-## Goal
+## Root cause (verified)
 
-Rewrite `README.md` so it (a) reflects every feature we've shipped since the last README update and (b) reads like the user built the project themselves — no mention of Lovable, Lovable Cloud, Lovable AI, Lovable Publish, or the "Edit with Lovable" badge anywhere.
+I called LeetCode's public GraphQL `recentAcSubmissionList` for `Dimple_1106` just now and it returned `[]`. The last sync in your network logs also returned `{ synced: 0, reason: "empty" }`. The app's sync path is working — LeetCode is refusing to expose your recent accepted submissions publicly.
 
-## Changes to `README.md`
+This happens when, on leetcode.com:
+- **Profile → Edit Profile → "Show recent AC submissions"** is off, or
+- Your submissions are set to private / profile is private.
 
-1. **Rebrand the stack section** away from Lovable:
-   - Replace "Backend / Database: Lovable Cloud" with "Backend / Database: Supabase (Postgres, Auth, RLS)".
-   - Replace "Auth: Lovable Cloud Auth" with "Auth: Supabase Auth (Google OAuth + email/password)".
-   - Remove the "built with Lovable" GitHub-sync section entirely.
-   - Remove the "Edit with Lovable badge has been hidden" note from the Docker section.
+Without that toggle on, no third‑party (including this app) can read your solves — LeetCode has no authenticated API we can use here.
 
-2. **Update Features** to include everything added since the last README:
-   - Recall Drills — fill-in-the-blank code snippets in C++ / Java / Python for all 25 patterns, with per-blank validation, aliases, and score persistence.
-   - CodeHelp Java (Hindi) lectures — hand-picked per pattern from the Supreme DSA with Java series, wired into the language filter.
-   - LeetCode Patterns Roadmap page (`/roadmap/leetcode-patterns`) with topic grouping, difficulty distribution, and JSON-LD `ItemList` schema.
-   - SEO layer — per-route metadata, `robots.txt`, `llms.txt`, dynamic `sitemap.xml`, Google Search Console verification, and an authenticated `/seo` analytics dashboard (Clicks / Impressions / CTR).
-   - Tracker upgrades — "Drills mastered" tile alongside streaks and solved-heatmap.
+## What I'll do
 
-3. **Update Environment variables**:
-   - Rename the table to plain Supabase variables (`VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID`).
-   - Drop `LOVABLE_API_KEY` from the main table (and from Docker) since it is only used by hosted Lovable services that we're no longer surfacing to readers.
+### 1. Make the failure obvious in the UI
+- In `src/routes/_authenticated/settings.tsx`, when sync returns `reason: "empty"`, replace the soft toast with an inline warning card that says: "LeetCode returned 0 submissions for `<username>`. Enable **Show recent AC submissions** on your LeetCode profile, then retry." Include a direct link to `https://leetcode.com/profile/` settings and to the public profile URL so you can verify it's visible.
+- Add a "Test connection" button that calls the sync and shows the raw reason (`empty`, `leetcode-error`, `network-error`, `no-username`, `ok`) plus the count.
 
-4. **Update Database schema section**:
-   - Add `pattern_drill_attempts` (user_id, pattern_id, drill_id, language, correct, total, completed_at) alongside `profiles` and `solved_problems`.
-   - Keep the RLS note.
+### 2. Also pull the lifetime solved count as a fallback signal
+- Extend `syncLeetCode` in `src/lib/leetcode.functions.ts` to additionally query `matchedUser { submitStats { acSubmissionNum { difficulty count } } }`. This works even when recent AC is hidden and lets us show "LeetCode reports N total solved" on the tracker even when we can't map individual slugs.
+- Surface that number on `/tracker` next to "Total solved" so you can see LeetCode sees your account, even if slug‑level mapping is blocked.
 
-5. **Rewrite the Deploy section** as neutral self-hosting:
-   - Keep the Docker / docker-compose instructions (they're framework-agnostic).
-   - Remove references to "Lovable publish path", Cloudflare Workers preset, and the Lovable badge.
-   - Mention that the app also runs on any Node host that can serve a TanStack Start build (`bun run build` → `node .output/server/index.mjs`).
+### 3. Auto-sync on relevant screens
+- Trigger `syncLeetCode` on mount for `/tracker` and `/settings` (once per session, guarded by a ref) so you don't have to click Sync manually every time. Manual button stays for on‑demand refresh.
 
-6. **Rewrite "GitHub sync" → "Development workflow"**:
-   - Replace the Lovable/GitHub connect instructions with a plain "clone, install, run, push" workflow.
+### 4. Small correctness fix
+- Currently `syncLeetCode` skips upsert entirely when every returned slug is already marked `manual`. Change it to still refresh `solved_at` for `leetcode`-source rows so re‑solves update the heatmap.
 
-7. **Tone pass** across the whole file:
-   - First-person / project-author voice ("I built", "the project uses") — no "generated with", "built with Lovable", or "Lovable editor".
-   - Keep MIT license section and attribution paragraph (credits YouTube creators & external resources — that stays).
+## What this will NOT do
+- It won't magically read private submissions. If the LeetCode toggle stays off, individual problem mapping remains impossible from any external app. The lifetime count from `matchedUser` is the best we can do in that case.
 
-## Out of scope
+## Files touched
+- `src/lib/leetcode.functions.ts` — add `matchedUser` query, return `{ synced, reason, totalSolved? }`, tweak upsert filter.
+- `src/routes/_authenticated/settings.tsx` — inline diagnostic card, test-connection button, auto-sync on mount.
+- `src/routes/tracker.tsx` — show LeetCode‑reported total, auto-sync on mount.
 
-- No code changes. Only `README.md` is touched.
-- No changes to `LICENSE`, `Dockerfile`, `docker-compose.yml`, or any source file.
-
-## Verification
-
-- Re-read the final `README.md` and grep for `lovable` (case-insensitive) — expect zero matches.
-- Confirm every shipped feature above is represented in the Features list.
+## Your action item
+After I ship this, open `https://leetcode.com/Dimple_1106/` in an incognito window. If you don't see a "Recent AC" list there, flip **Show recent AC submissions** on in your LeetCode profile settings and hit Sync again — that's the switch that unblocks slug-level tracking.
