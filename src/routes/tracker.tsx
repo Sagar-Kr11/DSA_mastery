@@ -49,10 +49,26 @@ function TrackerPage() {
     enabled: !!signedIn,
   });
 
+  // Auto-sync LeetCode once per session so tracker stays fresh.
+  const qc = useQueryClient();
+  const sync = useServerFn(syncLeetCode);
+  const syncMut = useMutation({
+    mutationFn: () => sync(),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["solved"] }),
+  });
+  const autoRan = useRef(false);
+  useEffect(() => {
+    if (autoRan.current || !signedIn) return;
+    autoRan.current = true;
+    syncMut.mutate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signedIn]);
+
   const rows = solvedQ.data ?? [];
   const dates = rows.map((r) => r.solved_at);
   const streaks = computeStreaks(dates);
   const drillsMastered = (drillsQ.data ?? []).filter((r) => r.total > 0 && r.correct === r.total).length;
+  const lcTotal = syncMut.data && "totalSolved" in syncMut.data ? syncMut.data.totalSolved : null;
 
   // Build slug -> pattern lookup for display
   const slugToPatterns: Record<string, string[]> = {};
