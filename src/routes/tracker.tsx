@@ -4,9 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { getSolved } from "@/lib/solved.functions";
+import { getDrillProgress } from "@/lib/drills.functions";
 import { GlassCard } from "@/components/GlassCard";
 import { Heatmap, computeStreaks } from "@/components/Heatmap";
-import { Flame, Trophy, CheckCircle2 } from "lucide-react";
+import { Flame, Trophy, CheckCircle2, Brain } from "lucide-react";
 import { PATTERNS } from "@/data/topics";
 
 export const Route = createFileRoute("/tracker")({
@@ -40,9 +41,17 @@ function TrackerPage() {
     enabled: !!signedIn,
   });
 
+  const fetchDrills = useServerFn(getDrillProgress);
+  const drillsQ = useQuery({
+    queryKey: ["drill-progress"],
+    queryFn: () => fetchDrills(),
+    enabled: !!signedIn,
+  });
+
   const rows = solvedQ.data ?? [];
   const dates = rows.map((r) => r.solved_at);
   const streaks = computeStreaks(dates);
+  const drillsMastered = (drillsQ.data ?? []).filter((r) => r.total > 0 && r.correct === r.total).length;
 
   // Build slug -> pattern lookup for display
   const slugToPatterns: Record<string, string[]> = {};
