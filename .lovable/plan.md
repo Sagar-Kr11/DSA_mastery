@@ -1,70 +1,45 @@
-# Fill-in-the-Blanks Recall Drills
+## Why the "coming soon" placeholder shows up
 
-Add a "Recall drill" section to each pattern page. Users see a code template with key tokens blanked out (e.g., `while (left ___ right)`, `map.___(key, val)`), type the missing token, and get instant feedback. Language tabs (C++ / Java / Python) match the existing language filter. Progress saves to Lovable Cloud so it shows up on the tracker.
+`src/data/drills.ts` currently only exports drills for 8 pattern IDs:
+`sliding-window`, `two-pointers`, `kadane`, `binary-search`, `graph-bfs-dfs`,
+`tree-dfs`, `fast-slow`, `knapsack`. The pattern page falls back to the
+"Drill coming soon" placeholder for any pattern not in that map — that was
+an intentional scope cut in the original plan.
 
-## What it looks like
+There are 25 patterns total, so 17 currently show the placeholder.
 
-On `/patterns/:patternId`, below the video and above practice problems:
+## Plan
 
-```text
-┌─ Recall drill ──────────────── C++ | Java | Python ─┐
-│ // Sliding window — max sum of size k                │
-│ int sum = 0, best = 0;                               │
-│ for (int i = 0; i < k; i++) sum += arr[i];           │
-│ best = sum;                                          │
-│ for (int i = k; i < arr.___; i++) {   [n] ✓          │
-│   sum += arr[i] ___ arr[i - k];       [ - ]          │
-│   best = ___(best, sum);              [max]          │
-│ }                                                     │
-│                                                       │
-│ 2 / 3 correct  ·  [Reveal all]  [Reset]              │
-└──────────────────────────────────────────────────────┘
-```
+Add a C++/Java/Python drill for each remaining pattern in `src/data/drills.ts`
+and register it in the `DRILLS` map. No component, schema, or route changes —
+the existing `RecallDrill` component picks them up automatically.
 
-Each blank is a monospace input sized to the expected token. Correct = green ring + check. Wrong = red ring; second wrong attempt shows the answer inline. Tolerance: trim + case-insensitive + common alias list per blank (e.g., `size`/`length`/`len`).
+Patterns to author (grouped by topic):
 
-## Data model
+- Arrays: `prefix-sum`, `hashmap-frequency`, `monotonic-stack`
+- Linked List: `reverse-list`
+- Trees: `tree-bfs` (also give `tree-dfs` its own dedicated drill instead of reusing the graph DFS one)
+- Graphs: `topo-sort`, `dijkstra`
+- DP: `lis`, `mcm`
+- Recursion / Backtracking: `backtracking`
+- Search: `bs-on-answer`
+- Bit / Math: `bit-tricks`, `number-theory-basics`
+- Service-company placements: `pattern-printing`, `string-basics`, `matrix-basics`, `recursion-basics`
 
-Extend the `Pattern` type in `src/data/topics.ts`:
-
-```ts
-type Blank = { id: string; answer: string; accepts?: string[]; hint?: string };
-type DrillSnippet = { language: "C++" | "Java" | "Python"; template: string; blanks: Blank[] };
-type Drill = { id: string; title: string; snippets: DrillSnippet[] };
-// Pattern gains: drills?: Drill[]
-```
-
-`template` uses `{{blankId}}` placeholders; the renderer splits on those and injects inputs. Start with one drill per pattern in all 3 languages; author more later without code changes.
-
-## Backend (Lovable Cloud)
-
-New table `pattern_drill_attempts` for per-user progress:
-
-```text
-user_id uuid, pattern_id text, drill_id text, language text,
-correct int, total int, completed_at timestamptz
-PRIMARY KEY (user_id, pattern_id, drill_id, language)
-```
-
-RLS: user can read/write only their own rows. GRANT to authenticated + service_role.
-
-Server functions in `src/lib/drills.functions.ts`:
-- `getDrillProgress()` — returns all attempts for current user (used by tracker + pattern page).
-- `saveDrillAttempt({ patternId, drillId, language, correct, total })` — upsert.
-
-## Frontend
-
-- `src/components/RecallDrill.tsx` — renders one drill, handles language tabs, per-blank input state, validation, and calls `saveDrillAttempt` when the user finishes (all blanks attempted).
-- `src/routes/patterns.$patternId.tsx` — render `<RecallDrill>` for each entry in `pattern.drills`. Signed-out users can still practice; a small "Sign in to save" note replaces the save.
-- `src/routes/tracker.tsx` — add a "Drills mastered" tile (count of drills where correct === total).
-
-## Scope for this pass
-
-- Author drills for ~8 flagship patterns first (Sliding Window, Two Pointers, Kadane, Binary Search, BFS, DFS, DP 1-D, Fast/Slow pointers). Others get a "Drill coming soon" placeholder so the section doesn't look empty.
-- No new dependencies. Uses existing Tailwind + sonner.
+Each drill will follow the existing shape: one canonical snippet in all three
+languages with 3 blanks covering the tokens most likely to be forgotten
+(loop bounds, comparison operators, standard-library calls, recurrence terms).
+Aliases (`accepts`) are added where multiple correct spellings exist
+(e.g. `size` / `length`, `Math.max` / `max`).
 
 ## Technical notes
 
-- Validation is pure client-side comparison; server just records the score. Never send the answer key over the wire from the server.
-- Zod-validate the save payload (`patternId`, `drillId` non-empty; `language` enum; `correct` ≤ `total` ≤ 20).
-- Debounce saves: only persist on completion or explicit "Reset", not per keystroke.
+- File touched: `src/data/drills.ts` only.
+- `tree-dfs` currently reuses `dfsDrill`; replace with a tree-specific drill
+  (`root->left` / `root.left` / recursion on `root.left, root.right`) so tree
+  and graph patterns don't share identical content.
+- Keep each snippet ≤ ~10 lines and ≤ 3 blanks to match the current UX and
+  stay within the Zod cap (`total ≤ 20`).
+- No new dependencies, no schema change, no server-function change.
+- After edits, run typecheck to confirm the `DRILLS` map still satisfies
+  `Record<string, Drill[]>`.
