@@ -967,18 +967,20 @@ const CODEHELP: Record<string, YouTubeRef> = {
 const CODEHELP_JAVA: Record<string, YouTubeRef> = {
   "pattern-printing":     { kind: "video", id: "AWHn2IimUiY", channel: "CodeHelp", title: "CodeHelp Java — Solve any PATTERN Printing Problem (L11)", languages: ["Java"] },
   "string-basics":        { kind: "video", id: "_hvBbiMRoo0", channel: "CodeHelp", title: "CodeHelp Java — Strings in Java (L14)", languages: ["Java"] },
-  "number-theory-basics": { kind: "video", id: "ktEyWsU7G94", channel: "CodeHelp", title: "CodeHelp Java — Basic Maths for DSA (L15)", languages: ["Java"] },
+  "number-theory-basics": { kind: "video", id: "ktEyWsU7G94", channel: "CodeHelp", title: "CodeHelp Java — Basic Maths needed for DSA (L15)", languages: ["Java"] },
   "bit-tricks":           { kind: "video", id: "MBv6HPXKUjU", channel: "CodeHelp", title: "CodeHelp Java — Bitwise Operators in Java (L26)", languages: ["Java"] },
-  "prefix-sum":           { kind: "video", id: "YOiBIsSkNLo", channel: "CodeHelp", title: "CodeHelp Java — Array Problem Solving Part-1 (L27)", languages: ["Java"] },
-  "two-pointers":         { kind: "video", id: "qB781Qqi4Cg", channel: "CodeHelp", title: "CodeHelp Java — Array Manipulation Problems (L28)", languages: ["Java"] },
-  "hashmap-frequency":    { kind: "video", id: "GS-7B21Ouh8", channel: "CodeHelp", title: "CodeHelp Java — Missing Elements from Array of Duplicates (L31)", languages: ["Java"] },
-  kadane:                 { kind: "video", id: "1EK1D1b9mB8", channel: "CodeHelp", title: "CodeHelp Java — Kadane's Algorithm (L32)", languages: ["Java"] },
+  kadane:                 { kind: "video", id: "1EK1D1b9mB8", channel: "CodeHelp", title: "CodeHelp Java — Maximum Sum Contiguous Subarray / Kadane's Algorithm (L32)", languages: ["Java"] },
   "matrix-basics":        { kind: "video", id: "XE-f4jKCsak", channel: "CodeHelp", title: "CodeHelp Java — Solving 2D Array Problems (L33)", languages: ["Java"] },
   "binary-search":        { kind: "video", id: "LfeH5aFeP7E", channel: "CodeHelp", title: "CodeHelp Java — Binary Search in 1 Video (L36)", languages: ["Java"] },
   "bs-on-answer":         { kind: "video", id: "llTL_-2DEXI", channel: "CodeHelp", title: "CodeHelp Java — Binary Search on Answers Pattern (L40)", languages: ["Java"] },
   "recursion-basics":     { kind: "video", id: "2kS5XRW6cpY", channel: "CodeHelp", title: "CodeHelp Java — Recursion Basics (L54)", languages: ["Java"] },
   backtracking:           { kind: "video", id: "Xkxf5Hy10_8", channel: "CodeHelp", title: "CodeHelp Java — Intro to Backtracking (L71)", languages: ["Java"] },
+  // NOTE: `hashmap-frequency`, `prefix-sum`, and `two-pointers` intentionally
+  // omitted — CodeHelp's Java series (as of L72) has no dedicated lecture
+  // for these patterns. Those pages fall back to the C++ playlist so users
+  // aren't sent to an unrelated generic array/collection video.
 };
+
 
 // Merge extras onto every pattern (kept side-by-side so the base list above stays readable)
 for (const p of PATTERNS) {
