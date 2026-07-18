@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, RotateCcw, Eye } from "lucide-react";
+import { Check, RotateCcw, Eye, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import type { Drill, DrillLanguage, DrillSnippet } from "@/data/drills";
 import { saveDrillAttempt } from "@/lib/drills.functions";
@@ -58,6 +58,21 @@ export function RecallDrill({ patternId, drills, signedIn }: Props) {
           })}
         </div>
       )}
+
+      {drill.url && (
+        <div className="mb-2 flex items-center gap-2 text-[11px] text-muted-foreground">
+          <span className="font-medium text-foreground/80">{drill.title}</span>
+          <a
+            href={drill.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 hover:text-foreground hover:border-white/20"
+          >
+            open on LeetCode <ExternalLink className="h-2.5 w-2.5" />
+          </a>
+        </div>
+      )}
+
 
       <div className="mb-3 flex flex-wrap items-center gap-1.5">
         <span className="mr-1 text-[10px] uppercase tracking-wider text-muted-foreground">Language</span>
