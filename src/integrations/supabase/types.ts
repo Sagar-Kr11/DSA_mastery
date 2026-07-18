@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      pattern_drill_attempts: {
+        Row: {
+          completed_at: string
+          correct: number
+          drill_id: string
+          language: string
+          pattern_id: string
+          total: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          correct?: number
+          drill_id: string
+          language: string
+          pattern_id: string
+          total?: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          correct?: number
+          drill_id?: string
+          language?: string
+          pattern_id?: string
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

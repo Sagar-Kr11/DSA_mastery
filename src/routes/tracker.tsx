@@ -4,9 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { getSolved } from "@/lib/solved.functions";
+import { getDrillProgress } from "@/lib/drills.functions";
 import { GlassCard } from "@/components/GlassCard";
 import { Heatmap, computeStreaks } from "@/components/Heatmap";
-import { Flame, Trophy, CheckCircle2 } from "lucide-react";
+import { Flame, Trophy, CheckCircle2, Brain } from "lucide-react";
 import { PATTERNS } from "@/data/topics";
 
 export const Route = createFileRoute("/tracker")({
@@ -40,9 +41,17 @@ function TrackerPage() {
     enabled: !!signedIn,
   });
 
+  const fetchDrills = useServerFn(getDrillProgress);
+  const drillsQ = useQuery({
+    queryKey: ["drill-progress"],
+    queryFn: () => fetchDrills(),
+    enabled: !!signedIn,
+  });
+
   const rows = solvedQ.data ?? [];
   const dates = rows.map((r) => r.solved_at);
   const streaks = computeStreaks(dates);
+  const drillsMastered = (drillsQ.data ?? []).filter((r) => r.total > 0 && r.correct === r.total).length;
 
   // Build slug -> pattern lookup for display
   const slugToPatterns: Record<string, string[]> = {};
@@ -67,10 +76,11 @@ function TrackerPage() {
       <h1 className="text-2xl font-bold tracking-tight">Your tracker</h1>
       <p className="mt-1 text-sm text-muted-foreground">Every solved problem — from LeetCode sync or manual checks.</p>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard icon={<Flame className="h-4 w-4" />} label="Current streak" value={streaks.current} suffix="days" />
         <StatCard icon={<Trophy className="h-4 w-4" />} label="Longest streak" value={streaks.longest} suffix="days" />
         <StatCard icon={<CheckCircle2 className="h-4 w-4" />} label="Total solved" value={rows.length} />
+        <StatCard icon={<Brain className="h-4 w-4" />} label="Drills mastered" value={drillsMastered} />
       </div>
 
       <GlassCard className="mt-6 p-5">

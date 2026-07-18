@@ -3,9 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { PATTERNS_BY_ID, TOPICS_BY_ID, CHANNEL_LABELS, LANGUAGES, videoLanguages } from "@/data/topics";
 import type { YouTubeRef, Resource, Language } from "@/data/topics";
+import { DRILLS } from "@/data/drills";
 import { GlassCard } from "@/components/GlassCard";
 import { PatternFlow } from "@/components/PatternFlow";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
+import { RecallDrill } from "@/components/RecallDrill";
 import { getSolved, toggleSolved } from "@/lib/solved.functions";
 import { ArrowLeft, BookOpen, Check, ExternalLink, FileText, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -117,6 +119,42 @@ function PatternPage() {
           </GlassCard>
         </section>
       )}
+
+      {(() => {
+        const drills = DRILLS[patternId];
+        if (!drills || drills.length === 0) {
+          return (
+            <section className="mt-8">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Recall drill</h2>
+              <GlassCard className="p-5 text-sm text-muted-foreground">
+                Fill-in-the-blanks drill for this pattern is coming soon.
+              </GlassCard>
+            </section>
+          );
+        }
+        return (
+          <section className="mt-8">
+            <div className="mb-3 flex items-baseline justify-between">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Recall drill</h2>
+              <span className="text-[11px] text-muted-foreground">Type the missing tokens to burn them into memory.</span>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              {drills.map((d) => (
+                <GlassCard key={d.id} className="p-5">
+                  <h3 className="mb-3 text-sm font-medium text-foreground">{d.title}</h3>
+                  <RecallDrill patternId={patternId} drill={d} signedIn={signedIn} />
+                </GlassCard>
+              ))}
+            </div>
+            {!signedIn && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                <Link to="/auth" className="text-primary hover:underline">Sign in</Link> to save your drill scores to the tracker.
+              </p>
+            )}
+          </section>
+        );
+      })()}
+
 
       <section className="mt-8">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Practice problems</h2>
