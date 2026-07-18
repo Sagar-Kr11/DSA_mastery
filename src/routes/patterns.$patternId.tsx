@@ -120,6 +120,42 @@ function PatternPage() {
         </section>
       )}
 
+      {(() => {
+        const drills = DRILLS[patternId];
+        if (!drills || drills.length === 0) {
+          return (
+            <section className="mt-8">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Recall drill</h2>
+              <GlassCard className="p-5 text-sm text-muted-foreground">
+                Fill-in-the-blanks drill for this pattern is coming soon.
+              </GlassCard>
+            </section>
+          );
+        }
+        return (
+          <section className="mt-8">
+            <div className="mb-3 flex items-baseline justify-between">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Recall drill</h2>
+              <span className="text-[11px] text-muted-foreground">Type the missing tokens to burn them into memory.</span>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              {drills.map((d) => (
+                <GlassCard key={d.id} className="p-5">
+                  <h3 className="mb-3 text-sm font-medium text-foreground">{d.title}</h3>
+                  <RecallDrill patternId={patternId} drill={d} signedIn={signedIn} />
+                </GlassCard>
+              ))}
+            </div>
+            {!signedIn && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                <Link to="/auth" className="text-primary hover:underline">Sign in</Link> to save your drill scores to the tracker.
+              </p>
+            )}
+          </section>
+        );
+      })()}
+
+
       <section className="mt-8">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Practice problems</h2>
         <GlassCard className="divide-y divide-white/5">
