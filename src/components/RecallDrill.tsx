@@ -8,7 +8,7 @@ import { saveDrillAttempt } from "@/lib/drills.functions";
 
 type Props = {
   patternId: string;
-  drill: Drill;
+  drills: Drill[];
   signedIn: boolean;
 };
 
@@ -25,7 +25,9 @@ function isCorrect(value: string, answer: string, accepts?: string[]) {
   return (accepts ?? []).some((a) => normalize(a) === v);
 }
 
-export function RecallDrill({ patternId, drill, signedIn }: Props) {
+export function RecallDrill({ patternId, drills, signedIn }: Props) {
+  const [drillIdx, setDrillIdx] = useState(0);
+  const drill = drills[drillIdx] ?? drills[0];
   const available = drill.snippets.map((s) => s.language);
   const [lang, setLang] = useState<DrillLanguage>(available[0]);
   const snippet = useMemo<DrillSnippet>(
@@ -35,6 +37,28 @@ export function RecallDrill({ patternId, drill, signedIn }: Props) {
 
   return (
     <div>
+      {drills.length > 1 && (
+        <div className="mb-3 -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
+          {drills.map((d, i) => {
+            const active = i === drillIdx;
+            return (
+              <button
+                key={d.id}
+                onClick={() => setDrillIdx(i)}
+                className={`shrink-0 rounded-md border px-2.5 py-1 text-[11px] transition ${
+                  active
+                    ? "border-primary/60 bg-primary/15 text-foreground"
+                    : "border-white/10 bg-white/5 text-muted-foreground hover:text-foreground hover:border-white/20"
+                }`}
+                title={d.title}
+              >
+                {i + 1}. {d.title}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       <div className="mb-3 flex flex-wrap items-center gap-1.5">
         <span className="mr-1 text-[10px] uppercase tracking-wider text-muted-foreground">Language</span>
         {LANGS.map((l) => {
@@ -96,7 +120,7 @@ function SnippetRunner({
 
   const total = snippet.blanks.length;
   const correctCount = snippet.blanks.reduce((n, blk) => {
-    if (revealed[blk.id]) return n; // reveal doesn't count
+    if (revealed[blk.id]) return n;
     return isCorrect(values[blk.id] ?? "", blk.answer, blk.accepts) ? n + 1 : n;
   }, 0);
   const allAttempted = snippet.blanks.every((blk) => (values[blk.id] ?? "").trim().length > 0 || revealed[blk.id]);
