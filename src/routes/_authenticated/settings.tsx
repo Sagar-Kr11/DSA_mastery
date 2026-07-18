@@ -35,14 +35,9 @@ function SettingsPage() {
   const profileQ = useQuery({ queryKey: ["profile"], queryFn: () => fetchProfile() });
   const [username, setUsername] = useState("");
 
-  // Pre-fill with Dimple_1106 if empty (per user request)
   useEffect(() => {
-    if (profileQ.data) {
-      if (profileQ.data.leetcode_username) {
-        setUsername(profileQ.data.leetcode_username);
-      } else {
-        setUsername("Dimple_1106");
-      }
+    if (profileQ.data?.leetcode_username) {
+      setUsername(profileQ.data.leetcode_username);
     }
   }, [profileQ.data]);
 
