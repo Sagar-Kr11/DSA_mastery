@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { getSolved } from "@/lib/solved.functions";
 import { getDrillProgress } from "@/lib/drills.functions";
+import { syncLeetCode } from "@/lib/leetcode.functions";
 import { GlassCard } from "@/components/GlassCard";
 import { Heatmap, computeStreaks } from "@/components/Heatmap";
-import { Flame, Trophy, CheckCircle2, Brain } from "lucide-react";
+import { Flame, Trophy, CheckCircle2, Brain, SiGnal as _s } from "lucide-react";
+import { Signal } from "lucide-react";
 import { PATTERNS } from "@/data/topics";
 
 export const Route = createFileRoute("/tracker")({
