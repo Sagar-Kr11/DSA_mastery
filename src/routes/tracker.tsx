@@ -8,8 +8,7 @@ import { getDrillProgress } from "@/lib/drills.functions";
 import { syncLeetCode } from "@/lib/leetcode.functions";
 import { GlassCard } from "@/components/GlassCard";
 import { Heatmap, computeStreaks } from "@/components/Heatmap";
-import { Flame, Trophy, CheckCircle2, Brain, SiGnal as _s } from "lucide-react";
-import { Signal } from "lucide-react";
+import { Flame, Trophy, CheckCircle2, Brain, Signal } from "lucide-react";
 import { PATTERNS } from "@/data/topics";
 
 export const Route = createFileRoute("/tracker")({
