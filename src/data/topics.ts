@@ -14,8 +14,8 @@ export type Channel =
   | "MIT";
 
 export type YouTubeRef =
-  | { kind: "video"; id: string; channel: Channel; title: string }
-  | { kind: "playlist"; id: string; channel: Channel; title: string };
+  | { kind: "video"; id: string; channel: Channel; title: string; languages?: ("C++" | "Java" | "Python")[] }
+  | { kind: "playlist"; id: string; channel: Channel; title: string; languages?: ("C++" | "Java" | "Python")[] };
 
 export type ResourceKind = "article" | "visualizer" | "book" | "cheatsheet" | "docs";
 export type Resource = {
