@@ -96,9 +96,25 @@ function TrackerPage() {
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard icon={<Flame className="h-4 w-4" />} label="Current streak" value={streaks.current} suffix="days" />
         <StatCard icon={<Trophy className="h-4 w-4" />} label="Longest streak" value={streaks.longest} suffix="days" />
-        <StatCard icon={<CheckCircle2 className="h-4 w-4" />} label="Total solved" value={rows.length} />
+        <StatCard icon={<CheckCircle2 className="h-4 w-4" />} label="Tracked solves" value={rows.length} />
         <StatCard icon={<Brain className="h-4 w-4" />} label="Drills mastered" value={drillsMastered} />
       </div>
+
+      {lcTotal != null && lcTotal > rows.length && (
+        <GlassCard className="mt-4 flex items-start gap-3 p-4">
+          <Signal className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+          <div className="text-sm">
+            <p>
+              LeetCode reports <b>{lcTotal}</b> lifetime accepted solves, but only <b>{rows.length}</b> are individually mapped here.
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              To map every solve to a pattern, turn on <b>"Show recent AC submissions"</b> in your{" "}
+              <a href="https://leetcode.com/profile/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">LeetCode profile settings</a>,
+              then re-sync from <Link to="/settings" className="text-primary hover:underline">Settings</Link>.
+            </p>
+          </div>
+        </GlassCard>
+      )}
 
       <GlassCard className="mt-6 p-5">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Activity — last 365 days</h2>
