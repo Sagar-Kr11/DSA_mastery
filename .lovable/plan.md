@@ -1,59 +1,47 @@
 ## Goal
 
-Replace the current "reused pattern skeleton" recall drills with a **unique fill-in-the-blank drill per practice problem**, in C++, Java, and Python — so each problem teaches its own key lines instead of showing the same template with a renamed title.
+The PDF's "TCS NQT" ranking table (ranks 1–4) plus the blue "Practice these from your sheet" boxes list 24 problems. Cross-checking against `src/data/topics.ts`, **16 are already in the app**. Add the **8 that are missing**, each with:
 
-## Why the current version feels weak
+- A LeetCode entry in the correct pattern's `problems` array (auto-renders the LeetCode link in the practice list)
+- A unique, hand-authored recall drill (C++, Java, Python) in `src/data/drills.ts`
 
-`src/data/drills.ts` uses `cloneDrill(pattern, problem)` which reuses the pattern's template and just relabels the title. Every problem under a pattern shows identical code with the same blanks, so switching tabs teaches nothing new.
+## Missing problems → target pattern
 
-## What changes
+| # | Problem (slug) | Difficulty | Pattern |
+|---|---|---|---|
+| 1 | `best-time-to-buy-and-sell-stock` | Easy | `kadane` (running-min tracking) |
+| 2 | `move-zeroes` | Easy | `two-pointers` |
+| 3 | `minimum-size-subarray-sum` | Medium | `sliding-window` |
+| 4 | `valid-parentheses` | Easy | `monotonic-stack` (stack pattern lives here) |
+| 5 | `search-insert-position` | Easy | `binary-search` |
+| 6 | `first-bad-version` | Easy | `binary-search` |
+| 7 | `find-minimum-in-rotated-sorted-array` | Medium | `binary-search` |
+| 8 | `generate-parentheses` | Medium | `backtracking` |
 
-### 1. Data model: one authored drill per problem
+The other 16 blue-box problems (Two Sum, 3Sum-adjacent items, Maximum Subarray, Container With Most Water, Remove Duplicates from Sorted Array, Valid Anagram, Valid Palindrome, Reverse String, Longest Substring Without Repeating Chars, First Unique Character, Climbing Stairs, Fibonacci Number, Subsets, Permutations, Search in Rotated Sorted Array, Find First and Last Position) already exist in `topics.ts` — no duplicates will be added.
 
-Rewrite `src/data/drills.ts` so `DRILLS[patternId]` is an array where **each entry is hand-authored for a specific problem**, not cloned:
+## Changes
 
-```ts
-type Drill = {
-  id: string;              // problem slug, e.g. "two-sum"
-  patternId: string;
-  problemTitle: string;
-  problemUrl: string;      // LeetCode / GFG link
-  snippets: { language: 'cpp'|'java'|'python'; code: string; blanks: Blank[] }[];
-};
-```
+### 1. `src/data/topics.ts`
+Append the 8 slugs into the `problems` array of the matching pattern object. This alone gives every problem its direct LeetCode link (`patterns.$patternId.tsx` already renders `https://leetcode.com/problems/${slug}/` per row).
 
-Each snippet is the actual solution outline for that problem with 4–7 blanks on the meaningful tokens (the condition, the update, the return value) — not generic `i++` scaffolding.
+### 2. `src/data/drills.ts`
+For each of the 8 new slugs, add a new `Drill` entry with three unique snippets (C++/Java/Python), each with 4–7 blanks on the meaningful tokens (loop condition, comparison, pointer update, return value) — not generic scaffolding. Following the existing hand-authored style already used across the file.
 
-### 2. Coverage
+Examples of the blanks I'll author (Java shown for brevity — C++/Python mirrored):
 
-Author drills for **every problem currently listed in `src/data/topics.ts`** across all 25 patterns (~100 problems × 3 languages ≈ 300 snippets). Each snippet:
+- **best-time-to-buy-and-sell-stock**: `minPrice = {{init}}` / `minPrice = Math.min(minPrice, {{cmp}})` / `profit = Math.max(profit, prices[i] - {{sub}})`
+- **move-zeroes**: `if (nums[i] {{cond}} 0) nums[{{ins}}++] = nums[i];` / trailing `nums[{{ins}}++] = {{fill}};`
+- **minimum-size-subarray-sum**: `sum += nums[{{r}}]` / `while (sum {{cmp}} target)` / `ans = Math.min(ans, r - l + {{off}})` / `sum -= nums[{{l}}++]`
+- **valid-parentheses**: `Map.of(')','(', ']','[', '}','{')` — blanks on the map keys/values and `stack.{{op}}()`
+- **search-insert-position**: `while (low {{cmp}} high)` / `mid = low + (high - low) / {{d}}` / return `{{ret}}`
+- **first-bad-version**: `if (isBadVersion(mid)) high = {{a}}; else low = {{b}};` / return `{{ret}}`
+- **find-minimum-in-rotated-sorted-array**: `if (nums[mid] {{cmp}} nums[high]) low = mid + 1; else high = {{h}}` / return `nums[{{ret}}]`
+- **generate-parentheses**: `if (open < {{n}}) backtrack(cur + "(", open + 1, close, ...)` / `if (close < {{o}}) backtrack(cur + ")", open, close + 1, ...)`
 
-- Compiles mentally as a real solution to that specific problem
-- Highlights the 4–7 tokens most worth memorizing for interviews
-- Uses `{{blankId}}` placeholders with an `answers` map (accepts obvious synonyms, e.g. `len` / `size`)
+### 3. No UI, schema, or route changes
+`RecallDrill.tsx`, `patterns.$patternId.tsx`, and `pattern_drill_attempts` already handle per-problem drills keyed by `(patternId, drillId)`. The new drill IDs slot in with no code changes.
 
-### 3. UI (no visual redesign)
-
-`src/components/RecallDrill.tsx` already has the tab bar, language switch, and validator. Only tweaks:
-
-- Show the problem's LeetCode/GFG link next to the tab title
-- Keep the `key={drill.id}-${lang}` reset behavior
-- No layout changes
-
-### 4. Tracker
-
-`pattern_drill_attempts` already keys on `(pattern_id, drill_id)`. No schema change; the new per-problem `drill.id` values slot in directly.
-
-## Technical notes
-
-- File touched most heavily: `src/data/drills.ts` (full rewrite, large file — will be split into `src/data/drills/<patternId>.ts` and re-exported from an index to stay maintainable).
-- `RecallDrill.tsx`: ~10-line change to render the problem link.
-- `patterns.$patternId.tsx`: already passes the drill array, no change.
-- No DB migration, no new dependencies.
-
-## Scope check before I start
-
-Authoring ~100 problem-specific drills × 3 languages is a large content pass. Two questions so I build the right thing:
-
-1. **Blanks per snippet** — target **5 blanks** (tight, interview-recall focused) or **8–10 blanks** (more thorough, closer to writing the solution)?
-2. **Rollout** — do all 25 patterns in one pass, or start with the 6 most-visited patterns (Sliding Window, Two Pointers, Binary Search, BFS, DFS, DP-1D) and expand next turn?
+## Verification
+- Typecheck (`tsgo`) after the edits.
+- Sanity-check by visiting `/patterns/kadane`, `/patterns/binary-search`, `/patterns/backtracking`, `/patterns/monotonic-stack`, `/patterns/sliding-window`, `/patterns/two-pointers` and confirming each new problem row shows a LeetCode link and its drill tab loads.
