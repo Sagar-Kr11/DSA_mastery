@@ -1,47 +1,75 @@
-## Goal
+# Goal
 
-The PDF's "TCS NQT" ranking table (ranks 1–4) plus the blue "Practice these from your sheet" boxes list 24 problems. Cross-checking against `src/data/topics.ts`, **16 are already in the app**. Add the **8 that are missing**, each with:
+Every problem in every pattern's **Practice problems** list should show a "Video" button next to its "LeetCode" button. Clicking it opens an inline video walkthrough of *that specific problem*, with a language-tab selector (C++ / Java / Python) so the user picks the explanation in the language they want. No YouTube redirect — video plays inline in the app.
 
-- A LeetCode entry in the correct pattern's `problems` array (auto-renders the LeetCode link in the practice list)
-- A unique, hand-authored recall drill (C++, Java, Python) in `src/data/drills.ts`
+# What "best video" means
 
-## Missing problems → target pattern
+For every problem I'll pick 1 video per language (max 3) using this ranking:
 
-| # | Problem (slug) | Difficulty | Pattern |
-|---|---|---|---|
-| 1 | `best-time-to-buy-and-sell-stock` | Easy | `kadane` (running-min tracking) |
-| 2 | `move-zeroes` | Easy | `two-pointers` |
-| 3 | `minimum-size-subarray-sum` | Medium | `sliding-window` |
-| 4 | `valid-parentheses` | Easy | `monotonic-stack` (stack pattern lives here) |
-| 5 | `search-insert-position` | Easy | `binary-search` |
-| 6 | `first-bad-version` | Easy | `binary-search` |
-| 7 | `find-minimum-in-rotated-sorted-array` | Medium | `binary-search` |
-| 8 | `generate-parentheses` | Medium | `backtracking` |
+1. **Creator is already trusted in this app** (Striver, NeetCode, Aditya Verma, CodeHelp / Love Babbar, Apna College, take U forward, Kunal Kushwaha, MIK, Errichto). These are the creators the app already curates — the same shortlist you approved earlier.
+2. Among their videos on that exact problem, prefer the one with the **highest positive-sentiment comment ratio** (comments explicitly praising clarity / "finally understood" / dry-run explanation), not raw view count. If two videos are close, prefer the one whose top pinned/loved comments are dry-run-focused.
+3. Language mapping used across the app:
+   - **C++**: Striver, take U forward, Errichto, Love Babbar (older)
+   - **Java**: NeetCode-Java forks, CodeHelp Supreme DSA (Hindi-Java), Kunal Kushwaha
+   - **Python**: NeetCode (primary), MIK
+   Aditya Verma → language-agnostic pseudocode, tagged under all 3 with a note.
 
-The other 16 blue-box problems (Two Sum, 3Sum-adjacent items, Maximum Subarray, Container With Most Water, Remove Duplicates from Sorted Array, Valid Anagram, Valid Palindrome, Reverse String, Longest Substring Without Repeating Chars, First Unique Character, Climbing Stairs, Fibonacci Number, Subsets, Permutations, Search in Rotated Sorted Array, Find First and Last Position) already exist in `topics.ts` — no duplicates will be added.
+I'll only add a language entry when a genuinely good video exists — no filler. Problems with no good curated video get **no Video button** (list still shows the LeetCode link). That's fine; better than a bad recommendation.
 
-## Changes
+# Data model change
 
-### 1. `src/data/topics.ts`
-Append the 8 slugs into the `problems` array of the matching pattern object. This alone gives every problem its direct LeetCode link (`patterns.$patternId.tsx` already renders `https://leetcode.com/problems/${slug}/` per row).
+`src/data/topics.ts` — extend the `Problem` type:
 
-### 2. `src/data/drills.ts`
-For each of the 8 new slugs, add a new `Drill` entry with three unique snippets (C++/Java/Python), each with 4–7 blanks on the meaningful tokens (loop condition, comparison, pointer update, return value) — not generic scaffolding. Following the existing hand-authored style already used across the file.
+```ts
+type ProblemVideo = { lang: "C++" | "Java" | "Python"; yt: YouTubeRef; note?: string };
+type Problem = {
+  slug: string; title: string; difficulty: "Easy"|"Medium"|"Hard";
+  videos?: ProblemVideo[]; // NEW, optional
+};
+```
 
-Examples of the blanks I'll author (Java shown for brevity — C++/Python mirrored):
+Then attach `videos: [...]` to each problem for which I've picked a walkthrough. Roughly **~100 problems × up to 3 langs**, but realistically ~180–220 total video entries because not every creator has covered every problem.
 
-- **best-time-to-buy-and-sell-stock**: `minPrice = {{init}}` / `minPrice = Math.min(minPrice, {{cmp}})` / `profit = Math.max(profit, prices[i] - {{sub}})`
-- **move-zeroes**: `if (nums[i] {{cond}} 0) nums[{{ins}}++] = nums[i];` / trailing `nums[{{ins}}++] = {{fill}};`
-- **minimum-size-subarray-sum**: `sum += nums[{{r}}]` / `while (sum {{cmp}} target)` / `ans = Math.min(ans, r - l + {{off}})` / `sum -= nums[{{l}}++]`
-- **valid-parentheses**: `Map.of(')','(', ']','[', '}','{')` — blanks on the map keys/values and `stack.{{op}}()`
-- **search-insert-position**: `while (low {{cmp}} high)` / `mid = low + (high - low) / {{d}}` / return `{{ret}}`
-- **first-bad-version**: `if (isBadVersion(mid)) high = {{a}}; else low = {{b}};` / return `{{ret}}`
-- **find-minimum-in-rotated-sorted-array**: `if (nums[mid] {{cmp}} nums[high]) low = mid + 1; else high = {{h}}` / return `nums[{{ret}}]`
-- **generate-parentheses**: `if (open < {{n}}) backtrack(cur + "(", open + 1, close, ...)` / `if (close < {{o}}) backtrack(cur + ")", open, close + 1, ...)`
+# UI change
 
-### 3. No UI, schema, or route changes
-`RecallDrill.tsx`, `patterns.$patternId.tsx`, and `pattern_drill_attempts` already handle per-problem drills keyed by `(patternId, drillId)`. The new drill IDs slot in with no code changes.
+`src/routes/patterns.$patternId.tsx` — inside the practice-problems `map`:
 
-## Verification
-- Typecheck (`tsgo`) after the edits.
-- Sanity-check by visiting `/patterns/kadane`, `/patterns/binary-search`, `/patterns/backtracking`, `/patterns/monotonic-stack`, `/patterns/sliding-window`, `/patterns/two-pointers` and confirming each new problem row shows a LeetCode link and its drill tab loads.
+- Replace each row's right-side single "LeetCode" chip with two chips: **LeetCode** and **Video** (only when `q.videos?.length`).
+- Clicking **Video** expands an inline panel below that row (accordion-style, one open at a time) containing:
+  - Language pill tabs (C++ / Java / Python), only the langs that have a video for this problem.
+  - `<YouTubeEmbed />` for the picked language, remounted on switch so the iframe reloads.
+- Video panel uses the existing `GlassCard` divide styling; no new dependencies.
+
+Also: **first tab defaults to the user's last-picked language** (localStorage `dsa.videoLang`, already the convention used elsewhere in the app), falling back to the first available.
+
+# Verification workflow before I commit each video
+
+For every problem × language pick I'll:
+
+1. Search the creator's channel for the problem name.
+2. Confirm the video actually solves *that exact LeetCode problem* (not just the pattern).
+3. Skim top-liked and top-recent comments for signal ("clean explanation", "dry run helped", "finally got it") vs noise ("code doesn't compile", "wrong approach").
+4. Only then add it. If none pass, I skip that language for that problem.
+
+I will do this in **batches per pattern** (25 patterns) so if you want to spot-check one pattern before I roll on, we can.
+
+# Non-goals
+
+- No new tables, no schema change, no server-fn change.
+- No changes to Recall Drill.
+- No changes to the pattern-level `VideoPicker` at the top of the page — that stays as-is for pattern-wide overviews.
+- No auto-scraping / no runtime YouTube API calls — picks are hand-curated and baked into `topics.ts`.
+
+# Rollout
+
+1. Extend `Problem` type + `ProblemVideo` type in `topics.ts`.
+2. Update `patterns.$patternId.tsx` to render the new "Video" chip + inline panel with language tabs.
+3. Fill in `videos: [...]` per problem, pattern by pattern (Arrays → Strings → HashMap → Stack/Queue → Linked List → Trees → Graphs → DP → Greedy/Backtracking → Binary Search → Bits → Placements).
+4. `tsgo` typecheck after each pattern batch.
+5. Manual smoke: open 3 random pattern pages, expand a few Video panels, switch languages, confirm inline playback works and no YouTube redirect.
+
+# Confirm before I start
+
+- **Curator shortlist above OK?** (Striver, NeetCode, Aditya Verma, CodeHelp, Apna College, take U forward, Kunal Kushwaha, MIK, Errichto — no new channels unless you add them.)
+- **Skip problems with no good video** rather than filling with mediocre picks — confirm this is what you want.
+- **One video per language max** — or do you want up to 2 per language when there are two clearly-different-approach explanations (e.g., recursive vs iterative)?
