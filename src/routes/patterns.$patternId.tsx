@@ -155,44 +155,15 @@ function PatternPage() {
       <section className="mt-8">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Practice problems</h2>
         <GlassCard className="divide-y divide-white/5">
-          {pattern.problems.map((q) => {
-            const solved = solvedSet.has(q.slug);
-            return (
-              <div key={q.slug} className="flex items-center gap-3 px-4 py-3">
-                <button
-                  onClick={() => {
-                    if (!signedIn) { toast("Sign in to save your progress."); return; }
-                    mut.mutate({ slug: q.slug, solved: !solved });
-                  }}
-                  className={`flex h-6 w-6 items-center justify-center rounded-md border transition ${
-                    solved
-                      ? "border-primary bg-primary text-primary-foreground shadow-[0_0_16px_-2px_oklch(0.78_0.16_200/0.7)]"
-                      : "border-white/15 hover:border-primary/60"
-                  }`}
-                  aria-label={solved ? "Mark unsolved" : "Mark solved"}
-                >
-                  {solved && <Check className="h-4 w-4" />}
-                </button>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className={`text-sm ${solved ? "text-muted-foreground line-through" : "text-foreground"}`}>
-                      {q.title}
-                    </span>
-                    <DifficultyPill d={q.difficulty} />
-                  </div>
-                  <div className="font-mono text-[11px] text-muted-foreground">{q.slug}</div>
-                </div>
-                <a
-                  href={`https://leetcode.com/problems/${q.slug}/`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
-                >
-                  LeetCode <ExternalLink className="h-3 w-3" />
-                </a>
-              </div>
-            );
-          })}
+          {pattern.problems.map((q) => (
+            <ProblemRow
+              key={q.slug}
+              q={q}
+              solved={solvedSet.has(q.slug)}
+              signedIn={signedIn}
+              onToggle={(next) => mut.mutate({ slug: q.slug, solved: next })}
+            />
+          ))}
         </GlassCard>
         {!signedIn && (
           <p className="mt-3 text-xs text-muted-foreground">
@@ -201,6 +172,144 @@ function PatternPage() {
         )}
       </section>
     </main>
+  );
+}
+
+function ProblemRow({
+  q,
+  solved,
+  signedIn,
+  onToggle,
+}: {
+  q: Problem;
+  solved: boolean;
+  signedIn: boolean;
+  onToggle: (next: boolean) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const videos = q.videos ?? PROBLEM_VIDEOS[q.slug];
+  const hasVideos = !!(videos && videos.length > 0);
+
+  return (
+    <div>
+      <div className="flex items-center gap-3 px-4 py-3">
+        <button
+          onClick={() => {
+            if (!signedIn) { toast("Sign in to save your progress."); return; }
+            onToggle(!solved);
+          }}
+          className={`flex h-6 w-6 items-center justify-center rounded-md border transition ${
+            solved
+              ? "border-primary bg-primary text-primary-foreground shadow-[0_0_16px_-2px_oklch(0.78_0.16_200/0.7)]"
+              : "border-white/15 hover:border-primary/60"
+          }`}
+          aria-label={solved ? "Mark unsolved" : "Mark solved"}
+        >
+          {solved && <Check className="h-4 w-4" />}
+        </button>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <span className={`text-sm ${solved ? "text-muted-foreground line-through" : "text-foreground"}`}>
+              {q.title}
+            </span>
+            <DifficultyPill d={q.difficulty} />
+          </div>
+          <div className="font-mono text-[11px] text-muted-foreground">{q.slug}</div>
+        </div>
+        {hasVideos && (
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs transition ${
+              open
+                ? "border-primary/60 bg-primary/15 text-foreground"
+                : "border-white/10 bg-white/5 text-muted-foreground hover:text-foreground hover:border-white/20"
+            }`}
+            aria-expanded={open}
+            aria-label={open ? "Hide video walkthrough" : "Show video walkthrough"}
+          >
+            <Play className="h-3 w-3" />
+            Video
+            <ChevronDown className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`} />
+          </button>
+        )}
+        <a
+          href={`https://leetcode.com/problems/${q.slug}/`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
+        >
+          LeetCode <ExternalLink className="h-3 w-3" />
+        </a>
+      </div>
+      {hasVideos && open && (
+        <div className="px-4 pb-4">
+          <ProblemVideoPanel videos={videos!} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ProblemVideoPanel({ videos }: { videos: ProblemVideo[] }) {
+  const available = useMemo(() => {
+    const set = new Set<Language>();
+    for (const v of videos) set.add(v.lang);
+    return LANGUAGES.filter((l) => set.has(l));
+  }, [videos]);
+
+  const [lang, setLang] = useState<Language>(() => {
+    if (typeof window !== "undefined") {
+      const saved = window.localStorage.getItem("dsa.videoLang") as Language | null;
+      if (saved && available.includes(saved)) return saved;
+    }
+    return available[0] ?? "Python";
+  });
+
+  useEffect(() => {
+    if (!available.includes(lang)) setLang(available[0] ?? "Python");
+  }, [available, lang]);
+
+  const picks = videos.filter((v) => v.lang === lang);
+  const active = picks[0];
+
+  const onPickLang = (l: Language) => {
+    setLang(l);
+    if (typeof window !== "undefined") window.localStorage.setItem("dsa.videoLang", l);
+  };
+
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+        <span className="mr-1 text-[10px] uppercase tracking-wider text-muted-foreground">Language</span>
+        {available.map((l) => (
+          <button
+            key={l}
+            onClick={() => onPickLang(l)}
+            className={`rounded-md border px-2 py-0.5 text-[11px] transition ${
+              lang === l
+                ? "border-primary/60 bg-primary/15 text-foreground"
+                : "border-white/10 bg-white/5 text-muted-foreground hover:text-foreground hover:border-white/20"
+            }`}
+          >
+            {l}
+          </button>
+        ))}
+        {active && (
+          <span className="ml-auto text-[11px] text-muted-foreground">
+            {CHANNEL_LABELS[active.yt.channel]}
+          </span>
+        )}
+      </div>
+      {active ? (
+        <YouTubeEmbed key={`${active.yt.kind}-${active.yt.id}-${lang}`} yt={active.yt} />
+      ) : (
+        <p className="text-xs text-muted-foreground">No video available in {lang} yet.</p>
+      )}
+      {active?.note && (
+        <p className="mt-2 text-[11px] text-muted-foreground">{active.note}</p>
+      )}
+    </div>
   );
 }
 
