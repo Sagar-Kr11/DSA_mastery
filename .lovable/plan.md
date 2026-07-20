@@ -1,75 +1,27 @@
-# Goal
+## Goal
+Add Java video walkthroughs alongside the existing Python (NeetCode) picks for every problem in `src/data/problemVideos.ts`, so the inline Video panel shows a Java tab too.
 
-Every problem in every pattern's **Practice problems** list should show a "Video" button next to its "LeetCode" button. Clicking it opens an inline video walkthrough of *that specific problem*, with a language-tab selector (C++ / Java / Python) so the user picks the explanation in the language they want. No YouTube redirect — video plays inline in the app.
+## Source of Java videos
+Primary: **takeUforward / Striver** — each Striver problem video contains both C++ and Java code side-by-side and his Java community solutions are the most-praised in comments. Fallbacks when Striver hasn't covered a problem: **Kunal Kushwaha**, **CodeHelp (Supreme DSA Java, Hindi)**, **Apna College**.
 
-# What "best video" means
+Selection rule (unchanged from the earlier plan): pick by top-comment sentiment ("clean dry run", "finally understood"), not raw views. Skip a problem's Java entry only if no trusted-creator video exists — better than a bad pick.
 
-For every problem I'll pick 1 video per language (max 3) using this ranking:
+## Change
+Only `src/data/problemVideos.ts`. For each of the ~75 keys already in the map, append a `{ lang: "Java", yt: { kind: "video", id, channel, title } }` entry to the existing array. No UI change needed — `patterns.$patternId.tsx` already renders one tab per language present in the array.
 
-1. **Creator is already trusted in this app** (Striver, NeetCode, Aditya Verma, CodeHelp / Love Babbar, Apna College, take U forward, Kunal Kushwaha, MIK, Errichto). These are the creators the app already curates — the same shortlist you approved earlier.
-2. Among their videos on that exact problem, prefer the one with the **highest positive-sentiment comment ratio** (comments explicitly praising clarity / "finally understood" / dry-run explanation), not raw view count. If two videos are close, prefer the one whose top pinned/loved comments are dry-run-focused.
-3. Language mapping used across the app:
-   - **C++**: Striver, take U forward, Errichto, Love Babbar (older)
-   - **Java**: NeetCode-Java forks, CodeHelp Supreme DSA (Hindi-Java), Kunal Kushwaha
-   - **Python**: NeetCode (primary), MIK
-   Aditya Verma → language-agnostic pseudocode, tagged under all 3 with a note.
+## Coverage plan
+Target Java coverage per pattern group (rough):
+- Arrays / two-pointers / kadane / prefix / sliding-window: all covered by Striver
+- HashMap, Stack/Monotonic, Linked List, Trees, Graphs, DP, Backtracking, Binary Search: Striver has full Java coverage of the classics; use his A-Z DSA sheet videos
+- Bits: Striver bit-manipulation series
+- Strings / Matrix: Striver where present, else Kunal Kushwaha
 
-I'll only add a language entry when a genuinely good video exists — no filler. Problems with no good curated video get **no Video button** (list still shows the LeetCode link). That's fine; better than a bad recommendation.
+I'll batch by pattern group, typecheck after each batch, then spot-verify one video per group actually loads inline.
 
-# Data model change
+## Non-goals
+- No new patterns, no schema change, no UI change.
+- Not adding C++ this turn — only Java, as requested. (C++ can be added next in the same shape if you want.)
+- No new creators outside the existing shortlist.
 
-`src/data/topics.ts` — extend the `Problem` type:
-
-```ts
-type ProblemVideo = { lang: "C++" | "Java" | "Python"; yt: YouTubeRef; note?: string };
-type Problem = {
-  slug: string; title: string; difficulty: "Easy"|"Medium"|"Hard";
-  videos?: ProblemVideo[]; // NEW, optional
-};
-```
-
-Then attach `videos: [...]` to each problem for which I've picked a walkthrough. Roughly **~100 problems × up to 3 langs**, but realistically ~180–220 total video entries because not every creator has covered every problem.
-
-# UI change
-
-`src/routes/patterns.$patternId.tsx` — inside the practice-problems `map`:
-
-- Replace each row's right-side single "LeetCode" chip with two chips: **LeetCode** and **Video** (only when `q.videos?.length`).
-- Clicking **Video** expands an inline panel below that row (accordion-style, one open at a time) containing:
-  - Language pill tabs (C++ / Java / Python), only the langs that have a video for this problem.
-  - `<YouTubeEmbed />` for the picked language, remounted on switch so the iframe reloads.
-- Video panel uses the existing `GlassCard` divide styling; no new dependencies.
-
-Also: **first tab defaults to the user's last-picked language** (localStorage `dsa.videoLang`, already the convention used elsewhere in the app), falling back to the first available.
-
-# Verification workflow before I commit each video
-
-For every problem × language pick I'll:
-
-1. Search the creator's channel for the problem name.
-2. Confirm the video actually solves *that exact LeetCode problem* (not just the pattern).
-3. Skim top-liked and top-recent comments for signal ("clean explanation", "dry run helped", "finally got it") vs noise ("code doesn't compile", "wrong approach").
-4. Only then add it. If none pass, I skip that language for that problem.
-
-I will do this in **batches per pattern** (25 patterns) so if you want to spot-check one pattern before I roll on, we can.
-
-# Non-goals
-
-- No new tables, no schema change, no server-fn change.
-- No changes to Recall Drill.
-- No changes to the pattern-level `VideoPicker` at the top of the page — that stays as-is for pattern-wide overviews.
-- No auto-scraping / no runtime YouTube API calls — picks are hand-curated and baked into `topics.ts`.
-
-# Rollout
-
-1. Extend `Problem` type + `ProblemVideo` type in `topics.ts`.
-2. Update `patterns.$patternId.tsx` to render the new "Video" chip + inline panel with language tabs.
-3. Fill in `videos: [...]` per problem, pattern by pattern (Arrays → Strings → HashMap → Stack/Queue → Linked List → Trees → Graphs → DP → Greedy/Backtracking → Binary Search → Bits → Placements).
-4. `tsgo` typecheck after each pattern batch.
-5. Manual smoke: open 3 random pattern pages, expand a few Video panels, switch languages, confirm inline playback works and no YouTube redirect.
-
-# Confirm before I start
-
-- **Curator shortlist above OK?** (Striver, NeetCode, Aditya Verma, CodeHelp, Apna College, take U forward, Kunal Kushwaha, MIK, Errichto — no new channels unless you add them.)
-- **Skip problems with no good video** rather than filling with mediocre picks — confirm this is what you want.
-- **One video per language max** — or do you want up to 2 per language when there are two clearly-different-approach explanations (e.g., recursive vs iterative)?
+## Verification
+`tsgo` typecheck after each batch, then open two random pattern pages in the preview and confirm the Java tab appears next to Python and plays inline.
