@@ -27,10 +27,17 @@ export type Resource = {
 
 export type FlowStep = { id: string; label: string; next?: string[] };
 
+export type ProblemVideo = {
+  lang: Language;
+  yt: YouTubeRef;
+  note?: string;
+};
+
 export type Problem = {
   slug: string; // leetcode slug
   title: string;
   difficulty: Difficulty;
+  videos?: ProblemVideo[];
 };
 
 export type Pattern = {
