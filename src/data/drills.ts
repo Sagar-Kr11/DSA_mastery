@@ -257,6 +257,37 @@ return k`,
       b: [b("a", "1"), b("b", "k - 1", ["i-1"]), b("c", "+=")],
     },
   ),
+  d(
+    "move-zeroes",
+    "Move Zeroes (in-place)",
+    {
+      c: `int insertPos = 0;
+for (int x : nums) {
+  if (x {{a}} 0) nums[insertPos++] = x;
+}
+while (insertPos < (int)nums.size()) nums[insertPos++] = {{b}};`,
+      b: [b("a", "!="), b("b", "0")],
+    },
+    {
+      c: `int insertPos = 0;
+for (int x : nums) {
+  if (x {{a}} 0) nums[insertPos++] = x;
+}
+while (insertPos < nums.length) nums[insertPos++] = {{b}};`,
+      b: [b("a", "!="), b("b", "0")],
+    },
+    {
+      c: `insert_pos = 0
+for x in nums:
+    if x {{a}} 0:
+        nums[insert_pos] = x
+        insert_pos += 1
+while insert_pos < len(nums):
+    nums[insert_pos] = {{b}}
+    insert_pos += 1`,
+      b: [b("a", "!="), b("b", "0")],
+    },
+  ),
 ];
 
 // =====================================================================
@@ -369,6 +400,37 @@ for i, x in enumerate(nums):
 if best_max < 0: return {{b}}
 return max(best_max, total {{c}} best_min)`,
       b: [b("a", "min"), b("b", "best_max"), b("c", "-")],
+    },
+  ),
+  d(
+    "best-time-to-buy-and-sell-stock",
+    "Best Time to Buy and Sell Stock (running min)",
+    {
+      c: `int minPrice = INT_MAX, profit = 0;
+for (int p : prices) {
+  minPrice = min(minPrice, {{a}});
+  profit = max(profit, p {{b}} minPrice);
+}
+return {{c}};`,
+      b: [b("a", "p"), b("b", "-"), b("c", "profit")],
+    },
+    {
+      c: `int minPrice = Integer.MAX_VALUE, profit = 0;
+for (int p : prices) {
+  minPrice = Math.min(minPrice, {{a}});
+  profit = Math.max(profit, p {{b}} minPrice);
+}
+return {{c}};`,
+      b: [b("a", "p"), b("b", "-"), b("c", "profit")],
+    },
+    {
+      c: `min_price = float('inf')
+profit = 0
+for p in prices:
+    min_price = min(min_price, {{a}})
+    profit = max(profit, p {{b}} min_price)
+return {{c}}`,
+      b: [b("a", "p"), b("b", "-"), b("c", "profit")],
     },
   ),
 ];
@@ -721,6 +783,47 @@ return ans`,
       b: [b("a", "popleft"), b("b", "pop"), b("c", "0")],
     },
   ),
+  d(
+    "minimum-size-subarray-sum",
+    "Minimum Size Subarray Sum (shrinking window)",
+    {
+      c: `int l = 0, sum = 0, ans = INT_MAX;
+for (int r = 0; r < (int)nums.size(); r++) {
+  sum += nums[{{a}}];
+  while (sum {{b}} target) {
+    ans = min(ans, r - l + {{c}});
+    sum -= nums[{{d}}];
+  }
+}
+return ans == INT_MAX ? 0 : ans;`,
+      b: [b("a", "r"), b("b", ">="), b("c", "1"), b("d", "l++")],
+    },
+    {
+      c: `int l = 0, sum = 0, ans = Integer.MAX_VALUE;
+for (int r = 0; r < nums.length; r++) {
+  sum += nums[{{a}}];
+  while (sum {{b}} target) {
+    ans = Math.min(ans, r - l + {{c}});
+    sum -= nums[{{d}}];
+  }
+}
+return ans == Integer.MAX_VALUE ? 0 : ans;`,
+      b: [b("a", "r"), b("b", ">="), b("c", "1"), b("d", "l++")],
+    },
+    {
+      c: `l = 0
+s = 0
+ans = float('inf')
+for r in range(len(nums)):
+    s += nums[{{a}}]
+    while s {{b}} target:
+        ans = min(ans, r - l + {{c}})
+        s -= nums[l]
+        l {{d}} 1
+return 0 if ans == float('inf') else ans`,
+      b: [b("a", "r"), b("b", ">="), b("c", "1"), b("d", "+=")],
+    },
+  ),
 ];
 
 // =====================================================================
@@ -1052,6 +1155,47 @@ return water`,
       },
     ],
   },
+  d(
+    "valid-parentheses",
+    "Valid Parentheses (stack)",
+    {
+      c: `stack<char> st;
+for (char c : s) {
+  if (c == '(' || c == '[' || c == '{') st.push(c);
+  else {
+    if (st.{{a}}()) return false;
+    char t = st.top(); st.pop();
+    if ((c == ')' && t != '(') || (c == ']' && t != '[') || (c == '}' && t != '{')) return {{b}};
+  }
+}
+return st.{{c}}();`,
+      b: [b("a", "empty"), b("b", "false"), b("c", "empty")],
+    },
+    {
+      c: `Deque<Character> st = new ArrayDeque<>();
+Map<Character,Character> pairs = Map.of(')', '(', ']', '[', '}', '{');
+for (char c : s.toCharArray()) {
+  if (pairs.containsValue(c)) st.push(c);
+  else if (pairs.containsKey(c)) {
+    if (st.isEmpty() || st.{{a}}() != pairs.{{b}}(c)) return false;
+  }
+}
+return st.{{c}}();`,
+      b: [b("a", "pop"), b("b", "get"), b("c", "isEmpty")],
+    },
+    {
+      c: `st = []
+pairs = {')': '(', ']': '[', '}': '{'}
+for c in s:
+    if c in '([{':
+        st.append(c)
+    else:
+        if not st or st.{{a}}() != pairs[c]:
+            return {{b}}
+return len(st) == {{c}}`,
+      b: [b("a", "pop"), b("b", "False"), b("c", "0")],
+    },
+  ),
 ];
 
 // =====================================================================
@@ -2974,6 +3118,46 @@ solve()`,
       b: [b("a", "d"), b("b", "'.'", ['"."']), b("c", "True")],
     },
   ),
+  d(
+    "generate-parentheses",
+    "Generate Parentheses (backtracking)",
+    {
+      c: `vector<string> ans;
+function<void(string,int,int)> bt = [&](string cur, int open, int close) {
+  if ((int)cur.size() == 2 * n) { ans.push_back(cur); return; }
+  if (open < {{a}}) bt(cur + "(", open + 1, close);
+  if (close < {{b}}) bt(cur + ")", open, close + 1);
+};
+bt("", {{c}}, 0);
+return ans;`,
+      b: [b("a", "n"), b("b", "open"), b("c", "0")],
+    },
+    {
+      c: `List<String> ans = new ArrayList<>();
+bt(ans, "", 0, 0, n);
+return ans;
+// void bt(List<String> ans, String cur, int open, int close, int n) {
+//   if (cur.length() == 2 * n) { ans.add(cur); return; }
+//   if (open < {{a}}) bt(ans, cur + "(", open + 1, close, n);
+//   if (close < {{b}}) bt(ans, cur + ")", open, close + 1, n);
+// }
+// initial open = {{c}}, close = 0`,
+      b: [b("a", "n"), b("b", "open"), b("c", "0")],
+    },
+    {
+      c: `ans = []
+def bt(cur, open, close):
+    if len(cur) == 2 * n:
+        ans.append(cur); return
+    if open < {{a}}:
+        bt(cur + "(", open + 1, close)
+    if close < {{b}}:
+        bt(cur + ")", open, close + 1)
+bt("", {{c}}, 0)
+return ans`,
+      b: [b("a", "n"), b("b", "open"), b("c", "0")],
+    },
+  ),
 ];
 
 // =====================================================================
@@ -3175,6 +3359,111 @@ while lo <= hi:
     elif aL > {{b}}: hi = i - 1
     else: lo = i {{c}} 1`,
       b: [b("a", "bR"), b("b", "bR"), b("c", "+")],
+    },
+  ),
+  d(
+    "search-insert-position",
+    "Search Insert Position",
+    {
+      c: `int low = 0, high = (int)nums.size();
+while (low {{a}} high) {
+  int mid = low + (high - low) / {{b}};
+  if (nums[mid] {{c}} target) low = mid + 1;
+  else high = mid;
+}
+return {{d}};`,
+      b: [b("a", "<"), b("b", "2"), b("c", "<"), b("d", "low")],
+    },
+    {
+      c: `int low = 0, high = nums.length;
+while (low {{a}} high) {
+  int mid = low + (high - low) / {{b}};
+  if (nums[mid] {{c}} target) low = mid + 1;
+  else high = mid;
+}
+return {{d}};`,
+      b: [b("a", "<"), b("b", "2"), b("c", "<"), b("d", "low")],
+    },
+    {
+      c: `low, high = 0, len(nums)
+while low {{a}} high:
+    mid = low + (high - low) // {{b}}
+    if nums[mid] {{c}} target:
+        low = mid + 1
+    else:
+        high = mid
+return {{d}}`,
+      b: [b("a", "<"), b("b", "2"), b("c", "<"), b("d", "low")],
+    },
+  ),
+  d(
+    "first-bad-version",
+    "First Bad Version (lower bound)",
+    {
+      c: `int low = 1, high = n;
+while (low < high) {
+  int mid = low + (high - low) / 2;
+  if (isBadVersion(mid)) high = {{a}};
+  else low = {{b}};
+}
+return {{c}};`,
+      b: [b("a", "mid"), b("b", "mid + 1"), b("c", "low")],
+    },
+    {
+      c: `int low = 1, high = n;
+while (low < high) {
+  int mid = low + (high - low) / 2;
+  if (isBadVersion(mid)) high = {{a}};
+  else low = {{b}};
+}
+return {{c}};`,
+      b: [b("a", "mid"), b("b", "mid + 1"), b("c", "low")],
+    },
+    {
+      c: `low, high = 1, n
+while low < high:
+    mid = low + (high - low) // 2
+    if isBadVersion(mid):
+        high = {{a}}
+    else:
+        low = {{b}}
+return {{c}}`,
+      b: [b("a", "mid"), b("b", "mid + 1"), b("c", "low")],
+    },
+  ),
+  d(
+    "find-minimum-in-rotated-sorted-array",
+    "Find Minimum in Rotated Sorted Array",
+    {
+      c: `int low = 0, high = (int)nums.size() - 1;
+while (low < high) {
+  int mid = low + (high - low) / 2;
+  if (nums[mid] {{a}} nums[high]) low = mid + {{b}};
+  else high = {{c}};
+}
+return nums[{{d}}];`,
+      b: [b("a", ">"), b("b", "1"), b("c", "mid"), b("d", "low")],
+    },
+    {
+      c: `int low = 0, high = nums.length - 1;
+while (low < high) {
+  int mid = low + (high - low) / 2;
+  if (nums[mid] {{a}} nums[high]) low = mid + {{b}};
+  else high = {{c}};
+}
+return nums[{{d}}];`,
+      b: [b("a", ">"), b("b", "1"), b("c", "mid"), b("d", "low")],
+    },
+    {
+      c: `low, high = 0, len(nums) - 1
+while low < high:
+    mid = low + (high - low) // 2
+    if nums[mid] {{a}} nums[high]:
+        low = mid + {{b}}
+    else:
+        high = {{c}}
+return nums[{{d}}]`,
+      b: [b("a", ">"), b("b", "1"), b("c", "mid"), b("d", "low")],
     },
   ),
 ];

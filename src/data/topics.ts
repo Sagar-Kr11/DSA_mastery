@@ -90,6 +90,7 @@ export const PATTERNS: Pattern[] = [
       { slug: "container-with-most-water", title: "Container With Most Water", difficulty: "Medium" },
       { slug: "trapping-rain-water", title: "Trapping Rain Water", difficulty: "Hard" },
       { slug: "remove-duplicates-from-sorted-array", title: "Remove Duplicates from Sorted Array", difficulty: "Easy" },
+      { slug: "move-zeroes", title: "Move Zeroes", difficulty: "Easy" },
     ],
   },
   {
@@ -110,6 +111,7 @@ export const PATTERNS: Pattern[] = [
       { slug: "maximum-subarray", title: "Maximum Subarray", difficulty: "Medium" },
       { slug: "maximum-product-subarray", title: "Maximum Product Subarray", difficulty: "Medium" },
       { slug: "maximum-sum-circular-subarray", title: "Maximum Sum Circular Subarray", difficulty: "Medium" },
+      { slug: "best-time-to-buy-and-sell-stock", title: "Best Time to Buy and Sell Stock", difficulty: "Easy" },
     ],
   },
   {
@@ -153,6 +155,7 @@ export const PATTERNS: Pattern[] = [
       { slug: "longest-repeating-character-replacement", title: "Longest Repeating Character Replacement", difficulty: "Medium" },
       { slug: "permutation-in-string", title: "Permutation in String", difficulty: "Medium" },
       { slug: "sliding-window-maximum", title: "Sliding Window Maximum", difficulty: "Hard" },
+      { slug: "minimum-size-subarray-sum", title: "Minimum Size Subarray Sum", difficulty: "Medium" },
     ],
   },
 
@@ -197,6 +200,7 @@ export const PATTERNS: Pattern[] = [
       { slug: "daily-temperatures", title: "Daily Temperatures", difficulty: "Medium" },
       { slug: "largest-rectangle-in-histogram", title: "Largest Rectangle in Histogram", difficulty: "Hard" },
       { slug: "trapping-rain-water", title: "Trapping Rain Water", difficulty: "Hard" },
+      { slug: "valid-parentheses", title: "Valid Parentheses", difficulty: "Easy" },
     ],
   },
 
@@ -431,6 +435,7 @@ export const PATTERNS: Pattern[] = [
       { slug: "subsets", title: "Subsets", difficulty: "Medium" },
       { slug: "word-search", title: "Word Search", difficulty: "Medium" },
       { slug: "sudoku-solver", title: "Sudoku Solver", difficulty: "Hard" },
+      { slug: "generate-parentheses", title: "Generate Parentheses", difficulty: "Medium" },
     ],
   },
 
@@ -454,6 +459,9 @@ export const PATTERNS: Pattern[] = [
       { slug: "search-in-rotated-sorted-array", title: "Search in Rotated Sorted Array", difficulty: "Medium" },
       { slug: "find-first-and-last-position-of-element-in-sorted-array", title: "Find First and Last Position", difficulty: "Medium" },
       { slug: "median-of-two-sorted-arrays", title: "Median of Two Sorted Arrays", difficulty: "Hard" },
+      { slug: "search-insert-position", title: "Search Insert Position", difficulty: "Easy" },
+      { slug: "first-bad-version", title: "First Bad Version", difficulty: "Easy" },
+      { slug: "find-minimum-in-rotated-sorted-array", title: "Find Minimum in Rotated Sorted Array", difficulty: "Medium" },
     ],
   },
   {
