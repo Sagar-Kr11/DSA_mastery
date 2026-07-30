@@ -32,6 +32,13 @@ const neet = (id: string, title: string): ProblemVideo => ({
   yt: { kind: "video", id, channel: "NeetCode", title: `${title} — NeetCode` },
 });
 
+const NEET_TREES = "PLot-Xpze53lfxD6l5pAGvCD4nPvWKU8Qo"; // NeetCode — Trees playlist
+
+const neetPlaylist = (title: string): ProblemVideo => ({
+  lang: "Python",
+  yt: { kind: "playlist", id: NEET_TREES, channel: "NeetCode", title: `${title} — NeetCode Trees (Python)` },
+});
+
 export const PROBLEM_VIDEOS: Record<string, ProblemVideo[]> = {
   // ==================== ARRAYS: two-pointers ====================
   "two-sum": [neet("KLlXCFG5TnA", "Two Sum"), striverVideo("UXDSeD9mN-k", "Two Sum")],
@@ -84,6 +91,15 @@ export const PROBLEM_VIDEOS: Record<string, ProblemVideo[]> = {
   "lowest-common-ancestor-of-a-binary-tree": [neet("13m9ZCB8gjw", "LCA of Binary Tree"), striverVideo("_-QHfMDde90", "LCA of Binary Tree")],
   "binary-tree-level-order-traversal": [neet("6ZnyEApgFYg", "Level Order Traversal"), striverVideo("EoAsWbO7sqg", "Level Order Traversal of Binary Tree")],
   "binary-tree-right-side-view": [neet("d4zLyf32e3I", "Binary Tree Right Side View"), striverPlaylist("Binary Tree Right Side View")],
+
+  // ==================== TREES: bst-ops (EPAM Tier 1) ====================
+  "search-in-a-binary-search-tree": [striverPlaylist("Search in a BST"), neetPlaylist("Search in a BST")],
+  "insert-into-a-binary-search-tree": [striverPlaylist("Insert into a BST"), neetPlaylist("Insert into a BST")],
+  "delete-node-in-a-bst": [striverPlaylist("Delete Node in a BST"), neetPlaylist("Delete Node in a BST")],
+  "validate-binary-search-tree": [striverPlaylist("Validate BST"), neet("s6ATEkipzow", "Validate Binary Search Tree")],
+  "kth-smallest-element-in-a-bst": [striverPlaylist("Kth Smallest in BST"), neet("5LUXSvjmGCw", "Kth Smallest Element in a BST")],
+  "lowest-common-ancestor-of-a-binary-search-tree": [striverPlaylist("LCA of a BST"), neet("gs2LMfuOR9k", "LCA of a BST")],
+  "minimum-absolute-difference-in-bst": [striverPlaylist("Minimum Absolute Difference in BST"), neetPlaylist("Minimum Absolute Difference in BST")],
 
   // ==================== GRAPHS ====================
   "number-of-islands": [neet("pV2kpPD66nE", "Number of Islands"), striverVideo("muncqlKJrH0", "Number of Islands (BFS)")],

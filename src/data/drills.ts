@@ -4837,6 +4837,308 @@ return ans`,
 ];
 
 // =====================================================================
+// BST OPERATIONS (EPAM Tier 1)
+// =====================================================================
+const bstOps: Drill[] = [
+  d(
+    "bst-floor-ceil",
+    "Floor & Ceil in a BST (EPAM OA)",
+    {
+      c: `int floorBST(TreeNode* root, int key) {
+  int ans = -1;
+  TreeNode* cur = root;
+  while (cur) {
+    if (cur->val == key) return {{a}};
+    if (key {{b}} cur->val) { ans = cur->val; cur = cur->{{c}}; }
+    else cur = cur->{{d}};
+  }
+  return ans;
+}
+// ceil: swap the branches — store on the else side and go left`,
+      b: [b("a", "key", ["cur->val"]), b("b", ">"), b("c", "right"), b("d", "left")],
+    },
+    {
+      c: `int floorBST(TreeNode root, int key) {
+  int ans = -1;
+  TreeNode cur = root;
+  while (cur != null) {
+    if (cur.val == key) return {{a}};
+    if (key {{b}} cur.val) { ans = cur.val; cur = cur.{{c}}; }
+    else cur = cur.{{d}};
+  }
+  return ans;
+}
+// ceil: store cur.val when key < cur.val, then move left`,
+      b: [b("a", "key", ["cur.val"]), b("b", ">"), b("c", "right"), b("d", "left")],
+    },
+    {
+      c: `def floor_bst(root, key):
+    ans, cur = -1, root
+    while cur:
+        if cur.val == key: return {{a}}
+        if key {{b}} cur.val:
+            ans = cur.val
+            cur = cur.{{c}}
+        else:
+            cur = cur.{{d}}
+    return ans`,
+      b: [b("a", "key", ["cur.val"]), b("b", ">"), b("c", "right"), b("d", "left")],
+    },
+    "https://www.geeksforgeeks.org/floor-in-binary-search-tree-bst/",
+  ),
+  d(
+    "search-in-a-binary-search-tree",
+    "Search in a BST",
+    {
+      c: `TreeNode* search(TreeNode* root, int val) {
+  while (root && root->val != val)
+    root = val {{a}} root->val ? root->{{b}} : root->{{c}};
+  return {{d}};
+}`,
+      b: [b("a", "<"), b("b", "left"), b("c", "right"), b("d", "root")],
+    },
+    {
+      c: `TreeNode search(TreeNode root, int val) {
+  while (root != null && root.val != val)
+    root = val {{a}} root.val ? root.{{b}} : root.{{c}};
+  return {{d}};
+}`,
+      b: [b("a", "<"), b("b", "left"), b("c", "right"), b("d", "root")],
+    },
+    {
+      c: `def searchBST(root, val):
+    while root and root.val != val:
+        root = root.{{b}} if val {{a}} root.val else root.{{c}}
+    return {{d}}`,
+      b: [b("a", "<"), b("b", "left"), b("c", "right"), b("d", "root")],
+    },
+  ),
+  d(
+    "insert-into-a-binary-search-tree",
+    "Insert into a BST",
+    {
+      c: `TreeNode* insert(TreeNode* root, int val) {
+  if (!root) return new TreeNode({{a}});
+  if (val {{b}} root->val) root->left = insert(root->{{c}}, val);
+  else root->right = insert(root->{{d}}, val);
+  return root;
+}`,
+      b: [b("a", "val"), b("b", "<"), b("c", "left"), b("d", "right")],
+    },
+    {
+      c: `TreeNode insert(TreeNode root, int val) {
+  if (root == null) return new TreeNode({{a}});
+  if (val {{b}} root.val) root.left = insert(root.{{c}}, val);
+  else root.right = insert(root.{{d}}, val);
+  return root;
+}`,
+      b: [b("a", "val"), b("b", "<"), b("c", "left"), b("d", "right")],
+    },
+    {
+      c: `def insertIntoBST(root, val):
+    if not root: return TreeNode({{a}})
+    if val {{b}} root.val: root.left = insertIntoBST(root.{{c}}, val)
+    else: root.right = insertIntoBST(root.{{d}}, val)
+    return root`,
+      b: [b("a", "val"), b("b", "<"), b("c", "left"), b("d", "right")],
+    },
+  ),
+  d(
+    "delete-node-in-a-bst",
+    "Delete Node in a BST",
+    {
+      c: `TreeNode* del(TreeNode* root, int key) {
+  if (!root) return nullptr;
+  if (key < root->val) root->left = del(root->left, key);
+  else if (key > root->val) root->right = del(root->{{a}}, key);
+  else {
+    if (!root->left) return root->{{b}};
+    if (!root->right) return root->{{c}};
+    TreeNode* s = root->right;
+    while (s->{{d}}) s = s->{{d}};   // in-order successor
+    root->val = s->val;
+    root->right = del(root->right, s->val);
+  }
+  return root;
+}`,
+      b: [b("a", "right"), b("b", "right"), b("c", "left"), b("d", "left")],
+    },
+    {
+      c: `TreeNode del(TreeNode root, int key) {
+  if (root == null) return null;
+  if (key < root.val) root.left = del(root.left, key);
+  else if (key > root.val) root.right = del(root.{{a}}, key);
+  else {
+    if (root.left == null) return root.{{b}};
+    if (root.right == null) return root.{{c}};
+    TreeNode s = root.right;
+    while (s.{{d}} != null) s = s.{{d}};
+    root.val = s.val;
+    root.right = del(root.right, s.val);
+  }
+  return root;
+}`,
+      b: [b("a", "right"), b("b", "right"), b("c", "left"), b("d", "left")],
+    },
+    {
+      c: `def deleteNode(root, key):
+    if not root: return None
+    if key < root.val: root.left = deleteNode(root.left, key)
+    elif key > root.val: root.right = deleteNode(root.{{a}}, key)
+    else:
+        if not root.left: return root.{{b}}
+        if not root.right: return root.{{c}}
+        s = root.right
+        while s.{{d}}: s = s.{{d}}
+        root.val = s.val
+        root.right = deleteNode(root.right, s.val)
+    return root`,
+      b: [b("a", "right"), b("b", "right"), b("c", "left"), b("d", "left")],
+    },
+  ),
+  d(
+    "validate-binary-search-tree",
+    "Validate Binary Search Tree",
+    {
+      c: `bool valid(TreeNode* r, long lo, long hi) {
+  if (!r) return {{a}};
+  if (r->val {{b}} lo || r->val {{c}} hi) return false;
+  return valid(r->left, lo, r->{{d}}) && valid(r->right, r->{{d}}, hi);
+}`,
+      b: [b("a", "true"), b("b", "<="), b("c", ">="), b("d", "val")],
+    },
+    {
+      c: `boolean valid(TreeNode r, long lo, long hi) {
+  if (r == null) return {{a}};
+  if (r.val {{b}} lo || r.val {{c}} hi) return false;
+  return valid(r.left, lo, r.{{d}}) && valid(r.right, r.{{d}}, hi);
+}`,
+      b: [b("a", "true"), b("b", "<="), b("c", ">="), b("d", "val")],
+    },
+    {
+      c: `def valid(r, lo, hi):
+    if not r: return {{a}}
+    if r.val {{b}} lo or r.val {{c}} hi: return False
+    return valid(r.left, lo, r.{{d}}) and valid(r.right, r.{{d}}, hi)`,
+      b: [b("a", "True"), b("b", "<="), b("c", ">="), b("d", "val")],
+    },
+  ),
+  d(
+    "kth-smallest-element-in-a-bst",
+    "Kth Smallest Element in a BST",
+    {
+      c: `int kth(TreeNode* root, int k) {
+  stack<TreeNode*> st; TreeNode* cur = root;
+  while (cur || !st.empty()) {
+    while (cur) { st.push(cur); cur = cur->{{a}}; }
+    cur = st.top(); st.pop();
+    if (--{{b}} == 0) return cur->val;
+    cur = cur->{{c}};
+  }
+  return -1;
+}`,
+      b: [b("a", "left"), b("b", "k"), b("c", "right")],
+    },
+    {
+      c: `int kth(TreeNode root, int k) {
+  Deque<TreeNode> st = new ArrayDeque<>(); TreeNode cur = root;
+  while (cur != null || !st.isEmpty()) {
+    while (cur != null) { st.push(cur); cur = cur.{{a}}; }
+    cur = st.pop();
+    if (--{{b}} == 0) return cur.val;
+    cur = cur.{{c}};
+  }
+  return -1;
+}`,
+      b: [b("a", "left"), b("b", "k"), b("c", "right")],
+    },
+    {
+      c: `def kthSmallest(root, k):
+    st, cur = [], root
+    while cur or st:
+        while cur:
+            st.append(cur); cur = cur.{{a}}
+        cur = st.pop()
+        {{b}} -= 1
+        if {{b}} == 0: return cur.val
+        cur = cur.{{c}}`,
+      b: [b("a", "left"), b("b", "k"), b("c", "right")],
+    },
+  ),
+  d(
+    "lowest-common-ancestor-of-a-binary-search-tree",
+    "LCA of a BST",
+    {
+      c: `TreeNode* lca(TreeNode* root, TreeNode* p, TreeNode* q) {
+  while (root) {
+    if (p->val < root->val && q->val < root->val) root = root->{{a}};
+    else if (p->val > root->val && q->val > root->val) root = root->{{b}};
+    else return {{c}};
+  }
+  return nullptr;
+}`,
+      b: [b("a", "left"), b("b", "right"), b("c", "root")],
+    },
+    {
+      c: `TreeNode lca(TreeNode root, TreeNode p, TreeNode q) {
+  while (root != null) {
+    if (p.val < root.val && q.val < root.val) root = root.{{a}};
+    else if (p.val > root.val && q.val > root.val) root = root.{{b}};
+    else return {{c}};
+  }
+  return null;
+}`,
+      b: [b("a", "left"), b("b", "right"), b("c", "root")],
+    },
+    {
+      c: `def lowestCommonAncestor(root, p, q):
+    while root:
+        if p.val < root.val and q.val < root.val: root = root.{{a}}
+        elif p.val > root.val and q.val > root.val: root = root.{{b}}
+        else: return {{c}}`,
+      b: [b("a", "left"), b("b", "right"), b("c", "root")],
+    },
+  ),
+  d(
+    "minimum-absolute-difference-in-bst",
+    "Minimum Absolute Difference in BST",
+    {
+      c: `int best = INT_MAX; TreeNode* prev = nullptr;
+void inorder(TreeNode* r) {
+  if (!r) return;
+  inorder(r->{{a}});
+  if (prev) best = min(best, r->val - prev->{{b}});
+  prev = r;
+  inorder(r->{{c}});
+}`,
+      b: [b("a", "left"), b("b", "val"), b("c", "right")],
+    },
+    {
+      c: `int best = Integer.MAX_VALUE; TreeNode prev = null;
+void inorder(TreeNode r) {
+  if (r == null) return;
+  inorder(r.{{a}});
+  if (prev != null) best = Math.min(best, r.val - prev.{{b}});
+  prev = r;
+  inorder(r.{{c}});
+}`,
+      b: [b("a", "left"), b("b", "val"), b("c", "right")],
+    },
+    {
+      c: `best, prev = float('inf'), None
+def inorder(r):
+    global best, prev
+    if not r: return
+    inorder(r.{{a}})
+    if prev is not None: best = min(best, r.val - prev.{{b}})
+    prev = r
+    inorder(r.{{c}})`,
+      b: [b("a", "left"), b("b", "val"), b("c", "right")],
+    },
+  ),
+];
+
+// =====================================================================
 // EXPORT
 // =====================================================================
 export const DRILLS: Record<string, Drill[]> = {
@@ -4850,6 +5152,7 @@ export const DRILLS: Record<string, Drill[]> = {
   "reverse-list": reverseList,
   "tree-dfs": treeDfs,
   "tree-bfs": treeBfs,
+  "bst-ops": bstOps,
   "graph-bfs-dfs": graphBfsDfs,
   "topo-sort": topoSort,
   dijkstra,

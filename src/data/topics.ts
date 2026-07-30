@@ -297,6 +297,31 @@ export const PATTERNS: Pattern[] = [
       { slug: "binary-tree-zigzag-level-order-traversal", title: "Zigzag Level Order", difficulty: "Medium" },
     ],
   },
+  {
+    id: "bst-ops",
+    topicId: "trees",
+    name: "BST Operations (search · insert · floor/ceil)",
+    logicType: "Exploit the BST ordering invariant: go left when target < node, right when target > node. Powers search, insert, delete, in-order sort, and floor/ceil (largest ≤ target / smallest ≥ target) — the confirmed EPAM OA question.",
+    companies: ["EPAM", "Amazon", "Microsoft", "Accenture", "Deloitte"],
+    youtube: { kind: "playlist", id: "PLgUwDviBIf0q8Hkd7bK2Bpryj2xVJk8Vk", channel: "Striver", title: "Striver — Trees & BST" },
+    flow: [
+      { id: "q1", label: "cur = root, ans = -1", next: ["q2"] },
+      { id: "q2", label: "While cur != null", next: ["q3"] },
+      { id: "q3", label: "If cur.val == target → return cur", next: ["q4"] },
+      { id: "q4", label: "If target < cur.val → (ceil: ans = cur.val) cur = cur.left", next: ["q5"] },
+      { id: "q5", label: "Else → (floor: ans = cur.val) cur = cur.right", next: ["q6"] },
+      { id: "q6", label: "Return node / ans; in-order traversal gives sorted order" },
+    ],
+    problems: [
+      { slug: "search-in-a-binary-search-tree", title: "Search in a BST", difficulty: "Easy" },
+      { slug: "insert-into-a-binary-search-tree", title: "Insert into a BST", difficulty: "Medium" },
+      { slug: "delete-node-in-a-bst", title: "Delete Node in a BST", difficulty: "Medium" },
+      { slug: "validate-binary-search-tree", title: "Validate Binary Search Tree", difficulty: "Medium" },
+      { slug: "kth-smallest-element-in-a-bst", title: "Kth Smallest Element in a BST", difficulty: "Medium" },
+      { slug: "lowest-common-ancestor-of-a-binary-search-tree", title: "LCA of a BST", difficulty: "Medium" },
+      { slug: "minimum-absolute-difference-in-bst", title: "Minimum Absolute Difference in BST", difficulty: "Easy" },
+    ],
+  },
 
   // ==================== GRAPHS ====================
   {
@@ -637,7 +662,7 @@ export const TOPICS: Topic[] = [
   { id: "hashmap", name: "HashMap", emoji: "#", blurb: "Frequency counts, complements, group-by keys, and prefix-sum lookups — the go-to pattern for turning O(n²) brute force into O(n) with a hash table.", patternIds: ["hashmap-frequency"] },
   { id: "stack-queue", name: "Stack / Queue", emoji: "⊟", blurb: "Monotonic stacks and queues answer nearest-greater/smaller in O(n).", patternIds: ["monotonic-stack"] },
   { id: "linked-list", name: "Linked List", emoji: "↦", blurb: "Fast/slow pointers, in-place reversal, K-group rewires.", patternIds: ["fast-slow", "reverse-list"] },
-  { id: "trees", name: "Trees", emoji: "🌳", blurb: "DFS combines subresults; BFS explores level-by-level.", patternIds: ["tree-dfs", "tree-bfs"] },
+  { id: "trees", name: "Trees", emoji: "🌳", blurb: "DFS combines subresults; BFS explores level-by-level; BST ordering gives O(h) search, insert and floor/ceil.", patternIds: ["tree-dfs", "tree-bfs", "bst-ops"] },
   { id: "graphs", name: "Graphs", emoji: "◈", blurb: "BFS/DFS, topological order, Dijkstra — the heavy hitters.", patternIds: ["graph-bfs-dfs", "topo-sort", "dijkstra"] },
   { id: "dp", name: "Dynamic Programming", emoji: "∑", blurb: "Knapsack, LIS, partition DP — memoize overlapping subproblems.", patternIds: ["knapsack", "lis", "mcm"] },
   { id: "greedy-backtracking", name: "Greedy / Backtracking", emoji: "⟳", blurb: "Choose-recurse-undo when brute force is only slightly too slow.", patternIds: ["backtracking"] },
