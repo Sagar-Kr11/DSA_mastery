@@ -662,7 +662,7 @@ export const TOPICS: Topic[] = [
   { id: "hashmap", name: "HashMap", emoji: "#", blurb: "Frequency counts, complements, group-by keys, and prefix-sum lookups — the go-to pattern for turning O(n²) brute force into O(n) with a hash table.", patternIds: ["hashmap-frequency"] },
   { id: "stack-queue", name: "Stack / Queue", emoji: "⊟", blurb: "Monotonic stacks and queues answer nearest-greater/smaller in O(n).", patternIds: ["monotonic-stack"] },
   { id: "linked-list", name: "Linked List", emoji: "↦", blurb: "Fast/slow pointers, in-place reversal, K-group rewires.", patternIds: ["fast-slow", "reverse-list"] },
-  { id: "trees", name: "Trees", emoji: "🌳", blurb: "DFS combines subresults; BFS explores level-by-level.", patternIds: ["tree-dfs", "tree-bfs"] },
+  { id: "trees", name: "Trees", emoji: "🌳", blurb: "DFS combines subresults; BFS explores level-by-level; BST ordering gives O(h) search, insert and floor/ceil.", patternIds: ["tree-dfs", "tree-bfs", "bst-ops"] },
   { id: "graphs", name: "Graphs", emoji: "◈", blurb: "BFS/DFS, topological order, Dijkstra — the heavy hitters.", patternIds: ["graph-bfs-dfs", "topo-sort", "dijkstra"] },
   { id: "dp", name: "Dynamic Programming", emoji: "∑", blurb: "Knapsack, LIS, partition DP — memoize overlapping subproblems.", patternIds: ["knapsack", "lis", "mcm"] },
   { id: "greedy-backtracking", name: "Greedy / Backtracking", emoji: "⟳", blurb: "Choose-recurse-undo when brute force is only slightly too slow.", patternIds: ["backtracking"] },
