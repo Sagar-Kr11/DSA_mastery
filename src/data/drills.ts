@@ -5131,7 +5131,7 @@ def inorder(r):
     if not r: return
     inorder(r.{{a}})
     if prev is not None: best = min(best, r.val - prev.{{b}})
-    prev = r.val
+    prev = r
     inorder(r.{{c}})`,
       b: [b("a", "left"), b("b", "val"), b("c", "right")],
     },
@@ -5152,6 +5152,7 @@ export const DRILLS: Record<string, Drill[]> = {
   "reverse-list": reverseList,
   "tree-dfs": treeDfs,
   "tree-bfs": treeBfs,
+  "bst-ops": bstOps,
   "graph-bfs-dfs": graphBfsDfs,
   "topo-sort": topoSort,
   dijkstra,
