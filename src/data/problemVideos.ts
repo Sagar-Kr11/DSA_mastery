@@ -32,6 +32,13 @@ const neet = (id: string, title: string): ProblemVideo => ({
   yt: { kind: "video", id, channel: "NeetCode", title: `${title} — NeetCode` },
 });
 
+const NEET_TREES = "PLot-Xpze53lfxD6l5pAGvCD4nPvWKU8Qo"; // NeetCode — Trees playlist
+
+const neetPlaylist = (title: string): ProblemVideo => ({
+  lang: "Python",
+  yt: { kind: "playlist", id: NEET_TREES, channel: "NeetCode", title: `${title} — NeetCode Trees (Python)` },
+});
+
 export const PROBLEM_VIDEOS: Record<string, ProblemVideo[]> = {
   // ==================== ARRAYS: two-pointers ====================
   "two-sum": [neet("KLlXCFG5TnA", "Two Sum"), striverVideo("UXDSeD9mN-k", "Two Sum")],
