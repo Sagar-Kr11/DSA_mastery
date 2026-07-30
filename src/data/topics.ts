@@ -297,6 +297,31 @@ export const PATTERNS: Pattern[] = [
       { slug: "binary-tree-zigzag-level-order-traversal", title: "Zigzag Level Order", difficulty: "Medium" },
     ],
   },
+  {
+    id: "bst-ops",
+    topicId: "trees",
+    name: "BST Operations (search · insert · floor/ceil)",
+    logicType: "Exploit the BST ordering invariant: go left when target < node, right when target > node. Powers search, insert, delete, in-order sort, and floor/ceil (largest ≤ target / smallest ≥ target) — the confirmed EPAM OA question.",
+    companies: ["EPAM", "Amazon", "Microsoft", "Accenture", "Deloitte"],
+    youtube: { kind: "playlist", id: "PLgUwDviBIf0q8Hkd7bK2Bpryj2xVJk8Vk", channel: "Striver", title: "Striver — Trees & BST" },
+    flow: [
+      { id: "q1", label: "cur = root, ans = -1", next: ["q2"] },
+      { id: "q2", label: "While cur != null", next: ["q3"] },
+      { id: "q3", label: "If cur.val == target → return cur", next: ["q4"] },
+      { id: "q4", label: "If target < cur.val → (ceil: ans = cur.val) cur = cur.left", next: ["q5"] },
+      { id: "q5", label: "Else → (floor: ans = cur.val) cur = cur.right", next: ["q6"] },
+      { id: "q6", label: "Return node / ans; in-order traversal gives sorted order" },
+    ],
+    problems: [
+      { slug: "search-in-a-binary-search-tree", title: "Search in a BST", difficulty: "Easy" },
+      { slug: "insert-into-a-binary-search-tree", title: "Insert into a BST", difficulty: "Medium" },
+      { slug: "delete-node-in-a-bst", title: "Delete Node in a BST", difficulty: "Medium" },
+      { slug: "validate-binary-search-tree", title: "Validate Binary Search Tree", difficulty: "Medium" },
+      { slug: "kth-smallest-element-in-a-bst", title: "Kth Smallest Element in a BST", difficulty: "Medium" },
+      { slug: "lowest-common-ancestor-of-a-binary-search-tree", title: "LCA of a BST", difficulty: "Medium" },
+      { slug: "minimum-absolute-difference-in-bst", title: "Minimum Absolute Difference in BST", difficulty: "Easy" },
+    ],
+  },
 
   // ==================== GRAPHS ====================
   {
