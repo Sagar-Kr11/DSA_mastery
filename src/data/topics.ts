@@ -746,8 +746,8 @@ export const PATTERNS: Pattern[] = [
 ];
 
 export const TOPICS: Topic[] = [
-  { id: "arrays", name: "Arrays", emoji: "▦", blurb: "Two pointers, prefix sums, Kadane — the foundation of every OA.", patternIds: ["two-pointers", "kadane", "prefix-sum"] },
-  { id: "strings", name: "Strings", emoji: "𝒮", blurb: "Sliding windows and string DP — anagrams, substrings, matches.", patternIds: ["sliding-window"] },
+  { id: "arrays", name: "Arrays", emoji: "▦", blurb: "Two pointers, prefix sums, Kadane and the in-place classics — the foundation of every OA.", patternIds: ["two-pointers", "kadane", "prefix-sum", "array-classics"] },
+  { id: "strings", name: "Strings", emoji: "𝒮", blurb: "Sliding windows, palindromes and parsing — anagrams, substrings, matches.", patternIds: ["sliding-window", "string-classics"] },
   { id: "hashmap", name: "HashMap", emoji: "#", blurb: "Frequency counts, complements, group-by keys, and prefix-sum lookups — the go-to pattern for turning O(n²) brute force into O(n) with a hash table.", patternIds: ["hashmap-frequency"] },
   { id: "stack-queue", name: "Stack / Queue", emoji: "⊟", blurb: "Monotonic stacks and queues answer nearest-greater/smaller in O(n).", patternIds: ["monotonic-stack"] },
   { id: "linked-list", name: "Linked List", emoji: "↦", blurb: "Fast/slow pointers, in-place reversal, K-group rewires.", patternIds: ["fast-slow", "reverse-list"] },
