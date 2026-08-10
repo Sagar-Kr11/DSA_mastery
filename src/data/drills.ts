@@ -5618,8 +5618,8 @@ return s.substr(start, len);`,
     {
       c: `int start = 0, len = 0;
 for (int i = 0; i < s.length(); i++) {
-  for (int[] p : new int[][]{{"{"}}{i, i}, {i, i + {{a}}}{{"}"}}) {
-    int l = p[0], r = p[1];
+  for (int d = 0; d <= {{a}}; d++) {
+    int l = i, r = i + d;
     while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt({{b}})) { l--; r++; }
     if (r - l - 1 > len) { len = r - l - 1; start = {{c}}; }
   }
