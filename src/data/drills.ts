@@ -5813,6 +5813,9 @@ return sb.toString();`,
 
 export const DRILLS: Record<string, Drill[]> = {
   "two-pointers": twoPointers,
+  "array-classics": arrayClassics,
+  "string-classics": stringClassics,
+  "linear-dp": linearDp,
   kadane,
   "prefix-sum": prefixSum,
   "sliding-window": slidingWindow,
