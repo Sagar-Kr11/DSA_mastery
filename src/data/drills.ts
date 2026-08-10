@@ -5141,6 +5141,676 @@ def inorder(r):
 // =====================================================================
 // EXPORT
 // =====================================================================
+// =====================================================================
+// LINEAR DP (House Robber family)
+// =====================================================================
+const linearDp: Drill[] = [
+  d(
+    "house-robber",
+    "House Robber (rob or skip)",
+    {
+      c: `int prev2 = 0, prev1 = 0;
+for (int x : nums) {
+  int take = x + {{a}};
+  int skip = {{b}};
+  prev2 = prev1;
+  prev1 = max(take, skip);
+}
+return {{c}};`,
+      b: [b("a", "prev2"), b("b", "prev1"), b("c", "prev1")],
+    },
+    {
+      c: `int prev2 = 0, prev1 = 0;
+for (int x : nums) {
+  int take = x + {{a}};
+  int skip = {{b}};
+  prev2 = prev1;
+  prev1 = Math.max(take, skip);
+}
+return {{c}};`,
+      b: [b("a", "prev2"), b("b", "prev1"), b("c", "prev1")],
+    },
+    {
+      c: `prev2 = prev1 = 0
+for x in nums:
+    take = x + {{a}}
+    skip = {{b}}
+    prev2 = prev1
+    prev1 = max(take, skip)
+return {{c}}`,
+      b: [b("a", "prev2"), b("b", "prev1"), b("c", "prev1")],
+    },
+  ),
+  d(
+    "house-robber-ii",
+    "House Robber II (circular street)",
+    {
+      c: `// rob(v) = linear House Robber
+int n = nums.size();
+if (n == 1) return {{a}};
+vector<int> skipLast(nums.begin(), nums.end() - 1);
+vector<int> skipFirst(nums.begin() + {{b}}, nums.end());
+return max(rob(skipLast), rob({{c}}));`,
+      b: [b("a", "nums[0]"), b("b", "1"), b("c", "skipFirst")],
+    },
+    {
+      c: `int n = nums.length;
+if (n == 1) return {{a}};
+int[] skipLast = Arrays.copyOfRange(nums, 0, n - 1);
+int[] skipFirst = Arrays.copyOfRange(nums, {{b}}, n);
+return Math.max(rob(skipLast), rob({{c}}));`,
+      b: [b("a", "nums[0]"), b("b", "1"), b("c", "skipFirst")],
+    },
+    {
+      c: `if len(nums) == 1:
+    return {{a}}
+return max(rob_linear(nums[:{{b}}]), rob_linear(nums[{{c}}:]))`,
+      b: [b("a", "nums[0]"), b("b", "-1"), b("c", "1")],
+    },
+  ),
+  d(
+    "climbing-stairs",
+    "Climbing Stairs (Fibonacci DP)",
+    {
+      c: `int a = 1, b1 = 1;
+for (int i = 2; i <= n; i++) {
+  int cur = a + {{a}};
+  a = {{b}};
+  b1 = cur;
+}
+return {{c}};`,
+      b: [b("a", "b1"), b("b", "b1"), b("c", "b1")],
+    },
+    {
+      c: `int a = 1, b = 1;
+for (int i = 2; i <= n; i++) {
+  int cur = a + {{a}};
+  a = {{b}};
+  b = cur;
+}
+return {{c}};`,
+      b: [b("a", "b"), b("b", "b"), b("c", "b")],
+    },
+    {
+      c: `a = b = 1
+for _ in range(2, n + 1):
+    a, b = b, {{a}}
+return {{b}}`,
+      b: [b("a", "a + b"), b("b", "b")],
+    },
+  ),
+  d(
+    "min-cost-climbing-stairs",
+    "Min Cost Climbing Stairs",
+    {
+      c: `int prev2 = 0, prev1 = 0;
+for (int i = 2; i <= (int)cost.size(); i++) {
+  int cur = min(prev1 + cost[i - 1], prev2 + {{a}});
+  prev2 = {{b}};
+  prev1 = cur;
+}
+return {{c}};`,
+      b: [b("a", "cost[i - 2]", ["cost[i-2]"]), b("b", "prev1"), b("c", "prev1")],
+    },
+    {
+      c: `int prev2 = 0, prev1 = 0;
+for (int i = 2; i <= cost.length; i++) {
+  int cur = Math.min(prev1 + cost[i - 1], prev2 + {{a}});
+  prev2 = {{b}};
+  prev1 = cur;
+}
+return {{c}};`,
+      b: [b("a", "cost[i - 2]", ["cost[i-2]"]), b("b", "prev1"), b("c", "prev1")],
+    },
+    {
+      c: `prev2 = prev1 = 0
+for i in range(2, len(cost) + 1):
+    cur = min(prev1 + cost[i - 1], prev2 + {{a}})
+    prev2 = {{b}}
+    prev1 = cur
+return {{c}}`,
+      b: [b("a", "cost[i - 2]", ["cost[i-2]"]), b("b", "prev1"), b("c", "prev1")],
+    },
+  ),
+  d(
+    "jump-game",
+    "Jump Game (greedy reach)",
+    {
+      c: `int reach = 0;
+for (int i = 0; i < (int)nums.size(); i++) {
+  if (i > {{a}}) return false;
+  reach = max(reach, i + {{b}});
+}
+return {{c}};`,
+      b: [b("a", "reach"), b("b", "nums[i]"), b("c", "true")],
+    },
+    {
+      c: `int reach = 0;
+for (int i = 0; i < nums.length; i++) {
+  if (i > {{a}}) return false;
+  reach = Math.max(reach, i + {{b}});
+}
+return {{c}};`,
+      b: [b("a", "reach"), b("b", "nums[i]"), b("c", "true")],
+    },
+    {
+      c: `reach = 0
+for i, x in enumerate(nums):
+    if i > {{a}}:
+        return False
+    reach = max(reach, i + {{b}})
+return {{c}}`,
+      b: [b("a", "reach"), b("b", "x"), b("c", "True")],
+    },
+  ),
+  d(
+    "decode-ways",
+    "Decode Ways (1-digit + 2-digit splits)",
+    {
+      c: `int prev2 = 1, prev1 = s[0] == '0' ? 0 : 1;
+for (int i = 1; i < (int)s.size(); i++) {
+  int cur = 0;
+  if (s[i] != {{a}}) cur += prev1;
+  int two = (s[i - 1] - '0') * 10 + (s[i] - '0');
+  if (two >= 10 && two <= {{b}}) cur += prev2;
+  prev2 = prev1;
+  prev1 = {{c}};
+}
+return prev1;`,
+      b: [b("a", "'0'"), b("b", "26"), b("c", "cur")],
+    },
+    {
+      c: `int prev2 = 1, prev1 = s.charAt(0) == '0' ? 0 : 1;
+for (int i = 1; i < s.length(); i++) {
+  int cur = 0;
+  if (s.charAt(i) != {{a}}) cur += prev1;
+  int two = Integer.parseInt(s.substring(i - 1, i + 1));
+  if (two >= 10 && two <= {{b}}) cur += prev2;
+  prev2 = prev1;
+  prev1 = {{c}};
+}
+return prev1;`,
+      b: [b("a", "'0'"), b("b", "26"), b("c", "cur")],
+    },
+    {
+      c: `prev2, prev1 = 1, 0 if s[0] == "0" else 1
+for i in range(1, len(s)):
+    cur = 0
+    if s[i] != {{a}}:
+        cur += prev1
+    if 10 <= int(s[i - 1:i + 1]) <= {{b}}:
+        cur += prev2
+    prev2, prev1 = prev1, {{c}}
+return prev1`,
+      b: [b("a", '"0"', ["'0'"]), b("b", "26"), b("c", "cur")],
+    },
+  ),
+  d(
+    "delete-and-earn",
+    "Delete and Earn (House Robber on values)",
+    {
+      c: `vector<int> pts(maxVal + 1, 0);
+for (int x : nums) pts[x] += {{a}};
+int prev2 = 0, prev1 = 0;
+for (int v = 1; v <= maxVal; v++) {
+  int cur = max(prev1, prev2 + {{b}});
+  prev2 = prev1;
+  prev1 = cur;
+}
+return {{c}};`,
+      b: [b("a", "x"), b("b", "pts[v]"), b("c", "prev1")],
+    },
+    {
+      c: `int[] pts = new int[maxVal + 1];
+for (int x : nums) pts[x] += {{a}};
+int prev2 = 0, prev1 = 0;
+for (int v = 1; v <= maxVal; v++) {
+  int cur = Math.max(prev1, prev2 + {{b}});
+  prev2 = prev1;
+  prev1 = cur;
+}
+return {{c}};`,
+      b: [b("a", "x"), b("b", "pts[v]"), b("c", "prev1")],
+    },
+    {
+      c: `pts = Counter(nums)
+prev2 = prev1 = 0
+for v in range(1, max(nums) + 1):
+    cur = max(prev1, prev2 + v * {{a}})
+    prev2 = prev1
+    prev1 = cur
+return {{b}}`,
+      b: [b("a", "pts[v]"), b("b", "prev1")],
+    },
+  ),
+];
+
+// =====================================================================
+// ARRAY CLASSICS
+// =====================================================================
+const arrayClassics: Drill[] = [
+  d(
+    "product-of-array-except-self",
+    "Product of Array Except Self (prefix × suffix)",
+    {
+      c: `int n = nums.size();
+vector<int> res(n, 1);
+int pre = 1;
+for (int i = 0; i < n; i++) { res[i] = {{a}}; pre *= nums[i]; }
+int suf = 1;
+for (int i = n - 1; i >= 0; i--) { res[i] *= {{b}}; suf *= {{c}}; }
+return res;`,
+      b: [b("a", "pre"), b("b", "suf"), b("c", "nums[i]")],
+    },
+    {
+      c: `int n = nums.length;
+int[] res = new int[n];
+int pre = 1;
+for (int i = 0; i < n; i++) { res[i] = {{a}}; pre *= nums[i]; }
+int suf = 1;
+for (int i = n - 1; i >= 0; i--) { res[i] *= {{b}}; suf *= {{c}}; }
+return res;`,
+      b: [b("a", "pre"), b("b", "suf"), b("c", "nums[i]")],
+    },
+    {
+      c: `n = len(nums)
+res = [1] * n
+pre = 1
+for i in range(n):
+    res[i] = {{a}}
+    pre *= nums[i]
+suf = 1
+for i in range(n - 1, -1, -1):
+    res[i] *= {{b}}
+    suf *= {{c}}
+return res`,
+      b: [b("a", "pre"), b("b", "suf"), b("c", "nums[i]")],
+    },
+  ),
+  d(
+    "merge-intervals",
+    "Merge Intervals (sort by start)",
+    {
+      c: `sort(iv.begin(), iv.end());
+vector<vector<int>> out;
+for (auto& x : iv) {
+  if (!out.empty() && x[0] <= {{a}})
+    out.back()[1] = max(out.back()[1], {{b}});
+  else
+    out.push_back({{c}});
+}
+return out;`,
+      b: [b("a", "out.back()[1]"), b("b", "x[1]"), b("c", "x")],
+    },
+    {
+      c: `Arrays.sort(iv, (p, q) -> p[0] - q[0]);
+List<int[]> out = new ArrayList<>();
+for (int[] x : iv) {
+  if (!out.isEmpty() && x[0] <= {{a}})
+    out.get(out.size() - 1)[1] = Math.max(out.get(out.size() - 1)[1], {{b}});
+  else
+    out.add({{c}});
+}
+return out.toArray(new int[0][]);`,
+      b: [b("a", "out.get(out.size() - 1)[1]"), b("b", "x[1]"), b("c", "x")],
+    },
+    {
+      c: `intervals.sort(key=lambda p: {{a}})
+out = []
+for s, e in intervals:
+    if out and s <= {{b}}:
+        out[-1][1] = max(out[-1][1], {{c}})
+    else:
+        out.append([s, e])
+return out`,
+      b: [b("a", "p[0]"), b("b", "out[-1][1]"), b("c", "e")],
+    },
+  ),
+  d(
+    "sort-colors",
+    "Sort Colors (Dutch national flag)",
+    {
+      c: `int low = 0, mid = 0, high = nums.size() - 1;
+while (mid <= {{a}}) {
+  if (nums[mid] == 0) swap(nums[low++], nums[{{b}}]);
+  else if (nums[mid] == 1) mid++;
+  else swap(nums[mid], nums[{{c}}]);
+}`,
+      b: [b("a", "high"), b("b", "mid++", ["mid"]), b("c", "high--", ["high"])],
+    },
+    {
+      c: `int low = 0, mid = 0, high = nums.length - 1;
+while (mid <= {{a}}) {
+  if (nums[mid] == 0) { swap(nums, low++, mid++); }
+  else if (nums[mid] == {{b}}) { mid++; }
+  else { swap(nums, mid, {{c}}); }
+}`,
+      b: [b("a", "high"), b("b", "1"), b("c", "high--", ["high"])],
+    },
+    {
+      c: `low, mid, high = 0, 0, len(nums) - 1
+while mid <= {{a}}:
+    if nums[mid] == 0:
+        nums[low], nums[mid] = nums[mid], nums[low]
+        low += 1
+        mid += 1
+    elif nums[mid] == {{b}}:
+        mid += 1
+    else:
+        nums[mid], nums[high] = nums[high], nums[mid]
+        high -= {{c}}`,
+      b: [b("a", "high"), b("b", "1"), b("c", "1")],
+    },
+  ),
+  d(
+    "rotate-array",
+    "Rotate Array (reverse three times)",
+    {
+      c: `int n = nums.size();
+k %= {{a}};
+reverse(nums.begin(), nums.end());
+reverse(nums.begin(), nums.begin() + {{b}});
+reverse(nums.begin() + k, {{c}});`,
+      b: [b("a", "n"), b("b", "k"), b("c", "nums.end()")],
+    },
+    {
+      c: `int n = nums.length;
+k %= {{a}};
+reverse(nums, 0, n - 1);
+reverse(nums, 0, {{b}});
+reverse(nums, k, {{c}});`,
+      b: [b("a", "n"), b("b", "k - 1", ["k-1"]), b("c", "n - 1", ["n-1"])],
+    },
+    {
+      c: `n = len(nums)
+k %= {{a}}
+nums.reverse()
+nums[:k] = reversed(nums[:{{b}}])
+nums[k:] = reversed(nums[{{c}}:])`,
+      b: [b("a", "n"), b("b", "k"), b("c", "k")],
+    },
+  ),
+  d(
+    "merge-sorted-array",
+    "Merge Sorted Array (fill from the back)",
+    {
+      c: `int i = m - 1, j = n - 1, k = m + n - 1;
+while (j >= 0) {
+  if (i >= 0 && nums1[i] > nums2[j]) nums1[k--] = nums1[{{a}}];
+  else nums1[k--] = nums2[{{b}}];
+}`,
+      b: [b("a", "i--", ["i"]), b("b", "j--", ["j"])],
+    },
+    {
+      c: `int i = m - 1, j = n - 1, k = m + n - 1;
+while (j >= {{a}}) {
+  if (i >= 0 && nums1[i] > nums2[j]) nums1[k--] = nums1[i--];
+  else nums1[k--] = nums2[{{b}}];
+}`,
+      b: [b("a", "0"), b("b", "j--", ["j"])],
+    },
+    {
+      c: `i, j, k = m - 1, n - 1, m + n - 1
+while j >= 0:
+    if i >= 0 and nums1[i] > nums2[j]:
+        nums1[k] = nums1[i]
+        i -= {{a}}
+    else:
+        nums1[k] = nums2[j]
+        j -= 1
+    k -= {{b}}`,
+      b: [b("a", "1"), b("b", "1")],
+    },
+  ),
+  d(
+    "find-the-duplicate-number",
+    "Find the Duplicate Number (Floyd cycle)",
+    {
+      c: `int slow = nums[0], fast = nums[0];
+do { slow = nums[slow]; fast = nums[nums[{{a}}]]; } while (slow != fast);
+slow = nums[0];
+while (slow != fast) { slow = nums[slow]; fast = nums[{{b}}]; }
+return {{c}};`,
+      b: [b("a", "fast"), b("b", "fast"), b("c", "slow")],
+    },
+    {
+      c: `int slow = nums[0], fast = nums[0];
+do { slow = nums[slow]; fast = nums[nums[{{a}}]]; } while (slow != fast);
+slow = nums[0];
+while (slow != fast) { slow = nums[slow]; fast = nums[{{b}}]; }
+return {{c}};`,
+      b: [b("a", "fast"), b("b", "fast"), b("c", "slow")],
+    },
+    {
+      c: `slow = fast = nums[0]
+while True:
+    slow = nums[slow]
+    fast = nums[nums[{{a}}]]
+    if slow == fast:
+        break
+slow = nums[0]
+while slow != fast:
+    slow = nums[slow]
+    fast = nums[{{b}}]
+return {{c}}`,
+      b: [b("a", "fast"), b("b", "fast"), b("c", "slow")],
+    },
+  ),
+];
+
+// =====================================================================
+// STRING CLASSICS
+// =====================================================================
+const stringClassics: Drill[] = [
+  d(
+    "longest-palindromic-substring",
+    "Longest Palindromic Substring (expand around centre)",
+    {
+      c: `int start = 0, len = 0;
+auto expand = [&](int l, int r) {
+  while (l >= 0 && r < (int)s.size() && s[l] == s[{{a}}]) { l--; r++; }
+  if (r - l - 1 > len) { len = r - l - 1; start = {{b}}; }
+};
+for (int i = 0; i < (int)s.size(); i++) { expand(i, i); expand(i, {{c}}); }
+return s.substr(start, len);`,
+      b: [b("a", "r"), b("b", "l + 1", ["l+1"]), b("c", "i + 1", ["i+1"])],
+    },
+    {
+      c: `int start = 0, len = 0;
+for (int i = 0; i < s.length(); i++) {
+  for (int[] p : new int[][]{{"{"}}{i, i}, {i, i + {{a}}}{{"}"}}) {
+    int l = p[0], r = p[1];
+    while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt({{b}})) { l--; r++; }
+    if (r - l - 1 > len) { len = r - l - 1; start = {{c}}; }
+  }
+}
+return s.substring(start, start + len);`,
+      b: [b("a", "1"), b("b", "r"), b("c", "l + 1", ["l+1"])],
+    },
+    {
+      c: `best = ""
+def expand(l, r):
+    while l >= 0 and r < len(s) and s[l] == s[{{a}}]:
+        l -= 1
+        r += 1
+    return s[l + 1:{{b}}]
+for i in range(len(s)):
+    for cand in (expand(i, i), expand(i, i + {{c}})):
+        if len(cand) > len(best):
+            best = cand
+return best`,
+      b: [b("a", "r"), b("b", "r"), b("c", "1")],
+    },
+  ),
+  d(
+    "palindromic-substrings",
+    "Palindromic Substrings (count centres)",
+    {
+      c: `int count = 0;
+auto expand = [&](int l, int r) {
+  while (l >= 0 && r < (int)s.size() && s[l] == s[r]) { {{a}}++; l--; r++; }
+};
+for (int i = 0; i < (int)s.size(); i++) { expand(i, {{b}}); expand(i, i + {{c}}); }
+return count;`,
+      b: [b("a", "count"), b("b", "i"), b("c", "1")],
+    },
+    {
+      c: `int count = 0;
+for (int i = 0; i < s.length(); i++) {
+  count += expand(s, i, {{a}});
+  count += expand(s, i, i + {{b}});
+}
+return {{c}};`,
+      b: [b("a", "i"), b("b", "1"), b("c", "count")],
+    },
+    {
+      c: `count = 0
+def expand(l, r):
+    c = 0
+    while l >= 0 and r < len(s) and s[l] == s[{{a}}]:
+        c += 1
+        l -= 1
+        r += 1
+    return c
+for i in range(len(s)):
+    count += expand(i, i) + expand(i, i + {{b}})
+return {{c}}`,
+      b: [b("a", "r"), b("b", "1"), b("c", "count")],
+    },
+  ),
+  d(
+    "longest-common-prefix",
+    "Longest Common Prefix (vertical scan)",
+    {
+      c: `string pre = strs[0];
+for (int i = 1; i < (int)strs.size(); i++) {
+  while (strs[i].find(pre) != {{a}}) pre = pre.substr(0, pre.size() - {{b}});
+  if (pre.empty()) return {{c}};
+}
+return pre;`,
+      b: [b("a", "0"), b("b", "1"), b("c", '""')],
+    },
+    {
+      c: `String pre = strs[0];
+for (int i = 1; i < strs.length; i++) {
+  while (!strs[i].startsWith({{a}})) pre = pre.substring(0, pre.length() - {{b}});
+  if (pre.isEmpty()) return {{c}};
+}
+return pre;`,
+      b: [b("a", "pre"), b("b", "1"), b("c", '""')],
+    },
+    {
+      c: `pre = strs[0]
+for word in strs[1:]:
+    while not word.startswith({{a}}):
+        pre = pre[:{{b}}]
+        if not pre:
+            return {{c}}
+return pre`,
+      b: [b("a", "pre"), b("b", "-1"), b("c", '""')],
+    },
+  ),
+  d(
+    "valid-palindrome",
+    "Valid Palindrome (two pointers, skip non-alnum)",
+    {
+      c: `int l = 0, r = s.size() - 1;
+while (l < r) {
+  if (!isalnum(s[l])) { l++; continue; }
+  if (!isalnum(s[r])) { {{a}}--; continue; }
+  if (tolower(s[l]) != tolower(s[{{b}}])) return false;
+  l++; r--;
+}
+return {{c}};`,
+      b: [b("a", "r"), b("b", "r"), b("c", "true")],
+    },
+    {
+      c: `int l = 0, r = s.length() - 1;
+while (l < r) {
+  if (!Character.isLetterOrDigit(s.charAt(l))) { l++; continue; }
+  if (!Character.isLetterOrDigit(s.charAt(r))) { {{a}}--; continue; }
+  if (Character.toLowerCase(s.charAt(l)) != Character.toLowerCase(s.charAt({{b}}))) return false;
+  l++; r--;
+}
+return {{c}};`,
+      b: [b("a", "r"), b("b", "r"), b("c", "true")],
+    },
+    {
+      c: `clean = [ch.lower() for ch in s if ch.{{a}}()]
+return clean == clean[{{b}}]`,
+      b: [b("a", "isalnum"), b("b", "::-1")],
+    },
+  ),
+  d(
+    "string-to-integer-atoi",
+    "String to Integer (atoi)",
+    {
+      c: `int i = 0, sign = 1;
+long res = 0;
+while (i < (int)s.size() && s[i] == ' ') i++;
+if (i < (int)s.size() && (s[i] == '+' || s[i] == '-')) sign = (s[i++] == '-') ? {{a}} : 1;
+while (i < (int)s.size() && isdigit(s[i])) {
+  res = res * 10 + (s[i++] - {{b}});
+  if (sign * res > INT_MAX) return INT_MAX;
+  if (sign * res < INT_MIN) return {{c}};
+}
+return (int)(sign * res);`,
+      b: [b("a", "-1"), b("b", "'0'"), b("c", "INT_MIN")],
+    },
+    {
+      c: `int i = 0, sign = 1;
+long res = 0;
+while (i < s.length() && s.charAt(i) == ' ') i++;
+if (i < s.length() && (s.charAt(i) == '+' || s.charAt(i) == '-')) sign = s.charAt(i++) == '-' ? {{a}} : 1;
+while (i < s.length() && Character.isDigit(s.charAt(i))) {
+  res = res * 10 + (s.charAt(i++) - {{b}});
+  if (sign * res > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+  if (sign * res < Integer.MIN_VALUE) return {{c}};
+}
+return (int)(sign * res);`,
+      b: [b("a", "-1"), b("b", "'0'"), b("c", "Integer.MIN_VALUE")],
+    },
+    {
+      c: `i, sign, res = 0, 1, 0
+while i < len(s) and s[i] == " ":
+    i += 1
+if i < len(s) and s[i] in "+-":
+    sign = {{a}} if s[i] == "-" else 1
+    i += 1
+while i < len(s) and s[i].isdigit():
+    res = res * {{b}} + int(s[i])
+    i += 1
+return max(-2**31, min(sign * res, {{c}}))`,
+      b: [b("a", "-1"), b("b", "10"), b("c", "2**31 - 1", ["2**31-1"])],
+    },
+  ),
+  d(
+    "reverse-words-in-a-string",
+    "Reverse Words in a String",
+    {
+      c: `istringstream in(s);
+string w, out;
+while (in >> w) out = w + (out.empty() ? "" : {{a}}) + out;
+return {{b}};`,
+      b: [b("a", '" "'), b("b", "out")],
+    },
+    {
+      c: `String[] parts = s.trim().split("\\\\s+");
+StringBuilder sb = new StringBuilder();
+for (int i = parts.length - 1; i >= {{a}}; i--) {
+  sb.append(parts[i]);
+  if (i > 0) sb.append({{b}});
+}
+return sb.toString();`,
+      b: [b("a", "0"), b("b", '" "')],
+    },
+    {
+      c: `return " ".join(reversed(s.{{a}}()))`,
+      b: [b("a", "split")],
+    },
+  ),
+];
+
 export const DRILLS: Record<string, Drill[]> = {
   "two-pointers": twoPointers,
   kadane,
