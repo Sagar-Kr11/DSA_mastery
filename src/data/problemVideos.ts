@@ -159,4 +159,27 @@ export const PROBLEM_VIDEOS: Record<string, ProblemVideo[]> = {
   "spiral-matrix": [neet("BJnMZNwUk1M", "Spiral Matrix"), striverVideo("3Zv-s9UUrFM", "Spiral Traversal of Matrix")],
   "set-matrix-zeroes": [neet("T41rL0L3Pnw", "Set Matrix Zeroes"), striverVideo("N0MgLvceX7M", "Set Matrix Zeroes")],
   "search-a-2d-matrix": [neet("Ber2pi2C0j0", "Search a 2D Matrix"), striverVideo("JXU4Akft7yk", "Search in 2D Matrix")],
+
+  // ==================== DP: linear-dp (House Robber family) ====================
+  "house-robber": [neet("73r3KWiEvyk", "House Robber"), striverPlaylist("House Robber")],
+  "house-robber-ii": [neet("rWAJCfYYOvM", "House Robber II"), striverPlaylist("House Robber II")],
+  "min-cost-climbing-stairs": [neet("ktmzAZWkEZ0", "Min Cost Climbing Stairs"), striverPlaylist("Min Cost Climbing Stairs")],
+  "jump-game": [neet("Yan0cv2cLy8", "Jump Game"), striverPlaylist("Jump Game")],
+  "decode-ways": [neet("6aEyTjOwlJU", "Decode Ways"), striverPlaylist("Decode Ways")],
+  "delete-and-earn": [striverPlaylist("Delete and Earn")],
+
+  // ==================== ARRAY CLASSICS ====================
+  "product-of-array-except-self": [neet("bNvIQI2wAjk", "Product of Array Except Self"), striverPlaylist("Product of Array Except Self")],
+  "merge-intervals": [neet("44H3cEC2fFM", "Merge Intervals"), striverVideo("IexN60k62jo", "Merge Overlapping Intervals")],
+  "sort-colors": [neet("4xbWSRZHqac", "Sort Colors"), striverVideo("tp8JIuCXBaU", "Sort an Array of 0s, 1s and 2s")],
+  "rotate-array": [neet("BHr381Guz3Y", "Rotate Array"), striverVideo("wvcQg43_V8U", "Rotate Array by K Places")],
+  "merge-sorted-array": [neet("P1Ic85RarKY", "Merge Sorted Array"), striverVideo("n7uwj04E0I4", "Merge Two Sorted Arrays")],
+  "find-the-duplicate-number": [neet("wjYnzkAhcNk", "Find the Duplicate Number"), striverPlaylist("Find the Duplicate Number")],
+
+  // ==================== STRING CLASSICS ====================
+  "longest-palindromic-substring": [neet("XYQecbcd6_c", "Longest Palindromic Substring"), striverPlaylist("Longest Palindromic Substring")],
+  "palindromic-substrings": [neet("4RACzI5-du8", "Palindromic Substrings"), striverPlaylist("Palindromic Substrings")],
+  "longest-common-prefix": [striverPlaylist("Longest Common Prefix")],
+  "string-to-integer-atoi": [striverPlaylist("String to Integer (atoi)")],
+  "reverse-words-in-a-string": [striverPlaylist("Reverse Words in a String")],
 };
