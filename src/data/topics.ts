@@ -654,6 +654,95 @@ export const PATTERNS: Pattern[] = [
       { slug: "letter-combinations-of-a-phone-number", title: "Letter Combinations of a Phone Number", difficulty: "Medium" },
     ],
   },
+
+  // ==================== DP: LINEAR / HOUSE ROBBER FAMILY ====================
+  {
+    id: "linear-dp",
+    topicId: "dp",
+    name: "Linear DP (House Robber family)",
+    logicType: "One-dimensional state over the index: dp[i] depends on dp[i-1] and dp[i-2]. Rob-or-skip, climb 1-or-2, jump reachability, decode splits — all collapse to two rolling variables and O(1) space.",
+    companies: ["Amazon", "Google", "Microsoft", "Adobe", "TCS NQT", "EPAM"],
+    youtube: { kind: "playlist", id: "PLgUwDviBIf0qUlt5H_kiKYaNSqJ81PMMY", channel: "Striver", title: "Striver — Dynamic Programming (A-Z)" },
+    extraVideos: [
+      { kind: "playlist", id: "PL_z_8CaSLPWekqhdCPmFohncHwz8TY2Go", channel: "AdityaVerma", title: "Aditya Verma — Dynamic Programming" },
+      { kind: "playlist", id: "PLot-Xpze53leU0Ec0VkBhnf4npMRFiNcB", channel: "NeetCode", title: "NeetCode — 1-D Dynamic Programming" },
+    ],
+    resources: [
+      { label: "House Robber — full explanation", url: "https://www.geeksforgeeks.org/find-maximum-possible-stolen-value-houses/", kind: "article", source: "GeeksforGeeks" },
+    ],
+    flow: [
+      { id: "l1", label: "Define dp[i] = best answer using first i items", next: ["l2"] },
+      { id: "l2", label: "Base: dp[0], dp[1] from the first one/two elements", next: ["l3"] },
+      { id: "l3", label: "Transition: dp[i] = max(dp[i-1], dp[i-2] + a[i])", next: ["l4"] },
+      { id: "l4", label: "Replace the array with two rolling vars (prev1, prev2)", next: ["l5"] },
+      { id: "l5", label: "Return dp[n-1] / prev1" },
+    ],
+    problems: [
+      { slug: "house-robber", title: "House Robber", difficulty: "Medium" },
+      { slug: "house-robber-ii", title: "House Robber II (circular)", difficulty: "Medium" },
+      { slug: "climbing-stairs", title: "Climbing Stairs", difficulty: "Easy" },
+      { slug: "min-cost-climbing-stairs", title: "Min Cost Climbing Stairs", difficulty: "Easy" },
+      { slug: "jump-game", title: "Jump Game", difficulty: "Medium" },
+      { slug: "decode-ways", title: "Decode Ways", difficulty: "Medium" },
+      { slug: "delete-and-earn", title: "Delete and Earn", difficulty: "Medium" },
+    ],
+  },
+
+  // ==================== ARRAY CLASSICS ====================
+  {
+    id: "array-classics",
+    topicId: "arrays",
+    name: "Array Classics (product · intervals · in-place)",
+    logicType: "The interview-staple array manipulations: prefix/suffix products without division, sorting intervals then merging, Dutch-national-flag partitioning, cyclic rotation by reversal, and back-to-front merging.",
+    companies: ["Amazon", "Microsoft", "Google", "Accenture", "TCS NQT", "Infosys"],
+    youtube: { kind: "playlist", id: "PLgUwDviBIf0rENwdL0nEH0uGom9no0nyB", channel: "Striver", title: "Striver — Arrays (A-Z DSA)" },
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53lfOdF3KwpMSFEyfE77zIwiP", channel: "NeetCode", title: "NeetCode — Arrays & Hashing" },
+    ],
+    flow: [
+      { id: "ac1", label: "Ask: can I reuse the output array as scratch?", next: ["ac2"] },
+      { id: "ac2", label: "Prefix pass left→right, suffix pass right→left", next: ["ac3"] },
+      { id: "ac3", label: "Intervals: sort by start, merge while start ≤ prevEnd", next: ["ac4"] },
+      { id: "ac4", label: "In-place: 3-way partition or reverse-reverse-reverse", next: ["ac5"] },
+      { id: "ac5", label: "Return without extra O(n) memory where possible" },
+    ],
+    problems: [
+      { slug: "product-of-array-except-self", title: "Product of Array Except Self", difficulty: "Medium" },
+      { slug: "merge-intervals", title: "Merge Intervals", difficulty: "Medium" },
+      { slug: "sort-colors", title: "Sort Colors (Dutch flag)", difficulty: "Medium" },
+      { slug: "rotate-array", title: "Rotate Array", difficulty: "Medium" },
+      { slug: "merge-sorted-array", title: "Merge Sorted Array", difficulty: "Easy" },
+      { slug: "find-the-duplicate-number", title: "Find the Duplicate Number", difficulty: "Medium" },
+    ],
+  },
+
+  // ==================== STRING CLASSICS ====================
+  {
+    id: "string-classics",
+    topicId: "strings",
+    name: "String Classics (palindromes · parsing)",
+    logicType: "Expand-around-centre for every palindrome question, vertical scanning for common prefixes, two-pointer skips for cleaned palindromes, and careful state machines for parsing (atoi, word reversal).",
+    companies: ["Amazon", "Microsoft", "Adobe", "TCS NQT", "Infosys", "Deloitte"],
+    youtube: { kind: "playlist", id: "PLgUwDviBIf0rVwua0kKYlsS_ik_1lyVK_", channel: "Striver", title: "Striver — Strings" },
+    extraVideos: [
+      { kind: "playlist", id: "PLot-Xpze53leNZQd0iINpD-MAhMOMzWvO", channel: "NeetCode", title: "NeetCode — Strings" },
+    ],
+    flow: [
+      { id: "sc1", label: "Palindrome? → expand around each centre (2n-1 centres)", next: ["sc2"] },
+      { id: "sc2", label: "Prefix? → compare column-by-column across all strings", next: ["sc3"] },
+      { id: "sc3", label: "Cleaning? → two pointers skipping non-alphanumerics", next: ["sc4"] },
+      { id: "sc4", label: "Parsing? → skip spaces, read sign, accumulate digits, clamp", next: ["sc5"] },
+      { id: "sc5", label: "Return built string / count" },
+    ],
+    problems: [
+      { slug: "longest-palindromic-substring", title: "Longest Palindromic Substring", difficulty: "Medium" },
+      { slug: "palindromic-substrings", title: "Palindromic Substrings", difficulty: "Medium" },
+      { slug: "longest-common-prefix", title: "Longest Common Prefix", difficulty: "Easy" },
+      { slug: "valid-palindrome", title: "Valid Palindrome", difficulty: "Easy" },
+      { slug: "string-to-integer-atoi", title: "String to Integer (atoi)", difficulty: "Medium" },
+      { slug: "reverse-words-in-a-string", title: "Reverse Words in a String", difficulty: "Medium" },
+    ],
+  },
 ];
 
 export const TOPICS: Topic[] = [
