@@ -753,7 +753,7 @@ export const TOPICS: Topic[] = [
   { id: "linked-list", name: "Linked List", emoji: "↦", blurb: "Fast/slow pointers, in-place reversal, K-group rewires.", patternIds: ["fast-slow", "reverse-list"] },
   { id: "trees", name: "Trees", emoji: "🌳", blurb: "DFS combines subresults; BFS explores level-by-level; BST ordering gives O(h) search, insert and floor/ceil.", patternIds: ["tree-dfs", "tree-bfs", "bst-ops"] },
   { id: "graphs", name: "Graphs", emoji: "◈", blurb: "BFS/DFS, topological order, Dijkstra — the heavy hitters.", patternIds: ["graph-bfs-dfs", "topo-sort", "dijkstra"] },
-  { id: "dp", name: "Dynamic Programming", emoji: "∑", blurb: "Knapsack, LIS, partition DP — memoize overlapping subproblems.", patternIds: ["knapsack", "lis", "mcm"] },
+  { id: "dp", name: "Dynamic Programming", emoji: "∑", blurb: "Linear DP (House Robber family), knapsack, LIS, partition DP — memoize overlapping subproblems.", patternIds: ["linear-dp", "knapsack", "lis", "mcm"] },
   { id: "greedy-backtracking", name: "Greedy / Backtracking", emoji: "⟳", blurb: "Choose-recurse-undo when brute force is only slightly too slow.", patternIds: ["backtracking"] },
   { id: "binary-search", name: "Binary Search", emoji: "⌕", blurb: "Halve the search space — over indices or over the answer itself.", patternIds: ["binary-search", "bs-on-answer"] },
   { id: "bits", name: "Bit Manipulation", emoji: "⚡", blurb: "XOR magic, popcount, masks — one-liners in interviews.", patternIds: ["bit-tricks"] },
