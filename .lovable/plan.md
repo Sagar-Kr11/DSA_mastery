@@ -1,27 +1,72 @@
 ## Goal
-Add Java video walkthroughs alongside the existing Python (NeetCode) picks for every problem in `src/data/problemVideos.ts`, so the inline Video panel shows a Java tab too.
+Fix the Bit Manipulation topic so every Java video tab opens an inline walkthrough for the exact problem, then expand the topic with high-value technical-interview patterns, LeetCode links, and Recall Drills.
 
-## Source of Java videos
-Primary: **takeUforward / Striver** — each Striver problem video contains both C++ and Java code side-by-side and his Java community solutions are the most-praised in comments. Fallbacks when Striver hasn't covered a problem: **Kunal Kushwaha**, **CodeHelp (Supreme DSA Java, Hindi)**, **Apna College**.
+## Current issue confirmed
+- The topic currently has one broad `bit-tricks` pattern with five questions.
+- Only **Single Number** has a dedicated Java entry. **Number of 1 Bits, Counting Bits, Missing Number, and Sum of Two Integers** currently use a relabeled full Striver A-Z playlist, so the Java tab does not open the named problem.
+- Recall Drills already exist for all five current Bit Manipulation questions.
 
-Selection rule (unchanged from the earlier plan): pick by top-comment sentiment ("clean dry run", "finally understood"), not raw views. Skip a problem's Java entry only if no trusted-creator video exists — better than a bad pick.
+## Changes
 
-## Change
-Only `src/data/problemVideos.ts`. For each of the ~75 keys already in the map, append a `{ lang: "Java", yt: { kind: "video", id, channel, title } }` entry to the existing array. No UI change needed — `patterns.$patternId.tsx` already renders one tab per language present in the array.
+### 1. Replace incorrect Java mappings
+Audit every problem displayed under Bit Manipulation and replace generic playlist entries with exact single-video IDs.
 
-## Coverage plan
-Target Java coverage per pattern group (rough):
-- Arrays / two-pointers / kadane / prefix / sliding-window: all covered by Striver
-- HashMap, Stack/Monotonic, Linked List, Trees, Graphs, DP, Backtracking, Binary Search: Striver has full Java coverage of the classics; use his A-Z DSA sheet videos
-- Bits: Striver bit-manipulation series
-- Strings / Matrix: Striver where present, else Kunal Kushwaha
+Selection rules:
+- The video title/content must cover the exact LeetCode problem or its exact algorithm.
+- Java code must be demonstrated or explicitly supported in the walkthrough.
+- Prefer established, clear educators such as NeetCode, takeUforward, Kunal Kushwaha, CodeHelp, Pepcoding, or Algorithms Made Easy; Striver is not mandatory.
+- Verify the creator, title, video ID, language, and embeddability before adding it.
+- Never label a playlist or a different-language walkthrough as a Java problem video. If no trustworthy exact Java video survives verification, omit that Java entry rather than misdirecting the learner.
 
-I'll batch by pattern group, typecheck after each batch, then spot-verify one video per group actually loads inline.
+The already verified exact match for **Sum of Two Integers** is NeetCode’s Java walkthrough. The remaining videos will receive the same exact-match verification before being mapped.
 
-## Non-goals
-- No new patterns, no schema change, no UI change.
-- Not adding C++ this turn — only Java, as requested. (C++ can be added next in the same shape if you want.)
-- No new creators outside the existing shortlist.
+### 2. Expand Bit Manipulation into interview patterns
+Replace the single broad grouping with focused, scannable patterns:
+
+1. **XOR Isolation**
+   - Single Number
+   - Missing Number
+   - Single Number II
+   - Single Number III
+
+2. **Set Bits & Bit Masks**
+   - Number of 1 Bits
+   - Counting Bits
+   - Power of Two
+   - Reverse Bits
+
+3. **Bitwise Arithmetic & Range Operations**
+   - Sum of Two Integers
+   - Bitwise AND of Numbers Range
+   - Divide Two Integers
+
+4. **Maximum XOR / Binary Trie**
+   - Maximum XOR of Two Numbers in an Array
+
+These cover the recurring interview signals: XOR cancellation, per-bit frequency, `n & (n-1)`, shifts/masks, common-prefix range AND, bitwise arithmetic, and greedy XOR with a binary trie.
+
+### 3. Complete each new pattern
+For every added pattern/problem:
+- Add the exact LeetCode slug, title, and difficulty so the existing practice link opens the correct problem.
+- Add a concise recognition rule and algorithm flow.
+- Add relevant company tags based on reputable interview-pattern references.
+- Add a direct, exact per-problem Java walkthrough where one can be verified, plus existing language alternatives where appropriate.
+- Keep all playback inside the existing inline video panel.
+
+### 4. Add Recall Drills
+Create a unique fill-in-the-blank drill for every newly added problem in C++, Java, and Python, focused on its essential bit operation rather than generic syntax. Register each drill under its new Bit Manipulation pattern so the drill selector and LeetCode link stay aligned with the curriculum.
+
+## Files
+- `src/data/topics.ts` — split/expand the Bit Manipulation curriculum, problem links, flows, companies, and pattern resources.
+- `src/data/problemVideos.ts` — remove misleading Java playlist fallbacks and add verified exact videos for current and new problems.
+- `src/data/drills.ts` — add and register drills for every new Bit Manipulation problem.
+
+No route or UI redesign is required; the existing pattern page, language tabs, inline player, and Recall Drill component already consume these data structures.
 
 ## Verification
-`tsgo` typecheck after each batch, then open two random pattern pages in the preview and confirm the Java tab appears next to Python and plays inline.
+- Confirm every Bit Manipulation problem slug resolves to the intended LeetCode problem and its drill uses the same slug.
+- Check every Java video ID against its title, creator, exact problem, Java content, and embed availability.
+- Assert there are no Java playlist fallbacks in Bit Manipulation.
+- Assert every listed problem has a matching registered drill.
+- Run the project typecheck/tests.
+- Open each Bit Manipulation pattern in the preview and verify its problem links, Java tabs, inline playback, and drill navigation.
