@@ -3765,7 +3765,150 @@ return a if a <= 0x7FFFFFFF else ~(a ^ MASK)
       b: [b("a", "<<"), b("b", "^"), b("c", "a")],
     },
   ),
+  d(
+    "single-number-ii",
+    "Single Number II (bit counts modulo 3)",
+    { c: `int ans = 0;
+for (int bit = 0; bit < 32; bit++) {
+  int count = 0;
+  for (int x : nums) count += (x {{a}} bit) & 1;
+  if (count % {{b}}) ans |= 1 << bit;
+}
+return {{c}};`, b: [b("a", ">>"), b("b", "3"), b("c", "ans")] },
+    { c: `int ans = 0;
+for (int bit = 0; bit < 32; bit++) {
+  int count = 0;
+  for (int x : nums) count += (x {{a}} bit) & 1;
+  if (count % {{b}} != 0) ans |= 1 << bit;
+}
+return {{c}};`, b: [b("a", ">>"), b("b", "3"), b("c", "ans")] },
+    { c: `ans = 0
+for bit in range(32):
+    count = sum((x {{a}} bit) & 1 for x in nums)
+    if count % {{b}}: ans |= 1 << bit
+return ans if ans < 2**31 else ans - {{c}}`, b: [b("a", ">>"), b("b", "3"), b("c", "2**32")] },
+  ),
+  d(
+    "single-number-iii",
+    "Single Number III (partition by low bit)",
+    { c: `int both = 0;
+for (int x : nums) both ^= x;
+int lowbit = both {{a}} -both;
+int first = 0;
+for (int x : nums) if (x & lowbit) first {{b}}= x;
+return {first, first ^ {{c}}};`, b: [b("a", "&"), b("b", "^"), b("c", "both")] },
+    { c: `int both = 0;
+for (int x : nums) both ^= x;
+int lowbit = both {{a}} -both;
+int first = 0;
+for (int x : nums) if ((x & lowbit) != 0) first {{b}}= x;
+return new int[]{first, first ^ {{c}}};`, b: [b("a", "&"), b("b", "^"), b("c", "both")] },
+    { c: `both = 0
+for x in nums: both ^= x
+lowbit = both {{a}} -both
+first = 0
+for x in nums:
+    if x & lowbit: first {{b}}= x
+return [first, first ^ {{c}}]`, b: [b("a", "&"), b("b", "^"), b("c", "both")] },
+  ),
+  d(
+    "power-of-two",
+    "Power of Two (clear lowest set bit)",
+    { c: `return n > 0 && (n {{a}} (n {{b}} 1)) == {{c}};`, b: [b("a", "&"), b("b", "-"), b("c", "0")] },
+    { c: `return n > 0 && (n {{a}} (n {{b}} 1)) == {{c}};`, b: [b("a", "&"), b("b", "-"), b("c", "0")] },
+    { c: `return n > 0 and (n {{a}} (n {{b}} 1)) == {{c}}`, b: [b("a", "&"), b("b", "-"), b("c", "0")] },
+  ),
+  d(
+    "reverse-bits",
+    "Reverse Bits (shift and append)",
+    { c: `uint32_t ans = 0;
+for (int i = 0; i < 32; i++) {
+  ans = (ans {{a}} 1) | (n & 1);
+  n {{b}}= 1;
+}
+return {{c}};`, b: [b("a", "<<"), b("b", ">>"), b("c", "ans")] },
+    { c: `int ans = 0;
+for (int i = 0; i < 32; i++) {
+  ans = (ans {{a}} 1) | (n & 1);
+  n {{b}}>= 1;
+}
+return {{c}};`, b: [b("a", "<<"), b("b", ">>>"), b("c", "ans")] },
+    { c: `ans = 0
+for _ in range(32):
+    ans = (ans {{a}} 1) | (n & 1)
+    n {{b}}= 1
+return {{c}}`, b: [b("a", "<<"), b("b", ">>"), b("c", "ans")] },
+  ),
+  d(
+    "bitwise-and-of-numbers-range",
+    "Bitwise AND of Numbers Range (clear suffix)",
+    { c: `while (right > left)
+  right {{a}}= right - {{b}};
+return {{c}};`, b: [b("a", "&"), b("b", "1"), b("c", "right")] },
+    { c: `while (right > left)
+  right {{a}}= right - {{b}};
+return {{c}};`, b: [b("a", "&"), b("b", "1"), b("c", "right")] },
+    { c: `while right > left:
+    right {{a}}= right - {{b}}
+return {{c}}`, b: [b("a", "&"), b("b", "1"), b("c", "right")] },
+  ),
+  d(
+    "divide-two-integers",
+    "Divide Two Integers (shifted subtraction)",
+    { c: `long ans = 0;
+for (int bit = 31; bit >= 0; bit--)
+  if ((divisor << bit) <= dividend) {
+    dividend {{a}} divisor << bit;
+    ans {{b}} 1L << bit;
+  }
+return {{c}};`, b: [b("a", "-="), b("b", "+="), b("c", "ans")] },
+    { c: `long ans = 0;
+for (int bit = 31; bit >= 0; bit--)
+  if ((divisor << bit) <= dividend) {
+    dividend {{a}} divisor << bit;
+    ans {{b}} 1L << bit;
+  }
+return (int) {{c}};`, b: [b("a", "-="), b("b", "+="), b("c", "ans")] },
+    { c: `ans = 0
+for bit in range(31, -1, -1):
+    if divisor << bit <= dividend:
+        dividend {{a}} divisor << bit
+        ans {{b}} 1 << bit
+return {{c}}`, b: [b("a", "-="), b("b", "+="), b("c", "ans")] },
+  ),
+  d(
+    "maximum-xor-of-two-numbers-in-an-array",
+    "Maximum XOR (binary trie query)",
+    { c: `for (int bit = 31; bit >= 0; bit--) {
+  int b = (x {{a}} bit) & 1;
+  if (node->child[1 - b]) {
+    ans |= 1 << bit;
+    node = node->child[{{b}} - b];
+  } else node = node->child[b];
+}
+return {{c}};`, b: [b("a", ">>"), b("b", "1"), b("c", "ans")] },
+    { c: `for (int bit = 31; bit >= 0; bit--) {
+  int b = (x {{a}} bit) & 1;
+  if (node.child[1 - b] != null) {
+    ans |= 1 << bit;
+    node = node.child[{{b}} - b];
+  } else node = node.child[b];
+}
+return {{c}};`, b: [b("a", ">>>"), b("b", "1"), b("c", "ans")] },
+    { c: `for bit in range(31, -1, -1):
+    b = (x {{a}} bit) & 1
+    if 1 - b in node:
+        ans |= 1 << bit
+        node = node[{{b}} - b]
+    else: node = node[b]
+return {{c}}`, b: [b("a", ">>"), b("b", "1"), b("c", "ans")] },
+  ),
 ];
+
+const xorIsolation = bitTricks.filter((drill) => ["single-number", "missing-number", "single-number-ii", "single-number-iii"].includes(drill.id));
+const setBitsMasks = bitTricks.filter((drill) => ["number-of-1-bits", "counting-bits", "power-of-two", "reverse-bits"].includes(drill.id));
+const bitwiseArithmetic = bitTricks.filter((drill) => ["sum-of-two-integers", "bitwise-and-of-numbers-range", "divide-two-integers"].includes(drill.id));
+const maximumXorTrie = bitTricks.filter((drill) => drill.id === "maximum-xor-of-two-numbers-in-an-array");
 
 // =====================================================================
 // NUMBER THEORY BASICS (placements)
@@ -5835,7 +5978,10 @@ export const DRILLS: Record<string, Drill[]> = {
   backtracking,
   "binary-search": binarySearch,
   "bs-on-answer": bsAnswer,
-  "bit-tricks": bitTricks,
+  "xor-isolation": xorIsolation,
+  "set-bits-masks": setBitsMasks,
+  "bitwise-arithmetic": bitwiseArithmetic,
+  "maximum-xor-trie": maximumXorTrie,
   "number-theory-basics": numberTheory,
   "pattern-printing": patternPrinting,
   "string-basics": stringBasics,
