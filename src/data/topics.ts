@@ -10,6 +10,11 @@ export type Channel =
   | "TusharRoy"
   | "WilliamFiset"
   | "Errichto"
+  | "AlgorithmsMadeEasy"
+  | "Prepflix"
+  | "HackerHeap"
+  | "XavierElon"
+  | "AlgoDucky"
   | "freeCodeCamp"
   | "MIT";
 
@@ -827,6 +832,11 @@ export const CHANNEL_LABELS: Record<Channel, string> = {
   TusharRoy: "Tushar Roy",
   WilliamFiset: "WilliamFiset",
   Errichto: "Errichto Algorithms",
+  AlgorithmsMadeEasy: "Algorithms Made Easy",
+  Prepflix: "Prepflix",
+  HackerHeap: "HackerHeap",
+  XavierElon: "Xavier Elon",
+  AlgoDucky: "Algo Ducky",
   freeCodeCamp: "freeCodeCamp",
   MIT: "MIT OpenCourseWare",
 };
@@ -850,6 +860,11 @@ export const CHANNEL_LANGUAGES: Record<Channel, Language[]> = {
   TusharRoy: ["Java"],
   WilliamFiset: ["Java"],
   Errichto: ["C++"],
+  AlgorithmsMadeEasy: ["Java"],
+  Prepflix: ["Java"],
+  HackerHeap: ["Java"],
+  XavierElon: ["Java"],
+  AlgoDucky: ["Java"],
   freeCodeCamp: ["Python", "Java", "C++"],
   MIT: ["Python"],
 };
