@@ -143,10 +143,17 @@ export const PROBLEM_VIDEOS: Record<string, ProblemVideo[]> = {
 
   // ==================== BITS ====================
   "single-number": [neet("qMPX1AOa83k", "Single Number"), striverVideo("nB_wsGyc5eA", "Single Number — XOR")],
-  "number-of-1-bits": [neet("5Km3utixwZs", "Number of 1 Bits"), striverPlaylist("Number of 1 Bits")],
-  "counting-bits": [neet("RyBM56RIWrM", "Counting Bits"), striverPlaylist("Counting Bits")],
-  "missing-number": [neet("WnPLSRLSANE", "Missing Number"), striverPlaylist("Missing Number")],
-  "sum-of-two-integers": [neet("gVUrDV4tZfY", "Sum of Two Integers"), striverPlaylist("Sum of Two Integers")],
+  "number-of-1-bits": [neet("5Km3utixwZs", "Number of 1 Bits"), { lang: "Java", yt: { kind: "video", id: "wLHhAHkID9M", channel: "NeetCode", title: "Number of 1 Bits — Java walkthrough" } }],
+  "counting-bits": [neet("RyBM56RIWrM", "Counting Bits"), { lang: "Java", yt: { kind: "video", id: "J1hCybwTVVE", channel: "NeetCode", title: "Counting Bits — Java walkthrough" } }],
+  "missing-number": [neet("WnPLSRLSANE", "Missing Number"), { lang: "Java", yt: { kind: "video", id: "NXwaiY9hGQU", channel: "NeetCode", title: "Missing Number — Java walkthrough" } }],
+  "single-number-ii": [{ lang: "Java", yt: { kind: "video", id: "5Bb2nqA40JY", channel: "Striver", title: "Single Number II — Striver (Java + C++)" } }],
+  "single-number-iii": [{ lang: "Java", yt: { kind: "video", id: "UA5JnV1J2sI", channel: "Striver", title: "Single Number III — Striver (Java + C++)" } }],
+  "sum-of-two-integers": [{ lang: "Java", yt: { kind: "video", id: "gVUrDV4tZfY", channel: "NeetCode", title: "Sum of Two Integers — NeetCode (Java)" } }],
+  "power-of-two": [{ lang: "Java", yt: { kind: "video", id: "bjRNBh0olIM", channel: "NeetCode", title: "Power of Two — Java walkthrough" } }],
+  "reverse-bits": [{ lang: "Java", yt: { kind: "video", id: "j5ImjESLcuc", channel: "NeetCode", title: "Reverse Bits — Java walkthrough" } }],
+  "bitwise-and-of-numbers-range": [{ lang: "Java", yt: { kind: "video", id: "j3XRFREnPWI", channel: "NeetCode", title: "Bitwise AND of Numbers Range — Java walkthrough" } }],
+  "divide-two-integers": [{ lang: "Java", yt: { kind: "video", id: "efpxjmVVdjI", channel: "NeetCode", title: "Divide Two Integers — Java walkthrough" } }],
+  "maximum-xor-of-two-numbers-in-an-array": [{ lang: "Java", yt: { kind: "video", id: "EIhAwfHubE8", channel: "Striver", title: "Maximum XOR of Two Numbers — Striver (Java + C++)" } }],
   "happy-number": [neet("ljz85bxOYJ0", "Happy Number"), striverPlaylist("Happy Number")],
   "powx-n": [neet("g9YQyYi4IQQ", "Pow(x, n)"), striverVideo("hFWckDXE-K8", "Pow(x, n)")],
 

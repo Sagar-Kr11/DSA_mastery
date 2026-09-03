@@ -519,24 +519,79 @@ export const PATTERNS: Pattern[] = [
 
   // ==================== BIT MANIPULATION ====================
   {
-    id: "bit-tricks",
+    id: "xor-isolation",
     topicId: "bits",
-    name: "Bit Manipulation Tricks",
-    logicType: "XOR pairs cancel, n & (n-1) drops lowest set bit — classic OA staples.",
-    companies: ["Amazon", "Microsoft", "Google", "Apple"],
-    youtube: { kind: "playlist", id: "PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O", channel: "AbdulBari", title: "Abdul Bari — Algorithms (bit / basics)" },
+    name: "XOR Isolation",
+    logicType: "Use XOR cancellation and per-bit grouping to isolate values that do not follow the array's repetition rule.",
+    companies: ["Amazon", "Microsoft", "Google", "Adobe"],
+    youtube: { kind: "video", id: "5Bb2nqA40JY", channel: "Striver", title: "Striver — Single Number II (Bit Manipulation)" },
     flow: [
-      { id: "bi1", label: "XOR of x with itself = 0", next: ["bi2"] },
-      { id: "bi2", label: "n & (n-1) clears lowest set bit", next: ["bi3"] },
-      { id: "bi3", label: "(x >> k) & 1 → k-th bit of x", next: ["bi4"] },
-      { id: "bi4", label: "Iterate bit-by-bit for popcount / masks" },
+      { id: "xi1", label: "Identify the duplicate frequency: twice or three times", next: ["xi2"] },
+      { id: "xi2", label: "Pairs → XOR all values; triples → count each bit modulo 3", next: ["xi3"] },
+      { id: "xi3", label: "Two unique values → XOR all, then isolate a differing set bit", next: ["xi4"] },
+      { id: "xi4", label: "Partition by that bit and XOR each group" },
     ],
     problems: [
       { slug: "single-number", title: "Single Number", difficulty: "Easy" },
+      { slug: "missing-number", title: "Missing Number", difficulty: "Easy" },
+      { slug: "single-number-ii", title: "Single Number II", difficulty: "Medium" },
+      { slug: "single-number-iii", title: "Single Number III", difficulty: "Medium" },
+    ],
+  },
+  {
+    id: "set-bits-masks",
+    topicId: "bits",
+    name: "Set Bits & Bit Masks",
+    logicType: "Inspect, clear, count, and reposition individual bits with shifts, masks, and Brian Kernighan's n & (n-1) trick.",
+    companies: ["Apple", "Microsoft", "Amazon", "Google"],
+    youtube: { kind: "video", id: "MBv6HPXKUjU", channel: "CodeHelp", title: "CodeHelp Java — Bitwise Operators and Masks" },
+    flow: [
+      { id: "sm1", label: "Choose the bit operation: test, clear, count, or reverse", next: ["sm2"] },
+      { id: "sm2", label: "Use (n >> i) & 1 to inspect bit i", next: ["sm3"] },
+      { id: "sm3", label: "Use n & (n-1) to clear the lowest set bit", next: ["sm4"] },
+      { id: "sm4", label: "Build the result by shifting and OR-ing extracted bits" },
+    ],
+    problems: [
       { slug: "number-of-1-bits", title: "Number of 1 Bits", difficulty: "Easy" },
       { slug: "counting-bits", title: "Counting Bits", difficulty: "Easy" },
-      { slug: "missing-number", title: "Missing Number", difficulty: "Easy" },
+      { slug: "power-of-two", title: "Power of Two", difficulty: "Easy" },
+      { slug: "reverse-bits", title: "Reverse Bits", difficulty: "Easy" },
+    ],
+  },
+  {
+    id: "bitwise-arithmetic",
+    topicId: "bits",
+    name: "Bitwise Arithmetic & Ranges",
+    logicType: "Model arithmetic with XOR/carry and remove changing suffix bits to solve addition, division, and range operations without brute force.",
+    companies: ["Google", "Amazon", "Apple", "Microsoft"],
+    youtube: { kind: "video", id: "gVUrDV4tZfY", channel: "NeetCode", title: "NeetCode — Sum of Two Integers (Java)" },
+    flow: [
+      { id: "ba1", label: "Addition → XOR gives sum without carry", next: ["ba2"] },
+      { id: "ba2", label: "(a & b) << 1 gives the carry; repeat until zero", next: ["ba3"] },
+      { id: "ba3", label: "Range AND → right &= right - 1 until right ≤ left", next: ["ba4"] },
+      { id: "ba4", label: "Division → subtract the largest shifted divisor and accumulate powers of two" },
+    ],
+    problems: [
       { slug: "sum-of-two-integers", title: "Sum of Two Integers", difficulty: "Medium" },
+      { slug: "bitwise-and-of-numbers-range", title: "Bitwise AND of Numbers Range", difficulty: "Medium" },
+      { slug: "divide-two-integers", title: "Divide Two Integers", difficulty: "Medium" },
+    ],
+  },
+  {
+    id: "maximum-xor-trie",
+    topicId: "bits",
+    name: "Maximum XOR / Binary Trie",
+    logicType: "Store numbers bit-by-bit in a binary trie, then greedily choose the opposite bit from MSB to LSB to maximize XOR.",
+    companies: ["Google", "Amazon", "Microsoft", "Meta"],
+    youtube: { kind: "video", id: "EIhAwfHubE8", channel: "Striver", title: "Striver — Maximum XOR of Two Numbers (C++ / Java)" },
+    flow: [
+      { id: "mx1", label: "Insert every number from bit 31 down to bit 0", next: ["mx2"] },
+      { id: "mx2", label: "For each query number, inspect bits from MSB to LSB", next: ["mx3"] },
+      { id: "mx3", label: "Prefer the opposite bit in the trie to set the current XOR bit", next: ["mx4"] },
+      { id: "mx4", label: "Track and return the maximum XOR value" },
+    ],
+    problems: [
+      { slug: "maximum-xor-of-two-numbers-in-an-array", title: "Maximum XOR of Two Numbers in an Array", difficulty: "Medium" },
     ],
   },
 
@@ -756,7 +811,7 @@ export const TOPICS: Topic[] = [
   { id: "dp", name: "Dynamic Programming", emoji: "∑", blurb: "Linear DP (House Robber family), knapsack, LIS, partition DP — memoize overlapping subproblems.", patternIds: ["linear-dp", "knapsack", "lis", "mcm"] },
   { id: "greedy-backtracking", name: "Greedy / Backtracking", emoji: "⟳", blurb: "Choose-recurse-undo when brute force is only slightly too slow.", patternIds: ["backtracking"] },
   { id: "binary-search", name: "Binary Search", emoji: "⌕", blurb: "Halve the search space — over indices or over the answer itself.", patternIds: ["binary-search", "bs-on-answer"] },
-  { id: "bits", name: "Bit Manipulation", emoji: "⚡", blurb: "XOR magic, popcount, masks — one-liners in interviews.", patternIds: ["bit-tricks"] },
+  { id: "bits", name: "Bit Manipulation", emoji: "⚡", blurb: "XOR isolation, set-bit masks, binary arithmetic and tries — compact patterns with major interview payoff.", patternIds: ["xor-isolation", "set-bits-masks", "bitwise-arithmetic", "maximum-xor-trie"] },
   { id: "placements", name: "Service-Company Placements", emoji: "🇮🇳", blurb: "TCS NQT · HackwithInfy · EPAM · Accenture · Deloitte — the patterns that actually appear on Indian OAs.", patternIds: ["number-theory-basics", "pattern-printing", "string-basics", "matrix-basics", "recursion-basics"] },
 ];
 
@@ -991,7 +1046,7 @@ const EXTRAS: Record<string, { extraVideos?: YouTubeRef[]; resources?: Resource[
       { label: "Binary Search on Answer", url: "https://usaco.guide/silver/binary-search", kind: "article", source: "USACO Guide" },
     ],
   },
-  "bit-tricks": {
+  "xor-isolation": {
     extraVideos: [
       { kind: "playlist", id: "PLot-Xpze53lfQmTEztbgdp8ALEoydvnRQ", channel: "NeetCode", title: "NeetCode — Bit Manipulation playlist" },
       { kind: "video", id: "7jkIUgLC29I", channel: "Errichto", title: "Errichto — Bitwise operations (part 1)" },
@@ -1000,6 +1055,18 @@ const EXTRAS: Record<string, { extraVideos?: YouTubeRef[]; resources?: Resource[
       { label: "Bit Manipulation", url: "https://cp-algorithms.com/algebra/bit-manipulation.html", kind: "article", source: "CP-Algorithms" },
       { label: "Bit tricks for competitive programming", url: "https://www.geeksforgeeks.org/bits-manipulation-important-tactics/", kind: "article", source: "GeeksforGeeks" },
     ],
+  },
+  "set-bits-masks": {
+    extraVideos: [{ kind: "video", id: "7jkIUgLC29I", channel: "Errichto", title: "Errichto — Bitwise operations (part 1)" }],
+    resources: [{ label: "Bit Manipulation", url: "https://cp-algorithms.com/algebra/bit-manipulation.html", kind: "article", source: "CP-Algorithms" }],
+  },
+  "bitwise-arithmetic": {
+    extraVideos: [{ kind: "playlist", id: "PLot-Xpze53lfQmTEztbgdp8ALEoydvnRQ", channel: "NeetCode", title: "NeetCode — Bit Manipulation playlist" }],
+    resources: [{ label: "Bit tricks for competitive programming", url: "https://www.geeksforgeeks.org/bits-manipulation-important-tactics/", kind: "article", source: "GeeksforGeeks" }],
+  },
+  "maximum-xor-trie": {
+    extraVideos: [{ kind: "video", id: "EIhAwfHubE8", channel: "Striver", title: "Striver — Maximum XOR of Two Numbers (C++ / Java)", languages: ["C++", "Java"] }],
+    resources: [{ label: "Binary Trie for Maximum XOR", url: "https://www.geeksforgeeks.org/maximum-xor-of-two-numbers-in-an-array-set-2/", kind: "article", source: "GeeksforGeeks" }],
   },
   "number-theory-basics": {
     extraVideos: [
@@ -1079,7 +1146,9 @@ const CODEHELP: Record<string, YouTubeRef> = {
   backtracking:          { kind: "playlist", id: "PLDzeHZWIZsTq8KwpV5ipe5-ncApOTEL9k", channel: "CodeHelp", title: "CodeHelp — Backtracking by Love Babbar" },
   "binary-search":       { kind: "playlist", id: "PLDzeHZWIZsTp4pb_WBRahP1tnipLuX9qM", channel: "CodeHelp", title: "CodeHelp — Searching & Sorting by Love Babbar" },
   "bs-on-answer":        { kind: "playlist", id: "PLDzeHZWIZsTp4pb_WBRahP1tnipLuX9qM", channel: "CodeHelp", title: "CodeHelp — Searching & Sorting (BS on Answer)" },
-  "bit-tricks":          { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Bit Manipulation)" },
+  "xor-isolation":       { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Bit Manipulation)" },
+  "set-bits-masks":      { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Bit Manipulation)" },
+  "bitwise-arithmetic":  { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Bit Manipulation)" },
   "number-theory-basics":{ kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Maths)" },
   "pattern-printing":    { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Patterns)" },
   "string-basics":       { kind: "playlist", id: "PLDzeHZWIZsTryvtXdMr6rPh4IDexB5NIA", channel: "CodeHelp", title: "CodeHelp — Complete C++ Placement DSA (Strings)" },
@@ -1097,7 +1166,9 @@ const CODEHELP_JAVA: Record<string, YouTubeRef> = {
   "pattern-printing":     { kind: "video", id: "AWHn2IimUiY", channel: "CodeHelp", title: "CodeHelp Java — Solve any PATTERN Printing Problem (L11)", languages: ["Java"] },
   "string-basics":        { kind: "video", id: "_hvBbiMRoo0", channel: "CodeHelp", title: "CodeHelp Java — Strings in Java (L14)", languages: ["Java"] },
   "number-theory-basics": { kind: "video", id: "ktEyWsU7G94", channel: "CodeHelp", title: "CodeHelp Java — Basic Maths needed for DSA (L15)", languages: ["Java"] },
-  "bit-tricks":           { kind: "video", id: "MBv6HPXKUjU", channel: "CodeHelp", title: "CodeHelp Java — Bitwise Operators in Java (L26)", languages: ["Java"] },
+  "xor-isolation":        { kind: "video", id: "MBv6HPXKUjU", channel: "CodeHelp", title: "CodeHelp Java — Bitwise Operators in Java (L26)", languages: ["Java"] },
+  "set-bits-masks":       { kind: "video", id: "MBv6HPXKUjU", channel: "CodeHelp", title: "CodeHelp Java — Bitwise Operators in Java (L26)", languages: ["Java"] },
+  "bitwise-arithmetic":   { kind: "video", id: "MBv6HPXKUjU", channel: "CodeHelp", title: "CodeHelp Java — Bitwise Operators in Java (L26)", languages: ["Java"] },
   kadane:                 { kind: "video", id: "1EK1D1b9mB8", channel: "CodeHelp", title: "CodeHelp Java — Maximum Sum Contiguous Subarray / Kadane's Algorithm (L32)", languages: ["Java"] },
   "matrix-basics":        { kind: "video", id: "XE-f4jKCsak", channel: "CodeHelp", title: "CodeHelp Java — Solving 2D Array Problems (L33)", languages: ["Java"] },
   "binary-search":        { kind: "video", id: "LfeH5aFeP7E", channel: "CodeHelp", title: "CodeHelp Java — Binary Search in 1 Video (L36)", languages: ["Java"] },
